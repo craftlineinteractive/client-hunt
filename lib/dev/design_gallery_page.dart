@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/providers.dart';
 import '../core/constants/app_icons.dart';
 import '../core/constants/app_strings.dart';
 import '../core/theme/app_colors.dart';
@@ -9,6 +10,7 @@ import '../core/theme/app_radius.dart';
 import '../core/theme/app_spacing.dart';
 import '../core/theme/app_typography.dart';
 import '../core/theme/theme_mode_provider.dart';
+import '../data/fake/fake.dart';
 import '../shared/widgets/shared.dart';
 
 /// **Debug-only.** A visual harness for every shared widget and state.
@@ -73,6 +75,49 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
               selected: ref.watch(themeModeProvider),
               onChanged: (ThemeMode mode) =>
                   ref.read(themeModeProvider.notifier).set(mode),
+            ),
+          ),
+          _Section(
+            title: 'Fake data scenarios',
+            subtitle:
+                'Debug only: controls the next search and the pretend '
+                'subscription.',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: <Widget>[
+                    for (final FakeScenario scenario in FakeScenario.values)
+                      AppChip(
+                        label: scenario.displayName,
+                        isSelected: ref.watch(fakeScenarioProvider) == scenario,
+                        onTap: () => ref
+                            .read(fakeScenarioProvider.notifier)
+                            .set(scenario),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                ToggleRow(
+                  label: 'Pretend Pro subscription',
+                  icon: AppIcons.pro,
+                  value: ref.watch(fakeProEnabledProvider),
+                  onChanged: (bool value) =>
+                      ref.read(fakeProEnabledProvider.notifier).set(value),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                MonoText(
+                  'Effective plan: '
+                  '${ref.watch(featureGateProvider).entitlements.isPro ? 'Pro' : 'Free'}'
+                  ' · max ${ref.watch(featureGateProvider).entitlements.maxResultsPerSearch}'
+                  ' results · ads '
+                  '${ref.watch(featureGateProvider).showsAds ? 'on' : 'off'}',
+                  style: AppTypography.monoSm,
+                  color: colors.textMuted,
+                ),
+              ],
             ),
           ),
           _Section(
@@ -357,9 +402,9 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text('Shalby Dental Clinic'),
+                            Text('Northline Dental Studio'),
                             SizedBox(height: 2),
-                            MonoText('contact@shalbydental.example'),
+                            MonoText('contact@northline-dental-studio.example'),
                           ],
                         ),
                       ),
@@ -662,7 +707,7 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                     child: ContactRow(
                       icon: AppIcons.email,
                       label: 'Email',
-                      value: 'contact@shalbydental.example',
+                      value: 'contact@northline-dental-studio.example',
                       copyTooltip: 'Copy email',
                     ),
                   ),
