@@ -424,16 +424,16 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                   children: <Widget>[
                     const AppTextField(
                       variant: AppTextFieldVariant.grouped,
-                      hintText: AppStrings.nicheHint,
+                      hintText: HomeStrings.nicheHint,
                       leadingIcon: AppIcons.niche,
                     ),
                     AppTextField(
                       variant: AppTextFieldVariant.grouped,
-                      hintText: AppStrings.locationHint,
+                      hintText: HomeStrings.locationHint,
                       leadingIcon: AppIcons.location,
                       trailing: AppIconButton(
                         icon: AppIcons.myLocation,
-                        tooltip: AppStrings.useMyLocation,
+                        tooltip: HomeStrings.useMyLocation,
                         onPressed: () {},
                         iconSize: 20,
                       ),
@@ -775,7 +775,7 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                 const SizedBox(height: AppSpacing.md),
                 if (_showNote)
                   InfoNote(
-                    text: AppStrings.unverifiedNotice,
+                    text: ResultsStrings.unverifiedNotice,
                     onDismiss: () => setState(() => _showNote = false),
                   ),
                 if (!_showNote)

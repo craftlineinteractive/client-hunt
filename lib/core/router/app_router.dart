@@ -43,8 +43,8 @@ final GoRouter appRouter = GoRouter(
               name: AppRoutes.searchName,
               builder: (BuildContext context, GoRouterState state) =>
                   const PlaceholderScreen(
-                    title: AppStrings.searchTab,
-                    subtitle: AppStrings.question,
+                    title: CommonStrings.searchTab,
+                    subtitle: HomeStrings.question,
                   ),
             ),
           ],
@@ -56,7 +56,7 @@ final GoRouter appRouter = GoRouter(
               name: AppRoutes.savedName,
               builder: (BuildContext context, GoRouterState state) =>
                   const PlaceholderScreen(
-                    title: AppStrings.savedLeadsTitle,
+                    title: SavedStrings.title,
                     subtitle: 'Your on-device lead pipeline.',
                   ),
             ),
@@ -69,7 +69,7 @@ final GoRouter appRouter = GoRouter(
               name: AppRoutes.settingsName,
               builder: (BuildContext context, GoRouterState state) =>
                   const PlaceholderScreen(
-                    title: AppStrings.settingsTab,
+                    title: CommonStrings.settingsTab,
                     subtitle: 'Theme, defaults, storage and legal.',
                   ),
             ),
@@ -98,7 +98,7 @@ final GoRouter appRouter = GoRouter(
       name: AppRoutes.filtersName,
       parentNavigatorKey: _rootNavigatorKey,
       builder: (BuildContext context, GoRouterState state) =>
-          const PlaceholderScreen(title: AppStrings.filters),
+          const PlaceholderScreen(title: FiltersStrings.title),
     ),
     GoRoute(
       path: AppRoutes.exportLeads,
@@ -188,7 +188,7 @@ class PlaceholderScreen extends StatelessWidget {
               ],
               const SizedBox(height: AppSpacing.md),
               Text(
-                AppStrings.placeholderCaption,
+                CommonStrings.placeholderCaption,
                 textAlign: TextAlign.center,
                 style: AppTypography.bodySm.copyWith(color: colors.textMuted),
               ),

@@ -14,7 +14,7 @@ import '../../core/theme/app_typography.dart';
 /// action.
 class AdBannerPlaceholder extends StatelessWidget {
   const AdBannerPlaceholder({
-    this.headline = AppStrings.adHeadline,
+    this.headline = AdsStrings.adHeadline,
     this.isDashed = false,
     this.onTap,
     this.actionLabel,
@@ -58,7 +58,7 @@ class AdBannerPlaceholder extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.checkbox),
             ),
             child: Text(
-              AppStrings.adLabel.toUpperCase(),
+              AdsStrings.adLabel.toUpperCase(),
               style: AppTypography.monoSm.copyWith(color: colors.textMuted),
             ),
           ),

@@ -70,10 +70,10 @@ void main() {
     // The one approved "verify" line must still exist, and must be the Pro
     // feature that ships with a "Coming soon" badge.
     expect(
-      AppStrings.aiVerifyFeature,
+      ProStrings.aiVerifyFeature,
       'AI to organize, format and verify leads',
     );
-    expect(AppStrings.publicContactDetails, 'Public contact details');
+    expect(LeadDetailStrings.publicContactDetails, 'Public contact details');
   });
 
   test('sample Pro reviews follow kDebugMode', () {
