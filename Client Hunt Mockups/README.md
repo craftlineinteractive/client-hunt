@@ -904,8 +904,9 @@ Footer links → legal/restore.
    leads" + outlined pill "Coming soon" (13).
 5. **"Free vs Pro comparison"** card (`balance_rounded` 20): table, header "Feature / Free / Pro"
    (13/600 `textSecondary`, Pro header in a small filled pill), rows separated by hairlines:
-   Maps leads ✓/✓ · Social sources —/✓ · Deep search —/✓ · Results per search 25/200 · Saved leads
-   50/Unlimited · Ads Yes/No. Pro column bold. Icons 18; "—" is text, not an icon.
+   Maps leads ✓/✓ · Social sources —/✓ · Deep search —/✓ · Results per search 50/200 · Saved leads
+   50/Unlimited · Ads Yes/No. Pro column bold. Icons 18; "—" is text, not an icon. (The 50 is the
+   Free `maxResultsPerSearch`; the "Max results" row on Filters therefore locks 100 and 200.)
 6. **"What users say"** card (`forum_rounded` 20 + "4.7" star metric + "Play store" 13): horizontally
    scrolling review cards (width ≈ 264, `cardSubtle`, border, p14): 5 stars (`star_rounded` 17, last one
    `star_half_rounded` for 4.5), review text 13 `textSecondary`, footer with 32 px initials avatar +
@@ -1061,12 +1062,12 @@ routes and absent — and restored after pop — on every pushed route.
 |---------|------|-----|------------------------------|
 | Maps source | ✓ | ✓ | Home source pills (Maps is always available) |
 | Instagram / LinkedIn / Facebook / X sources | ✗ | ✓ | Home locked source chips; paywall feature list |
-| Searches per day | 5 | unlimited | Home quota pill "3/5 free today" |
+| Searches per day | 5 | no limit | Home quota pill "3/5 free today" |
 | Deep search (crawl websites for emails) | ✗ | ✓ | Filters → Results → Search depth = Deep (lock + PRO) |
-| Results per search | 25 | 200 | Filters → Max results 200 (lock); comparison table 25/200 |
+| Results per search | 50 | 200 | Filters → Max results 100 and 200 each carry a Pro lock badge on Free; comparison table 50/200 |
 | "No website" filter | ✗ | ✓ | Filters → Contact → No website (PRO, disabled switch) |
 | Saved leads / lists | 50 | unlimited | Saved leads limit + upsell; comparison table |
-| Export formats | CSV | CSV, Excel, PDF, VCF, no limits | Export format tiles; paywall list |
+| Export formats | CSV, Excel, PDF, VCF | same four, without limits | Export format tiles; paywall list. All four formats are allowed on Free — the Pro claim is "without limits", not "more formats" |
 | Ads | shown | removed | Every ad slot (home, results, saved, lead detail) |
 | Social profile values | hidden/teaser | ✓ | Lead detail profiles card (Pro badge + "Not found" until Pro) |
 | Priority support | ✗ | ✓ | Paywall feature list only |
@@ -1082,8 +1083,15 @@ routes and absent — and restored after pop — on every pushed route.
 
 The selected plan drives the sticky bar caption and the button label ("Continue"). Savings math:
 ₹299 × 12 = ₹3,588; ₹2,999 is 16.4% less → "Save 16%"; ₹2,999 / 12 ≈ ₹249.9 → "About ₹250 / month".
-Prices are display strings in A1 (billing is prompt E); keep the numbers in `ProPlan` constants so the
-copy and the model cannot drift.
+Only the three plan prices are literal, and they live in `ProPlan`. "Save 16%", "About ₹250 / month"
+and "₹2,999 billed yearly" are *derived* from those numbers (`savingsPercent`, `caption`,
+`billingSummary`), so a price change cannot leave stale copy behind. A test fails on any other rupee
+amount in `lib/`. Billing itself is prompt E.
+
+**Entitlements are one value, not scattered booleans.** Every Free/Pro limit in this table is a field
+of `Entitlements` (`lib/domain/entitlements/`), with exactly two constants — `freeEntitlements` and
+`proEntitlements` — and one `FeatureGate` that answers `canUseSource`, `canUseDeepSearch`,
+`maxResultsOptions` and `reasonForLock`. Screens ask the gate; they never compare numbers.
 
 ---
 
