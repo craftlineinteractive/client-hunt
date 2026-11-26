@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../dev/design_gallery_page.dart';
 import '../../shared/widgets/app_bottom_nav.dart';
 import '../constants/app_strings.dart';
 import '../theme/app_colors.dart';
@@ -140,6 +142,15 @@ final GoRouter appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state) =>
           const PlaceholderScreen(title: 'ClientHunt Pro'),
     ),
+    // Debug-only: the component gallery never ships in a release build.
+    if (kDebugMode)
+      GoRoute(
+        path: AppRoutes.designGallery,
+        name: AppRoutes.designGalleryName,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            const DesignGalleryPage(),
+      ),
   ],
 );
 
