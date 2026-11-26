@@ -60,7 +60,7 @@ class AppIconButton extends StatelessWidget {
             constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
             child: Center(
               child: Material(
-                color: outlined ? colors.card : const Color(0x00000000),
+                color: outlined ? colors.card : Colors.transparent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(borderRadius),
                   side: outlined

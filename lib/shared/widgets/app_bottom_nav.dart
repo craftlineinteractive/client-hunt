@@ -88,7 +88,7 @@ class _NavItem extends StatelessWidget {
                 curve: Curves.easeOut,
                 width: isActive ? 40 : 28,
                 decoration: BoxDecoration(
-                  color: isActive ? colors.primary : const Color(0x00000000),
+                  color: isActive ? colors.primary : Colors.transparent,
                   borderRadius: AppRadius.pillAll,
                 ),
                 alignment: Alignment.center,

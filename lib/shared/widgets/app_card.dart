@@ -68,7 +68,7 @@ class AppCard extends StatelessWidget {
       child: onTap == null
           ? content
           : Material(
-              color: const Color(0x00000000),
+              color: Colors.transparent,
               borderRadius: borderRadius,
               clipBehavior: Clip.antiAlias,
               child: InkWell(

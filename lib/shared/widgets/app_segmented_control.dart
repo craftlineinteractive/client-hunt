@@ -18,7 +18,11 @@ enum AppSegmentedStyle {
 /// One option in an [AppSegmentedControl].
 @immutable
 class AppSegmentOption<T> {
-  const AppSegmentOption({required this.value, required this.label, this.count});
+  const AppSegmentOption({
+    required this.value,
+    required this.label,
+    this.count,
+  });
 
   /// Value reported when selected.
   final T value;
@@ -138,7 +142,7 @@ class _Segment<T> extends StatelessWidget {
             vertical: 5,
           ),
           decoration: BoxDecoration(
-            color: background ?? const Color(0x00000000),
+            color: background ?? Colors.transparent,
             borderRadius: BorderRadius.circular(AppRadius.sm),
             boxShadow: <BoxShadow>[
               if (isSelected && !isFilled && !colors.isDark)

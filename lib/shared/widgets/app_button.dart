@@ -81,14 +81,18 @@ class AppButton extends StatelessWidget {
         ? AppSpacing.buttonHeightLarge
         : AppSpacing.buttonHeight;
 
-    final (Color background, Color foreground, Color? border) = switch (variant) {
+    final (
+      Color background,
+      Color foreground,
+      Color? border,
+    ) = switch (variant) {
       AppButtonVariant.primary => (colors.primary, colors.onPrimary, null),
-      AppButtonVariant.secondary => (colors.card, colors.textPrimary, colors.border),
-      AppButtonVariant.ghost => (
-        const Color(0x00000000),
+      AppButtonVariant.secondary => (
+        colors.card,
         colors.textPrimary,
-        null,
+        colors.border,
       ),
+      AppButtonVariant.ghost => (Colors.transparent, colors.textPrimary, null),
     };
 
     final Widget leading = isLoading
@@ -146,9 +150,7 @@ class AppButton extends StatelessWidget {
               splashColor: colors.overlayPressed,
               highlightColor: colors.overlayHover,
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.lg,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 child: content,
               ),
             ),

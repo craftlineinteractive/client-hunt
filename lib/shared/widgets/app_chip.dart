@@ -153,7 +153,7 @@ class AppChip extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: verticalInset),
         child: Material(
-          color: const Color(0x00000000),
+          color: Colors.transparent,
           child: InkWell(
             onTap: isEnabled ? onTap : null,
             borderRadius: AppRadius.pillAll,
