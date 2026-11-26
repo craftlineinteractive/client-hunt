@@ -1266,3 +1266,35 @@ These do not block any screen prompt (B1–B8): each has a safe default implemen
 ---
 
 *End of reference.*
+
+## 10. Testing
+
+Two commands must stay green:
+
+```
+flutter analyze     # zero issues, no exceptions
+flutter test        # every unit, widget, router, guard and golden test
+```
+
+| Suite | What it protects |
+|-------|------------------|
+| `test/app_test.dart` | The app builds in light and dark and the three tabs switch. |
+| `test/router_test.dart` | Bottom nav appears on exactly `/search`, `/saved`, `/settings`; every pushed route covers it and restores it on pop. |
+| `test/monochrome_guard_test.dart` | No `Color(0x…)` or named `Colors.*` outside `lib/core/theme`. |
+| `test/decisions_test.dart` | No copy claims verification; sample reviews follow `kDebugMode`; `OpenStatus` has two values; prices are exact and derived; no stray rupee amount anywhere in `lib/`. |
+| `test/entitlements_test.dart` | Every Free/Pro gate rule and the two plan constants. |
+| `test/dummy_data_test.dart` | 42 / 31 / 40 leads, 128 saved with the 42/38/19/29 split and 14/9/36/22 lists, deterministic output, and all data is fictional (`.example`, `+91 00000 xxxxx`, no real brand names). |
+| `test/fake_engine_test.dart` | The event sequence per scenario and the terminal event for empty, error and cancel. |
+| `test/fake_repositories_test.dart` | Saved CRUD, lists and counts, quota drain, history dedupe, settings, subscription, export. |
+| `test/golden/shared_widgets_golden_test.dart` | Core widgets at 390 px in both themes (tag `golden`). |
+
+**Goldens.** Generate with
+
+```
+flutter test --update-goldens --tags golden
+```
+
+Golden images are **platform sensitive**: glyph rasterization and shadows differ between operating systems, so generate them on the same OS that verifies them (these were generated on Windows). Committing goldens generated on another platform will fail here and vice versa. The test tag is declared in `dart_test.yaml`.
+
+Fonts are bundled, so no network is involved. A widget test still starts with the placeholder test font, so the golden file registers Plus Jakarta Sans, Inter, JetBrains Mono and Material Icons from the asset bundle once in `setUpAll`; without that every glyph and icon would render as a block. No other test needs font loading.
+

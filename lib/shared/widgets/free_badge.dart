@@ -22,13 +22,19 @@ class FreeBadge extends StatelessWidget {
         borderRadius: AppRadius.pillAll,
         border: Border.all(color: colors.border),
       ),
-      alignment: Alignment.center,
-      child: Text(
-        'Free',
-        style: AppTypography.labelSm.copyWith(
-          color: colors.textSecondary,
-          letterSpacing: 0,
-        ),
+      // A `min` Row keeps the pill hugging its label; `alignment` on the
+      // Container would stretch it to the parent's width inside a Wrap.
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            'Free',
+            style: AppTypography.labelSm.copyWith(
+              color: colors.textSecondary,
+              letterSpacing: 0,
+            ),
+          ),
+        ],
       ),
     );
   }

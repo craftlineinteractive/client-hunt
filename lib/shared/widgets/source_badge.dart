@@ -27,10 +27,16 @@ class SourceBadge extends StatelessWidget {
         borderRadius: AppRadius.pillAll,
         border: Border.all(color: colors.border),
       ),
-      alignment: Alignment.center,
-      child: Text(
-        label,
-        style: AppTypography.monoSm.copyWith(color: colors.textSecondary),
+      // A Row with `min` keeps the pill hugging its label; a Container with
+      // `alignment` would stretch to the parent's width inside a Wrap/Row.
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            label,
+            style: AppTypography.monoSm.copyWith(color: colors.textSecondary),
+          ),
+        ],
       ),
     );
   }

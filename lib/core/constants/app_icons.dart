@@ -25,6 +25,8 @@ abstract final class AppIcons {
   static const IconData check = Icons.check_rounded;
   static const IconData checkCircle = Icons.check_circle_rounded;
   static const IconData add = Icons.add_rounded;
+  static const IconData checkbox = Icons.check_box_rounded;
+  static const IconData checkboxBlank = Icons.check_box_outline_blank_rounded;
   static const IconData lock = Icons.lock_rounded;
   static const IconData info = Icons.info_outline_rounded;
   static const IconData pro = Icons.workspace_premium_rounded;

@@ -20,6 +20,7 @@ export 'empty_state.dart';
 export 'free_badge.dart';
 export 'info_note.dart';
 export 'initials_avatar.dart';
+export 'lead_card.dart';
 export 'mono_text.dart';
 export 'option_pill.dart';
 export 'pro_badge.dart';

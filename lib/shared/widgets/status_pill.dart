@@ -45,13 +45,18 @@ class StatusPill extends StatelessWidget {
         borderRadius: AppRadius.pillAll,
         border: Border.all(color: border),
       ),
-      alignment: Alignment.center,
-      child: Text(
-        label,
-        style: AppTypography.labelMd.copyWith(
-          color: text,
-          fontWeight: FontWeight.w600,
-        ),
+      // `min` keeps the pill hugging its label instead of filling a Wrap row.
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            label,
+            style: AppTypography.labelMd.copyWith(
+              color: text,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

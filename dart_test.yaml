@@ -1,0 +1,13 @@
+# Test configuration.
+#
+# Golden tests are tagged `golden` so they can be generated or run on their own:
+#
+#   flutter test --update-goldens --tags golden
+#   flutter test --tags golden
+#
+# Golden images are platform sensitive: regenerate them on the same OS that will
+# verify them. They are included in a plain `flutter test` run on the machine
+# that owns the checked-in PNGs.
+tags:
+  golden:
+    description: Pixel snapshots of core widgets in light and dark. Platform sensitive.
