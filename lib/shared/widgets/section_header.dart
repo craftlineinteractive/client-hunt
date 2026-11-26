@@ -41,7 +41,8 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppColors colors = AppColors.of(context);
-    final Widget? trailingWidget = trailing ??
+    final Widget? trailingWidget =
+        trailing ??
         (trailingText == null
             ? null
             : InkWell(

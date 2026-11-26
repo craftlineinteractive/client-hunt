@@ -23,10 +23,10 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     this.showWordmark = false,
     this.trailing,
     super.key,
-  })  : subtitle = null,
-        leadingIcon = null,
-        onLeading = null,
-        _isPushed = false;
+  }) : subtitle = null,
+       leadingIcon = null,
+       onLeading = null,
+       _isPushed = false;
 
   /// Pushed-screen variant.
   const AppTopBar.pushed({
@@ -36,9 +36,9 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     this.leadingIcon = AppIcons.back,
     this.onLeading,
     super.key,
-  })  : showWordmark = false,
-        trailing = null,
-        _isPushed = true;
+  }) : showWordmark = false,
+       trailing = null,
+       _isPushed = true;
 
   /// The screen title.
   final String title;
@@ -140,10 +140,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
           : null,
       actions: actions == null
           ? null
-          : <Widget>[
-              ...actions!,
-              const SizedBox(width: AppSpacing.sm),
-            ],
+          : <Widget>[...actions!, const SizedBox(width: AppSpacing.sm)],
     );
   }
 }

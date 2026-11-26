@@ -45,8 +45,9 @@ abstract final class AppRoutes {
   static const String designGalleryName = 'designGallery';
 }
 
-final GlobalKey<NavigatorState> _rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: 'root',
+);
 
 /// The app router.
 ///
@@ -59,9 +60,12 @@ final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.search,
   routes: <RouteBase>[
     StatefulShellRoute.indexedStack(
-      builder: (BuildContext context, GoRouterState state,
-              StatefulNavigationShell navigationShell) =>
-          AppShell(navigationShell: navigationShell),
+      builder:
+          (
+            BuildContext context,
+            GoRouterState state,
+            StatefulNavigationShell navigationShell,
+          ) => AppShell(navigationShell: navigationShell),
       branches: <StatefulShellBranch>[
         StatefulShellBranch(
           routes: <RouteBase>[
@@ -70,9 +74,9 @@ final GoRouter appRouter = GoRouter(
               name: AppRoutes.searchName,
               builder: (BuildContext context, GoRouterState state) =>
                   const PlaceholderScreen(
-                title: AppStrings.searchTab,
-                subtitle: AppStrings.question,
-              ),
+                    title: AppStrings.searchTab,
+                    subtitle: AppStrings.question,
+                  ),
             ),
           ],
         ),
@@ -83,9 +87,9 @@ final GoRouter appRouter = GoRouter(
               name: AppRoutes.savedName,
               builder: (BuildContext context, GoRouterState state) =>
                   const PlaceholderScreen(
-                title: 'Saved leads',
-                subtitle: 'Your on-device lead pipeline.',
-              ),
+                    title: 'Saved leads',
+                    subtitle: 'Your on-device lead pipeline.',
+                  ),
             ),
           ],
         ),
@@ -96,9 +100,9 @@ final GoRouter appRouter = GoRouter(
               name: AppRoutes.settingsName,
               builder: (BuildContext context, GoRouterState state) =>
                   const PlaceholderScreen(
-                title: AppStrings.settingsTab,
-                subtitle: 'Theme, defaults, storage and legal.',
-              ),
+                    title: AppStrings.settingsTab,
+                    subtitle: 'Theme, defaults, storage and legal.',
+                  ),
             ),
           ],
         ),
@@ -115,8 +119,7 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.leadDetail,
       name: AppRoutes.leadDetailName,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (BuildContext context, GoRouterState state) =>
-          PlaceholderScreen(
+      builder: (BuildContext context, GoRouterState state) => PlaceholderScreen(
         title: 'Lead details',
         subtitle: state.pathParameters['id'],
       ),

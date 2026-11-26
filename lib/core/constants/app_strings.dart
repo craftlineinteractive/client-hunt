@@ -29,11 +29,11 @@ abstract final class AppStrings {
 
   // Trust language. The app never claims verification.
   static const String publicContactDetails = 'Public contact details';
-  static const String notVerifiedNote =
-      'Found on a public page, not verified.';
+  static const String notVerifiedNote = 'Found on a public page, not verified.';
   static const String unverifiedNotice =
       'Contact details are sourced publicly and unverified.';
-  static const String storedOnDevice = 'Your leads are stored only on this device.';
+  static const String storedOnDevice =
+      'Your leads are stored only on this device.';
 
   // Ads.
   static const String adLabel = 'Ad';

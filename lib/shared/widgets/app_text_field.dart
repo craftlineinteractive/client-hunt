@@ -154,9 +154,7 @@ class AppTextField extends StatelessWidget {
         cursorColor: colors.primary,
         decoration: InputDecoration(
           hintText: hintText,
-          prefixIcon: leadingIcon == null
-              ? null
-              : Icon(leadingIcon, size: 20),
+          prefixIcon: leadingIcon == null ? null : Icon(leadingIcon, size: 20),
           suffixIcon: trailing,
           contentPadding: EdgeInsets.symmetric(
             horizontal: AppSpacing.md + 2,

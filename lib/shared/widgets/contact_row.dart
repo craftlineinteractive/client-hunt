@@ -84,13 +84,14 @@ class ContactRow extends StatelessWidget {
             value,
             maxLines: isCompact ? 1 : 2,
             overflow: TextOverflow.ellipsis,
-            style: (isCompact
-                    ? AppTypography.monoMd
-                    : AppTypography.monoSemibold)
-                .copyWith(
-              fontSize: isCompact ? 14 : 15,
-              color: isCompact ? colors.textSecondary : colors.textPrimary,
-            ),
+            style:
+                (isCompact ? AppTypography.monoMd : AppTypography.monoSemibold)
+                    .copyWith(
+                      fontSize: isCompact ? 14 : 15,
+                      color: isCompact
+                          ? colors.textSecondary
+                          : colors.textPrimary,
+                    ),
           );
 
     if (isCompact) {

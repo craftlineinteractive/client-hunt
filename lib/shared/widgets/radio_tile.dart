@@ -125,9 +125,7 @@ class RadioTile extends StatelessWidget {
                   Text(
                     '$trailingCount',
                     style: AppTypography.monoSm.copyWith(
-                      color: isSelected
-                          ? colors.textPrimary
-                          : colors.textMuted,
+                      color: isSelected ? colors.textPrimary : colors.textMuted,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

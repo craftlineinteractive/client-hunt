@@ -129,11 +129,7 @@ abstract final class AppTheme {
           side: BorderSide(color: c.border),
         ),
       ),
-      dividerTheme: DividerThemeData(
-        color: c.divider,
-        thickness: 1,
-        space: 1,
-      ),
+      dividerTheme: DividerThemeData(color: c.divider, thickness: 1, space: 1),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: c.card,
@@ -144,7 +140,9 @@ abstract final class AppTheme {
         ),
         hintStyle: AppTypography.bodyMd.copyWith(color: c.textMuted),
         labelStyle: AppTypography.labelMd.copyWith(color: c.textSecondary),
-        floatingLabelStyle: AppTypography.labelMd.copyWith(color: c.textPrimary),
+        floatingLabelStyle: AppTypography.labelMd.copyWith(
+          color: c.textPrimary,
+        ),
         errorStyle: AppTypography.bodySm.copyWith(
           color: c.textPrimary,
           fontWeight: FontWeight.w600,
@@ -167,9 +165,8 @@ abstract final class AppTheme {
               : c.background,
         ),
         trackColor: WidgetStateProperty.resolveWith<Color>(
-          (Set<WidgetState> states) => states.contains(WidgetState.selected)
-              ? c.primary
-              : c.disabled,
+          (Set<WidgetState> states) =>
+              states.contains(WidgetState.selected) ? c.primary : c.disabled,
         ),
         trackOutlineColor: const WidgetStatePropertyAll<Color>(
           Color(0x00000000),
@@ -187,9 +184,8 @@ abstract final class AppTheme {
               : BorderSide(color: c.disabledForeground, width: 1.5),
         ),
         fillColor: WidgetStateProperty.resolveWith<Color>(
-          (Set<WidgetState> states) => states.contains(WidgetState.selected)
-              ? c.primary
-              : c.card,
+          (Set<WidgetState> states) =>
+              states.contains(WidgetState.selected) ? c.primary : c.card,
         ),
         checkColor: WidgetStatePropertyAll<Color>(c.onPrimary),
         overlayColor: WidgetStatePropertyAll<Color>(c.overlayPressed),
@@ -223,18 +219,15 @@ abstract final class AppTheme {
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.resolveWith<Color>(
-            (Set<WidgetState> states) => states.contains(WidgetState.selected)
-                ? c.primary
-                : c.card,
+            (Set<WidgetState> states) =>
+                states.contains(WidgetState.selected) ? c.primary : c.card,
           ),
           foregroundColor: WidgetStateProperty.resolveWith<Color>(
             (Set<WidgetState> states) => states.contains(WidgetState.selected)
                 ? c.onPrimary
                 : c.textSecondary,
           ),
-          side: WidgetStatePropertyAll<BorderSide>(
-            BorderSide(color: c.border),
-          ),
+          side: WidgetStatePropertyAll<BorderSide>(BorderSide(color: c.border)),
           shape: const WidgetStatePropertyAll<OutlinedBorder>(
             RoundedRectangleBorder(borderRadius: AppRadius.mdAll),
           ),
@@ -290,9 +283,7 @@ abstract final class AppTheme {
         elevation: 0,
         insetPadding: const EdgeInsets.all(AppSpacing.xxl),
         titleTextStyle: AppTypography.titleMd.copyWith(color: c.textPrimary),
-        contentTextStyle: AppTypography.bodyMd.copyWith(
-          color: c.textSecondary,
-        ),
+        contentTextStyle: AppTypography.bodyMd.copyWith(color: c.textSecondary),
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.xlAll,
           side: BorderSide(color: c.border),
@@ -324,9 +315,7 @@ abstract final class AppTheme {
       listTileTheme: ListTileThemeData(
         iconColor: c.textSecondary,
         textColor: c.textPrimary,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
         minVerticalPadding: AppSpacing.sm,
       ),
       textButtonTheme: TextButtonThemeData(
@@ -349,9 +338,7 @@ abstract final class AppTheme {
           foregroundColor: WidgetStatePropertyAll<Color>(c.textPrimary),
           backgroundColor: WidgetStatePropertyAll<Color>(c.card),
           overlayColor: WidgetStatePropertyAll<Color>(c.overlayPressed),
-          side: WidgetStatePropertyAll<BorderSide>(
-            BorderSide(color: c.border),
-          ),
+          side: WidgetStatePropertyAll<BorderSide>(BorderSide(color: c.border)),
           textStyle: WidgetStatePropertyAll<TextStyle>(AppTypography.button),
           minimumSize: const WidgetStatePropertyAll<Size>(
             Size(AppSpacing.minTapTarget, AppSpacing.buttonHeight),

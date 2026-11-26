@@ -179,10 +179,11 @@ class SettingsRow extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.right,
-                        style: (isMonoValue
-                                ? AppTypography.monoSm
-                                : AppTypography.bodySm)
-                            .copyWith(color: colors.textMuted),
+                        style:
+                            (isMonoValue
+                                    ? AppTypography.monoSm
+                                    : AppTypography.bodySm)
+                                .copyWith(color: colors.textMuted),
                       ),
                     ),
                   if (trailingIcon != null) ...<Widget>[

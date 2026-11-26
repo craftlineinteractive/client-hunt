@@ -26,7 +26,8 @@ class StatusPill extends StatelessWidget {
     final AppColors colors = AppColors.of(context);
 
     final (Color border, Color text, Color fill) = switch (label) {
-      'New' || 'Replied' => (colors.primary, colors.textPrimary, colors.surface),
+      'New' ||
+      'Replied' => (colors.primary, colors.textPrimary, colors.surface),
       'Contacted' => (
         colors.disabledForeground,
         colors.textSecondary,

@@ -43,9 +43,7 @@ class AdBannerPlaceholder extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.surface,
         borderRadius: AppRadius.mdAll,
-        border: Border.all(
-          color: isDashed ? colors.disabled : colors.border,
-        ),
+        border: Border.all(color: isDashed ? colors.disabled : colors.border),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

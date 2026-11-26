@@ -97,7 +97,8 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
           ),
           _Section(
             title: 'Typography',
-            subtitle: 'Plus Jakarta Sans · Inter · JetBrains Mono, minimum 13 px',
+            subtitle:
+                'Plus Jakarta Sans · Inter · JetBrains Mono, minimum 13 px',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -148,11 +149,7 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                   variant: AppButtonVariant.ghost,
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                AppButton(
-                  label: 'Loading',
-                  onPressed: () {},
-                  isLoading: true,
-                ),
+                AppButton(label: 'Loading', onPressed: () {}, isLoading: true),
                 const SizedBox(height: AppSpacing.sm),
                 const AppButton(label: 'Disabled'),
                 const SizedBox(height: AppSpacing.sm),
@@ -362,9 +359,7 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                           children: <Widget>[
                             Text('Shalby Dental Clinic'),
                             SizedBox(height: 2),
-                            MonoText(
-                              'contact@shalbydental.example',
-                            ),
+                            MonoText('contact@shalbydental.example'),
                           ],
                         ),
                       ),
@@ -448,11 +443,16 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                       label: 'Contacted',
                       count: 38,
                     ),
-                    AppSegmentOption<int>(value: 3, label: 'Replied', count: 19),
+                    AppSegmentOption<int>(
+                      value: 3,
+                      label: 'Replied',
+                      count: 19,
+                    ),
                     AppSegmentOption<int>(value: 4, label: 'Closed', count: 29),
                   ],
                   selected: _statusIndex,
-                  onChanged: (int value) => setState(() => _statusIndex = value),
+                  onChanged: (int value) =>
+                      setState(() => _statusIndex = value),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 AppSegmentedControl<int>(
@@ -464,7 +464,8 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                   ],
                   selected: _statusIndex % 4,
                   style: AppSegmentedStyle.filled,
-                  onChanged: (int value) => setState(() => _statusIndex = value),
+                  onChanged: (int value) =>
+                      setState(() => _statusIndex = value),
                 ),
               ],
             ),
@@ -715,8 +716,16 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                 const StatsStrip(
                   items: <StatItem>[
                     StatItem(icon: AppIcons.group, value: '42', label: 'Leads'),
-                    StatItem(icon: AppIcons.email, value: '31', label: 'Emails'),
-                    StatItem(icon: AppIcons.phone, value: '40', label: 'Phones'),
+                    StatItem(
+                      icon: AppIcons.email,
+                      value: '31',
+                      label: 'Emails',
+                    ),
+                    StatItem(
+                      icon: AppIcons.phone,
+                      value: '40',
+                      label: 'Phones',
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -741,7 +750,8 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                   child: EmptyState(
                     icon: AppIcons.savedOutline,
                     title: 'Nothing saved yet',
-                    body: 'Save a lead from search results to start your '
+                    body:
+                        'Save a lead from search results to start your '
                         'pipeline.',
                     actionLabel: 'Find leads',
                     onAction: () {},
@@ -917,9 +927,7 @@ class _Section extends StatelessWidget {
               padding: const EdgeInsets.only(top: 2),
               child: Text(
                 subtitle!,
-                style: AppTypography.bodySm.copyWith(
-                  color: colors.textMuted,
-                ),
+                style: AppTypography.bodySm.copyWith(color: colors.textMuted),
               ),
             ),
           const SizedBox(height: AppSpacing.md),

@@ -129,9 +129,7 @@ class _TagInputState extends State<TagInput> {
                 controller: _controller,
                 onSubmitted: _submit,
                 textInputAction: TextInputAction.done,
-                style: AppTypography.bodySm.copyWith(
-                  color: colors.textPrimary,
-                ),
+                style: AppTypography.bodySm.copyWith(color: colors.textPrimary),
                 cursorColor: colors.primary,
                 decoration: InputDecoration.collapsed(
                   hintText: widget.hintText,

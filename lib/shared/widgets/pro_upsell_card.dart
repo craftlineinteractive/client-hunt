@@ -57,9 +57,7 @@ class ProUpsellCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: foreground.withValues(alpha: 0.08),
                   borderRadius: AppRadius.mdAll,
-                  border: Border.all(
-                    color: foreground.withValues(alpha: 0.2),
-                  ),
+                  border: Border.all(color: foreground.withValues(alpha: 0.2)),
                 ),
                 alignment: Alignment.center,
                 child: Icon(AppIcons.pro, size: 20, color: foreground),
@@ -71,9 +69,7 @@ class ProUpsellCard extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       title,
-                      style: AppTypography.titleSm.copyWith(
-                        color: foreground,
-                      ),
+                      style: AppTypography.titleSm.copyWith(color: foreground),
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
