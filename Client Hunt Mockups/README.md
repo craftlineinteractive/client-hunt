@@ -1033,6 +1033,24 @@ bottom navigation, implemented with `StatefulShellRoute.indexedStack`. All other
 on the root navigator so the shell (and its nav bar) is covered. Filters is a modal-style pushed route,
 not a bottom sheet, because it has its own sticky Apply bar.
 
+**Back-stack rules.** Implemented by the shot stack, not by per-screen overrides — no route intercepts
+pop, so the Android system back button always does exactly what the app-bar arrow does.
+
+| Screen | Opened from | Back / close returns to |
+|--------|-------------|--------------------------|
+| Results (`/results`) | Search (Find Leads or a recent row) | Search, with its form state intact |
+| Lead detail (`/lead/:id`) | Results or Saved | The screen that opened it (results or saved), at the same scroll position |
+| Filters (`/filters`) | Search's Filters chip, or results' tune icon | Where it was opened; applying pops with the `SearchFilters` result |
+| Export (`/export`) | Results' sticky bar, Saved's selection bar, Settings' export row | Where it was opened |
+| Pro (`/pro`) | Home Pro pill, Settings Pro card, any locked source chip, any locked filter | Where it was opened |
+| Debug gallery (`/dev/gallery`) | Debug builds only | Where it was opened |
+
+Each tab is its own stack inside the shell, so switching tabs and coming back preserves that tab's
+position. Navigation calls go through the typed helpers in `lib/core/router/app_routes.dart`
+(`goToResults`, `goToLead(id)`, `openFilters`, `openExport`, `openPro`, `goToTab`); no screen builds a
+path string. `test/router_test.dart` asserts that the bottom bar is present on exactly the three tab
+routes and absent — and restored after pop — on every pushed route.
+
 ---
 
 ## 6. Pro vs Free matrix

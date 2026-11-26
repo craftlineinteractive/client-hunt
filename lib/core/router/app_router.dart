@@ -8,53 +8,22 @@ import '../constants/app_strings.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
+import 'app_routes.dart';
 
-/// Every route path and name in one place.
+export 'app_routes.dart';
+
+/// The app router.
 ///
-/// Later prompts navigate with these constants instead of raw strings so a path
-/// change is a single edit.
-abstract final class AppRoutes {
-  static const String search = '/search';
-  static const String searchName = 'search';
-
-  static const String saved = '/saved';
-  static const String savedName = 'saved';
-
-  static const String settings = '/settings';
-  static const String settingsName = 'settings';
-
-  static const String results = '/results';
-  static const String resultsName = 'results';
-
-  /// `/lead/:id` — the id is a placeholder until the data layer exists.
-  static const String leadDetail = '/lead/:id';
-  static const String leadDetailName = 'leadDetail';
-
-  static String leadDetailPath(String id) => '/lead/$id';
-
-  static const String filters = '/filters';
-  static const String filtersName = 'filters';
-
-  static const String exportLeads = '/export';
-  static const String exportLeadsName = 'exportLeads';
-
-  static const String pro = '/pro';
-  static const String proName = 'pro';
-
-  static const String designGallery = '/dev/gallery';
-  static const String designGalleryName = 'designGallery';
-}
-
+/// Three tab destinations live in a [StatefulShellRoute.indexedStack] so each
+/// tab preserves its own state and the bottom navigation stays visible. Every
+/// other destination is pushed on the root navigator with
+/// `parentNavigatorKey: _rootNavigatorKey`, which covers the shell — and with it
+/// the bottom bar, exactly as the mockups draw those screens.
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
 );
 
-/// The app router.
-///
-/// The three tab destinations live in a [StatefulShellRoute] so the bottom
-/// navigation survives tab switches. Every other destination is pushed on the
-/// root navigator, covering the shell and its navigation bar, exactly as the
-/// mockups draw them.
+/// The single router instance.
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: AppRoutes.search,
@@ -87,7 +56,7 @@ final GoRouter appRouter = GoRouter(
               name: AppRoutes.savedName,
               builder: (BuildContext context, GoRouterState state) =>
                   const PlaceholderScreen(
-                    title: 'Saved leads',
+                    title: AppStrings.savedTab,
                     subtitle: 'Your on-device lead pipeline.',
                   ),
             ),
@@ -145,7 +114,8 @@ final GoRouter appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state) =>
           const PlaceholderScreen(title: 'ClientHunt Pro'),
     ),
-    // Debug-only: the component gallery never ships in a release build.
+    // Debug-only: the component gallery never ships in a release build. It is
+    // registered outside the shell so it has no bottom navigation.
     if (kDebugMode)
       GoRoute(
         path: AppRoutes.designGallery,
