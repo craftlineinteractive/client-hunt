@@ -774,8 +774,8 @@ row → `/pro`. Deep depth and 200 results locked → `/pro`.
      60% opacity disabled switch.
    - **Business quality** (`star_border_rounded`): "Minimum rating" + 5 `OptionPill`s (36 h, radius 8,
      mono 13): Any / 3.0+ / 3.5+ / **4.0+ (selected)** / 4.5+. "Minimum reviews": Any / **10+
-     (selected)** / 50+ / 100+. "Status" + 3-option segmented: **Any (selected)** / Open now /
-     Recently active.
+     (selected)** / 50+ / 100+. "Status" + 2-option segmented: **Any (selected)** / Open now.
+     ("Recently active" was removed — see Section 9.)
    - **Keywords** (`tag_rounded` or `sell_rounded`): "Must include" TagInput with chips "implants",
      "family" + inline placeholder "Type keyword..."; "Exclude" TagInput with "supplies", "training".
      Chips are radius 8, mono 13, fill `#F4F4F5`/`#262626`, `close_rounded` 14.
@@ -1109,7 +1109,6 @@ element rather than show an empty or zero value.
 | `noWebsite` (Pro) | Maps `website` presence | Only meaningful on Maps results; social profiles always have a link, so they are excluded |
 | `minRating`, `minReviews` | Maps rating/reviews | Non-Maps leads cannot satisfy them → excluded when set |
 | `openStatus.openNow` | Maps open state | Non-Maps leads excluded when set |
-| `openStatus.recentlyActive` | Social "last post" (future capability) | Treated as "Any" until D implements it; do not fake it |
 | `mustInclude` / `exclude` | name, category, description keywords | Applied after normalization; case/space-insensitive |
 | `radiusKm` | lat/lng | Non-geocoded leads excluded when radius < country-wide |
 | `depth` fast / deep | website crawl | Deep = fetch contact/about pages for emails/phones |
@@ -1135,7 +1134,8 @@ radius steps (mapped to 8/12/16/pill in code) and the 100/200/300 ms motion toke
 **b) Bottom navigation 4 tabs vs 3 tabs.** `home_screen` and `saved_leads` show Search, Saved, History,
 Settings; `settings` shows Search, Saved, Settings. There is no History screen mockup. **Resolution:**
 three tabs — Search, Saved, Settings — defined once in `lib/core/constants/nav_tabs.dart` as `navTabs`.
-Adding History later is a one-line data change plus a route; no widget changes. **Needs confirmation.**
+Adding History later is a one-line data change plus a route; no widget changes.
+**Resolved 26 Nov 2026:** three tabs are final; History is not a destination.
 
 **c) Icon names rendered as text in `search_results`.** The contact rows print `call`, `mail`,
 `language` as literal text because the icon font failed to load in that file. **Resolution:** real
@@ -1151,11 +1151,15 @@ verify emails or phones yet. **Resolution:** the label becomes **"Public contact
 email note stays **"Found on a public page, not verified."** The results-screen notice "Emails are
 unverified" is matched to the same language: **"Contact details are sourced publicly and unverified."**
 No UI copy anywhere claims verification. Status words use icons + weight only.
+**Resolved 26 Nov 2026:** the only approved use of the word "verify" is the Pro feature line "AI to
+organize, format and verify leads", which keeps its "Coming soon" badge. `test/decisions_test.dart`
+fails if any other string in `app_strings.dart` mentions verification.
 
 **f) Sample reviews and rating in `go_pro`.** Three reviews and a "4.7 Play store" metric are invented.
 **Resolution:** kept as design-only dummy data, stored in `AppStrings` with
-`kShowSampleProReviews = true` and a doc comment "SAMPLE DATA — replace with real Play Store reviews
-before release"; the caption "Sample reviews for design only" stays visible.
+`kShowSampleProReviews = kDebugMode` and a doc comment "SAMPLE DATA — replace with real Play Store
+reviews before release"; the caption "Sample reviews for design only" stays visible. A release build
+renders no reviews section and no rating metric at all — invented testimonials never ship.
 
 **g) Mixed Outlined + Rounded Material Symbols.** **Resolution:** `Icons.*_rounded` everywhere,
 centralized in `lib/core/constants/app_icons.dart` so a wrong family cannot sneak in.
@@ -1164,7 +1168,7 @@ centralized in `lib/core/constants/app_icons.dart` so a wrong family cannot snea
 
 | # | Finding | Resolution |
 |---|---------|-----------|
-| h | Dark frames are inconsistent: `lead_detail` has a light-styled "dark" frame; `saved_leads`, `search_filters`, `export_leads`, `settings` mix light values in; `go_pro` uses its own off-palette dark set | Dark theme normalized to the `home_screen`/`search_results` dark values (Section 2). Every listed alternate maps to a canonical token (Section 2.3) |
+| h | Dark frames are inconsistent: `lead_detail` has a light-styled "dark" frame; `saved_leads`, `search_filters`, `export_leads`, `settings` mix light values in; `go_pro` uses its own off-palette dark set | **Final:** dark theme is the normalized `home_screen`/`search_results` dark set (Section 2). The six off-palette dark frames are mockup noise and must never be copied literally. Every alternate maps to a canonical token (Section 2.3) |
 | i | Three different neutral families are mixed (neutral `#525252`, zinc `#71717A/#F4F4F5/#E4E4E7`, slate-ish `#666/#555/#444`) | One neutral scale, role-based tokens. Screening maps are in Section 2.3 |
 | j | Corners: cards are radius 16, but tiles/actions vary 10/12/14/16/20 and chips/badges are pills | Four radius tokens (8/12/16/pill) plus `tile` 14; every value in the mockups falls on one of them |
 | k | Text below 13 px everywhere: 10 px ad tag and filter count, 11 px nav labels/"Pro sources"/"PRO" badges, 12 px Pro pill/ad copy | Raise to 13 px; adjust pill padding so nothing clips. The app-wide minimum is 13 px and is asserted by the gallery |
@@ -1186,33 +1190,52 @@ centralized in `lib/core/constants/app_icons.dart` so a wrong family cannot snea
 
 ---
 
-## 9. Open questions for the product owner
+## 9. Resolved decisions and remaining questions
 
-1. **History tab** — confirm three tabs (Search, Saved, Settings) for launch, and whether History returns
-   later as a fourth tab or as a section inside Search (recent searches already live there).
-2. **Free search quota** — "3/5 free today" implies 5 searches/day. Does a search that returns 0 results
-   count? Do deep searches count double?
-3. **Free export limits** — the paywall says Pro exports "without limits". Is Free CSV-only, is there a
-   row cap (25? 50?), and is VCF/Excel/PDF entirely Pro?
-4. **Free saved-lead cap** — comparison table says 50 saved leads for Free. What happens to existing
-   leads when a Pro subscription lapses — read-only, or oldest hidden?
-5. **Social-only leads** — rating, reviews and open-now do not exist for Instagram/LinkedIn/Facebook/X
-   results. Confirm that those elements are hidden (not shown as "—") and that rating filters silently
-   exclude social leads.
-6. **"Recently active"** status filter — this needs social last-activity data that the engine may not
-   have. Ship it disabled with a "Coming soon" badge, or drop it from launch?
-7. **Verification wording** — "Public contact details" is used now. Is there a planned validation badge
-   (e.g. "Format valid", "Domain has MX") that should appear on lead detail later?
-8. **Phone/WhatsApp** — should a WhatsApp action appear only when a `wa.me` link exists in the source, or
-   also when a mobile number is valid? The mockups show the chat icon on every card.
-9. **Deep search cost** — is Deep limited per day even for Pro (the mockups show no usage meter for Pro)?
-10. **Plans** — are ₹2,999 / ₹299 / ₹99 final, and is there a free trial? The paywall has no trial copy.
-11. **Currency/locale** — the UI is INR-only and English-only. Confirm no localization before v1.
-12. **Support contact** — `support@yourdomain` needs a real address before release.
-13. **Export filename** — should the default name follow the search ("dentists-ahmedabad-leads") and be
-    editable, as drawn?
-14. **Ads** — 320 × 50 placeholder is used everywhere. Confirm ad placement rules (home, results, saved,
-    detail) and that Pro removes all of them.
+### 9.1 Resolved decisions (26 November 2026)
+
+These are final. Where a decision is enforceable, code and tests enforce it — not just this document.
+
+1. **Navigation — exactly three tabs: Search, Saved, Settings.** History is not a destination. The
+   Search screen keeps its "Recent" list with "Clear all"; that is where past searches live. The
+   two four-tab frames (`home_screen`, `saved_leads`) are outdated. Defined once as `navTabs`.
+2. **Dark palette — the normalized values are final.** Dark theme uses the `home_screen` /
+   `search_results` dark set recorded in Section 2. The six remaining off-palette dark frames
+   (`lead_detail`, `saved_leads`, `search_filters`, `export_leads`, `settings`, `go_pro`) are mockup
+   noise and must not be copied literally. Nothing in the app may introduce a new neutral.
+3. **Trust copy — "Public contact details", never "Verified".** The lead-detail contact card header
+   is "Public contact details"; the email note stays "Found on a public page, not verified." The only
+   approved use of the word "verify" is the Pro feature line "AI to organize, format and verify
+   leads", which always carries its "Coming soon" badge. `test/decisions_test.dart` fails on any other
+   mention of verification in `app_strings.dart`.
+4. **Sample Pro reviews and the 4.7 rating are debug-only.** `kShowSampleProReviews` derives from
+   `kDebugMode`; a release build renders no "What users say" section and no rating metric. Real Play
+   Store reviews must replace the sample list before launch.
+5. **Prices are final: ₹2,999 / year, ₹299 / month, ₹99 / week. No trial.** Yearly shows "Save 16%"
+   and "About ₹250 / month". Both are *derived* from the plan numbers in `ProPlan`, never written as
+   literals, and no other price text may exist anywhere in `lib/` (guarded by a test — this is what
+   retires the earlier ₹249 drift).
+6. **"Recently active" is removed.** `OpenStatus` has exactly two values, `any` and `openNow`, and
+   open-now applies to Maps leads only. The Filters screen shows a 2-option status segment. There is
+   no social last-activity data, so offering the filter would be a promise the app cannot keep.
+7. **Plans and trial.** The three plans above are the launch set; there is no free trial and no
+   annual-only discount beyond the derived 16% saving.
+
+### 9.2 Still open
+
+These do not block any screen prompt (B1–B8): each has a safe default implemented already.
+
+1. **Free saved-lead cap behaviour on lapse** — the Free cap is 50 saved leads. If a Pro subscription
+   lapses with more than 50 saved, are the extra leads read-only, oldest-hidden, or export-only?
+   Safe default: keep all leads readable, block only *new* saves until under the cap.
+2. **WhatsApp action** — show it only when a `wa.me` link exists in the source, or also for any valid
+   mobile number? Safe default: mobile numbers only (`PhoneKind.supportsWhatsApp`).
+3. **Currency and locale** — INR and English only for v1. Confirm no localization before launch.
+4. **Support contact** — `support@yourdomain` is a placeholder and needs a real address.
+5. **Export file name** — should the default follow the search ("dentists-ahmedabad-leads") and stay
+   editable? Drawn that way; treated as editable.
+6. **Verification badges later** — if a future engine exposes validation states, Section 7's
+   `ValidationStatus` already models them as icon + label. Confirm the wording before any badge ships.
 
 ---
 
