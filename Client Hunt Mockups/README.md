@@ -753,4 +753,467 @@ website, listIds.
 status control scroll with the list (they are not sticky in the mockup). Cards are
 `features/saved/widgets/saved_lead_card.dart` in B. Selection state is local in B, Riverpod in C.
 
-<!-- CONTINUE -->
+### 4.5 search_filters — Filters (modal/pushed, `/filters`)
+
+**Purpose.** Precise pre-search tuning so the lead engine does less work: contact presence, quality
+thresholds, keyword include/exclude, geography, depth and result count, cleanup rules.
+
+**Navigation.** Opened from home's "Filters" chip (and from results' tune icon). Close (X) → discard.
+"Reset" → defaults. "Apply filters" → returns to home and updates the active count. "No website" locked
+row → `/pro`. Deep depth and 200 results locked → `/pro`.
+
+**Layout, top to bottom** (body on `canvas`, 16 padding, 12 gaps)
+
+1. **Pushed app bar (close variant)**: `close_rounded` 24 in a 40 px button; "Filters" (`titleMd`);
+   right text action "Reset" (14/500 `textSecondary` → `textPrimary`).
+2. **Section cards** (radius 16, `card`, border, p16, soft shadow), each with `SectionHeader`
+   (16–18 px icon + title `titleSm` 14/600):
+   - **Contact** (`mail_rounded`): rows 48 with label 13/500 and a **switch** on the right. "Has email"
+     **on**, "Has phone" **on**, "Has website" off, "Has WhatsApp number" off, "Has social profile
+     link" off, "No website" off with an inline **PRO** badge (fill `primary`, lock 14, text 13) and a
+     60% opacity disabled switch.
+   - **Business quality** (`star_border_rounded`): "Minimum rating" + 5 `OptionPill`s (36 h, radius 8,
+     mono 13): Any / 3.0+ / 3.5+ / **4.0+ (selected)** / 4.5+. "Minimum reviews": Any / **10+
+     (selected)** / 50+ / 100+. "Status" + 3-option segmented: **Any (selected)** / Open now /
+     Recently active.
+   - **Keywords** (`tag_rounded` or `sell_rounded`): "Must include" TagInput with chips "implants",
+     "family" + inline placeholder "Type keyword..."; "Exclude" TagInput with "supplies", "training".
+     Chips are radius 8, mono 13, fill `#F4F4F5`/`#262626`, `close_rounded` 14.
+   - **Area** (`location_on_rounded`): "Country" select showing "India" (`public_rounded` 16 +
+     `expand_more_rounded`); "Radius" label + value pill "25 km" (mono 13, `surface`, border) on a
+     slider 1–100 km at 25, with 13 px min/max labels "1 km", "50 km", "100 km".
+   - **Results** (`assignment_rounded`): "Search depth" with two `RadioTile`s — **Fast** (selected,
+     2 px `primary` border, `cardSubtle`, radio selected, subtitle "Listing details only") and **Deep**
+     (normal border, 80% opacity, radio empty, PRO badge, subtitle "Also scans websites for emails").
+     "Max results": 25 / **50 (selected)** / 100 / 200 with a lock icon and 70% opacity. "Sort by"
+     select showing "Relevance" (`expand_more_rounded`).
+   - **Cleanup** (`delete_rounded`): rows 48 with switches: "Remove duplicates" **on**, "Skip leads I
+     already saved" **on**, "Remove invalid phone numbers" **on**, "Group by city" off.
+3. **Sticky bottom bar**: caption row centered, `tune_rounded` 14 + "5 filters active" (mono 13
+   `textMuted`); "Apply filters" 52 h, radius 16, primary, `check_rounded` 20.
+4. No bottom nav.
+
+**States.** Each toggle on/off; every pill/segment selected state; locked rows (Pro); empty keyword
+inputs; radius extremes; active filter count 0 ("No filters active"); apply returns.
+
+**Interactive elements.** Close, Reset, 6 contact switches, 5 rating pills, 4 review pills, 3 status
+segments, 2 tag inputs with removable chips, country select, radius slider, 2 depth radios, 4 result
+pills, sort select, 4 cleanup switches, Apply.
+
+**Dummy data.** The defaults above (rating 4.0+, reviews 10+, 50 results, 25 km, keywords).
+
+**Pro-gated.** "No website" filter, Deep search depth, 200 results.
+
+**Shared components.** `AppTopBar.pushed` (close), `AppCard`, `SectionHeader`, `ToggleRow`,
+`AppSegmentedControl`, `OptionPill`/`OptionPillRow`, `RadioTile`, `TagInput`, `AppChip`, `ProBadge`,
+`AppButton`/`BottomActionBar`.
+
+**Lead fields.** Everything it filters on: emails, phones, website, whatsApp, socialLinks, rating,
+reviewCount, isOpenNow, name/category (keywords), city/country, lat/lng (radius), plus engine options
+(depth, maxResults, sortBy, dedupe, skipSaved, removeInvalidPhones, groupByCity).
+
+**Flutter notes.** `Scaffold` + scroll view + `bottomNavigationBar` (sticky Apply). Dismissing returns
+`SearchFilters?` — use `Navigator.pop(context, filters)` so the caller decides whether to apply. Radius
+slider uses the themed `Slider`; keep the value pill in sync.
+
+### 4.6 export_leads — Export (pushed, `/export`)
+
+**Purpose.** Configure and run a lead export: scope, format, columns, file name, cleanup, quick copy.
+
+**Navigation.** Opened from results' sticky "Export Leads", from saved's selection bar, or from
+settings' "Export all saved leads". Close (X) → discard. "Export as CSV" (label follows selected
+format) → runs export and opens the system share sheet. Share icon → share without saving. Quick copy →
+clipboard + snackbar.
+
+**Layout, top to bottom** (body on `canvas`, 16 padding, 12 gaps)
+
+1. **Pushed app bar (close variant)**: `close_rounded`; "Export leads" (`titleMd`); empty right slot.
+2. **"What to export" card**: uppercase overline 13/600 `textSecondary`; four scope rows 48 with radios:
+   **All leads 42 (selected)**, "Selected only 0", "Only with email 31", "Only with phone 40" — counts
+   right-aligned in mono 13/600 (muted for unselected).
+3. **"Format" card**: 2 × 2 `SelectableTile`s 72 h (radius 12): **CSV** (selected: 1.5 px `primary`
+   border, `surface` fill, check circle) with `description_rounded` in a 36 px tile and subtitle ".csv";
+   Excel (`.xlsx`, `table_chart_rounded`); PDF (`.pdf`, `picture_as_pdf_rounded`); VCF (".vcf,
+   contacts", `contact_page_rounded`). Subtitle in mono 13 `textMuted`.
+4. **"Columns" card**: header + "Select all" text action; wrapped chips 36: selected (fill `primary`,
+   `check_rounded` 16) "Name", "Phone", "Email", "Website", "Address"; unselected (border `#DCDCDC`,
+   text `textSecondary`) "Category", "Rating", "Reviews", "Source", "Social links", "Notes", "Tags",
+   "Status".
+5. **"File name" card**: outlined field 48, radius 12, border `#CCCCCC`: `description_rounded` 16 muted +
+   "dentists-ahmedabad-leads" (mono 14/500) + right suffix ".csv" (mono 13 `textMuted`).
+6. **"Cleanup & Formatting" card**: rows 48 with switches: "Remove duplicates" **on**, "Skip leads
+   without contact info" off, "Add header row" **on**.
+7. **"Quick copy" card**: two 48 px outlined buttons — `mail_rounded` + "Copy emails" + count pill "31",
+   `call_rounded` + "Copy phones" + "40"; caption "Copies one per line, ready to paste."
+8. **Summary line**: `info_outline_rounded` 16 + "42 leads · 5 columns · CSV · about 12 KB" (mono 13
+   `textSecondary`).
+9. **Sticky bar**: 52 × 52 outlined share button (`share_rounded`) + "Export as CSV" (52 h, radius 12,
+   primary, `file_download_rounded` 20).
+10. No bottom nav.
+
+**States.** Scope per value (Selected only disabled at 0); each format selected; columns on/off;
+file-name editing (extensions follow format); cleanup toggles; export in progress (button loading at 40%
+opacity); no data (EmptyState).
+
+**Interactive elements.** Close, 4 scope radios, 4 format tiles, 14 column chips, Select all, file-name
+field, 3 cleanup switches, 2 quick-copy buttons, share, export.
+
+**Dummy data.** 42 / 0 / 31 / 40 scopes; 31 emails, 40 phones; file name; 12 KB estimate.
+
+**Pro-gated.** Unlimited exports and non-CSV formats (free tier is CSV up to a row cap — confirm in
+Section 9). The VCF format depends on phone extraction.
+
+**Shared components.** `AppTopBar.pushed` (close), `AppCard`, `RadioTile`, `SelectableTile`, `AppChip`,
+`AppTextField`, `ToggleRow`, `AppButton`, `AppIconButton`, `InfoNote`, `BottomActionBar`.
+
+**Lead fields.** All exportable columns: name, phone(s), email(s), website, address, category, rating,
+reviews, source(s), social links, notes, tags, status. Scope depends on hasEmail/hasPhone.
+
+**Flutter notes.** Format and column chips must wrap (`Wrap`, spacing 8) rather than scroll. Keep the
+total estimated size as a derived placeholder until the engine exists. File writing/sharing is prompt E.
+
+### 4.7 go_pro — ClientHunt Pro paywall (pushed, `/pro`)
+
+**Purpose.** Convert to Pro: three plans, what is included, Free vs Pro, social proof.
+
+**Navigation.** Opened from the Pro pill, locked sources, locked filters, saved-limit upsell, settings'
+"Go Pro". Close (X) → back. "Restore" → restore purchases. "Continue" → purchase flow (prompt E).
+Footer links → legal/restore.
+
+**Layout, top to bottom**
+
+1. **Pushed app bar (close variant)**: `close_rounded` 24; right text action "Restore" (14/600
+   `textSecondary`). No title.
+2. **Hero** (centered): 48 px tile (radius 14, `primary` fill, `workspace_premium_rounded` 28 in
+   `onPrimary`); "ClientHunt Pro" (`headlineMd`); "Find more leads, from more places." (14
+   `textSecondary`).
+3. **Plan stack** (gap 8), rows min height 72, radius 16, p14, full-width tappable:
+   - **Yearly — selected**: 2 px `primary` border, `card` fill, soft shadow (light). Radio selected
+     (20, 2 px border, 10 px inner dot); "Yearly" (`titleXs` 15/700) + **"Best value"** filled badge
+     (primary, 13/600 uppercase) + **"Save 16%"** outlined badge; second line "About ₹250 / month"
+     (13 `textSecondary`); right: "₹2,999 / year" (mono 14/600).
+   - **Monthly**: 1 px border, `cardSubtle`; "Monthly" + "Billed every month"; "₹299 / month".
+   - **Weekly**: "Weekly" + "Billed every week"; "₹99 / week".
+   (Prices are INR; the glyph is ₹. The plan rows are the radio group — only one selectable.)
+4. **"Included in all plans"** card: header with `workspace_premium_rounded` 22; 8 features, each
+   `check_circle_rounded` 20 primary + text 14 `textSecondary`:
+   "Search Instagram, LinkedIn, Facebook and X" · "Deep search that scans websites for emails" ·
+   "Up to 200 results per search" · "Unlimited saved leads and lists" · "Find businesses with no
+   website" · "Export to CSV, Excel, PDF and VCF without limits" · "Ad-free experience" ·
+   "Priority support". Then a separated row: `lock_rounded` 18 + "AI to organize, format and verify
+   leads" + outlined pill "Coming soon" (13).
+5. **"Free vs Pro comparison"** card (`balance_rounded` 20): table, header "Feature / Free / Pro"
+   (13/600 `textSecondary`, Pro header in a small filled pill), rows separated by hairlines:
+   Maps leads ✓/✓ · Social sources —/✓ · Deep search —/✓ · Results per search 25/200 · Saved leads
+   50/Unlimited · Ads Yes/No. Pro column bold. Icons 18; "—" is text, not an icon.
+6. **"What users say"** card (`forum_rounded` 20 + "4.7" star metric + "Play store" 13): horizontally
+   scrolling review cards (width ≈ 264, `cardSubtle`, border, p14): 5 stars (`star_rounded` 17, last one
+   `star_half_rounded` for 4.5), review text 13 `textSecondary`, footer with 32 px initials avatar +
+   name 13/600 + role 13 `textMuted`. Mockup reviews: Amit K. / Agency Owner; Priya S. / B2B Consultant;
+   Rahul M. / Freelancer. Closing caption: **"Sample reviews for design only"** (13 `textMuted`).
+7. **Footer**: links row "Terms · Privacy Policy · Restore purchases" (13, underlined on tap); legal
+   note `info_outline_rounded` 16 + "Subscription renews automatically until cancelled. Cancel anytime
+   in Google Play."
+8. **Sticky bar**: "₹2,999 billed yearly" caption (mono 13 `textMuted`); "Continue" 52 h radius 16
+   primary with `arrow_forward_rounded` 20.
+9. No bottom nav.
+
+**States.** Three plans selected; restore in progress; purchase loading/error (icon + text weight);
+reviews loading/unavailable.
+
+**Interactive elements.** Close, Restore, 3 plan rows, 3 footer links, Continue.
+
+**Pro-gated.** This *is* the gate. Everything in the feature list is the Pro entitlement set.
+
+**Shared components.** `AppTopBar.pushed` (close), `AppCard`, `SectionHeader`, `ProBadge`,
+`StatusPill`-like small outlined badge, `RadioTile`/plan row, `InitialsAvatar`, `InfoNote` (legal),
+`BottomActionBar`.
+
+**Lead fields.** None.
+
+**Flutter notes.** **The three reviews and the 4.7 rating are dummy data.** They live behind
+`AppStrings.sampleProReviews` and `kShowSampleProReviews = true` with a comment that they must be
+replaced before release. A horizontal `ListView` sized ~264 × ~150. Purchase actions are stubs that
+show a snackbar until prompt E.
+
+### 4.8 settings — Settings (tab, `/settings`)
+
+**Purpose.** Theme, country and search defaults, device storage, privacy/ads, support, legal, Pro entry.
+
+**Navigation.** Tab index 2. Pro card "Go Pro" → `/pro`. "Manage subscription" → `/pro` (or store
+subscription page later). Theme segment → `themeModeProvider`. Rows with chevrons push placeholder
+screens/dialogs in B (they are stubs in A1). External-link rows open URLs (later). Export all saved →
+`/export`. Clear history / clear saved → confirm dialogs. Bottom nav → Search, Saved.
+
+**Layout, top to bottom** (body on `canvas`, 16 padding, 20 gaps)
+
+1. **Tab app bar**: "Settings" (`headlineSm` 22/700), no actions.
+2. **Pro status card** (inverse: fill `primary`, text `onPrimary`, radius 16, p16; in light this is a
+   black card, in dark a white card): 40 px tile (radius 12, `#171717`/`#F5F5F5`, border,
+   `workspace_premium_rounded` 20) + "ClientHunt Pro" 16/700 + "Unlock social sources and unlimited
+   leads" (13, on primary at 70%) + "Go Pro" pill (32 h, fill `onPrimary`, text `primary`, 13/600).
+   Below, outside the card: "Manage subscription" (13 `textMuted`) + `chevron_right_rounded` 16.
+3. **Appearance group**: 32 px icon tile (`surface`, `palette_rounded` 16 in `textPrimary`) + "Theme"
+   (14/500) and the 3-option segmented Light / Dark / **System** (selected, fill `primary`); then
+   "Default country" + value "India" + `expand_more_rounded`.
+4. **Search defaults group**: "Default sources" + "Maps" + chevron; "Max results per search" + "50"
+   (mono 13) + chevron; "Remove duplicates" switch **on**; "Skip leads I already saved" switch **on**.
+5. **Data and storage group**: "Storage used" + "2.4 MB" (mono 13 `textMuted`); "Export all saved
+   leads" + chevron; "Clear search history" + chevron; "Clear all saved leads" + chevron (destructive by
+   confirmation, still monochrome). Caption under the group: `lock_rounded` 14 + "Your leads are stored
+   only on this device." (13 `textMuted`).
+6. **Privacy and ads group**: "Ad personalization" switch **on**; "Reset advertising ID" +
+   `open_in_new_rounded` 16; "Privacy choices" + chevron.
+7. **Support group**: "Rate ClientHunt" + chevron; "Share the app" + chevron; "Send feedback" +
+   chevron; "Contact support" + "support@yourdomain" (mono 13) + chevron (external); "Help and FAQ" +
+   chevron.
+8. **About and legal group**: "Privacy Policy" + external; "Terms of Use" + external; "Open source
+   licenses" + chevron; "App version" + "1.0.0 (1)" (mono 13).
+9. **Footer**: "Made with care by Craftline Interactive" (13 `textMuted`, centered).
+10. **Bottom nav** — 3 tabs, Settings active.
+
+**States.** Theme light/dark/system; toggles on/off; Pro vs Free (Pro card copy changes to "Manage" vs
+"Go Pro"); storage empty/data; confirmation dialogs; long labels do not wrap under values.
+
+**Interactive elements.** Go Pro, manage subscription, theme segment, country row, 4 search-default rows,
+4 data rows, 4 privacy rows, 5 support rows, 4 about rows, nav tabs.
+
+**Dummy data.** Country India, max results 50, storage 2.4 MB, version 1.0.0 (1), support email.
+
+**Pro-gated.** The Pro status card is the entry point; "Ad personalization" only matters for Free users.
+
+**Shared components.** `AppTopBar.tab`, `SettingsGroup`, `SettingsRow`, `ToggleRow`,
+`AppSegmentedControl`, `AppChip`/`ProBadge`, `AppCard`, `AppBottomNav`.
+
+**Lead fields.** None directly; "Export all saved leads" and storage depend on saved counts.
+
+**Flutter notes.** One `SingleChildScrollView` + `Column`; groups are `SettingsGroup(title, children)`
+with a rounded card that clips dividers. Theme segment writes to `themeModeProvider` (in memory in A1).
+Version string should come from `package_info_plus` in a later prompt — hardcode in A1.
+
+---
+
+## 5. Navigation map
+
+| From | Action | To | Bottom nav |
+|------|--------|----|-----------|
+| Launch | — | `/search` | shown, Search active |
+| Search | "Find Leads" | `/results` | hidden |
+| Search | recent row | `/results` (same query) | hidden |
+| Search | "Filters" chip | `/filters` | hidden |
+| Search | "Pro" pill / locked source | `/pro` | hidden |
+| Search | settings icon | `/settings` | shown, Settings active |
+| Search | nav Saved / Settings | `/saved` / `/settings` | shown |
+| Results | back | previous (Search) | shown again |
+| Results | lead card | `/lead` | hidden |
+| Results | tune | `/filters` | hidden |
+| Results | "Export Leads" | `/export` | hidden |
+| Results | more | bottom sheet (sort/filter/export) | hidden |
+| Lead detail | back | previous | as previous |
+| Lead detail | profiles Pro badge | `/pro` | hidden |
+| Lead detail | remove | confirm dialog → previous | hidden |
+| Saved | card | `/lead` | hidden |
+| Saved | selection export | `/export` | hidden |
+| Saved | Pro upsell | `/pro` | hidden |
+| Saved | nav Search / Settings | `/search` / `/settings` | shown |
+| Filters | close | previous (discard) | as previous |
+| Filters | apply | previous (with `SearchFilters`) | as previous |
+| Filters | "No website" / Deep / 200 | `/pro` | hidden |
+| Export | close | previous | as previous |
+| Export | export / share | system share sheet | hidden |
+| Pro | close | previous | as previous |
+| Pro | continue | purchase flow (E) | hidden |
+| Settings | Go Pro / manage | `/pro` | hidden |
+| Settings | export all | `/export` | hidden |
+| Settings | nav Search / Saved | `/search` / `/saved` | shown |
+| any (debug) | — | `/dev/gallery` | hidden |
+
+**Bottom nav visibility.** Only the three tab destinations (`/search`, `/saved`, `/settings`) show the
+bottom navigation, implemented with `StatefulShellRoute.indexedStack`. All other destinations are pushed
+on the root navigator so the shell (and its nav bar) is covered. Filters is a modal-style pushed route,
+not a bottom sheet, because it has its own sticky Apply bar.
+
+---
+
+## 6. Pro vs Free matrix
+
+### 6.1 Gated features
+
+| Feature | Free | Pro | Where it is gated in the UI |
+|---------|------|-----|------------------------------|
+| Maps source | ✓ | ✓ | Home source pills (Maps is always available) |
+| Instagram / LinkedIn / Facebook / X sources | ✗ | ✓ | Home locked source chips; paywall feature list |
+| Searches per day | 5 | unlimited | Home quota pill "3/5 free today" |
+| Deep search (crawl websites for emails) | ✗ | ✓ | Filters → Results → Search depth = Deep (lock + PRO) |
+| Results per search | 25 | 200 | Filters → Max results 200 (lock); comparison table 25/200 |
+| "No website" filter | ✗ | ✓ | Filters → Contact → No website (PRO, disabled switch) |
+| Saved leads / lists | 50 | unlimited | Saved leads limit + upsell; comparison table |
+| Export formats | CSV | CSV, Excel, PDF, VCF, no limits | Export format tiles; paywall list |
+| Ads | shown | removed | Every ad slot (home, results, saved, lead detail) |
+| Social profile values | hidden/teaser | ✓ | Lead detail profiles card (Pro badge + "Not found" until Pro) |
+| Priority support | ✗ | ✓ | Paywall feature list only |
+| AI organize/format/verify leads | — | coming soon | Paywall coming-soon row |
+
+### 6.2 Plans
+
+| Plan | Price | Period | Badges | Caption | Bottom-bar caption |
+|------|-------|--------|--------|---------|--------------------|
+| Yearly (default selected) | ₹2,999 | year | "Best value" (filled), "Save 16%" (outlined) | "About ₹250 / month" | "₹2,999 billed yearly" |
+| Monthly | ₹299 | month | — | "Billed every month" | "₹299 billed monthly" |
+| Weekly | ₹99 | week | — | "Billed every week" | "₹99 billed weekly" |
+
+The selected plan drives the sticky bar caption and the button label ("Continue"). Savings math:
+₹299 × 12 = ₹3,588; ₹2,999 is 16.4% less → "Save 16%"; ₹2,999 / 12 ≈ ₹249.9 → "About ₹250 / month".
+Prices are display strings in A1 (billing is prompt E); keep the numbers in `ProPlan` constants so the
+copy and the model cannot drift.
+
+---
+
+## 7. Data requirements for the lead engine
+
+This table is the contract between the UI and the engine prompts (D). "All" means every source type can
+produce it *some of the time*; "Maps only" means social-only or website-only leads must hide the UI
+element rather than show an empty or zero value.
+
+| UI field | Model field | Maps listing | Website crawl | Social search | Coverage | Validation needed later |
+|----------|-------------|--------------|---------------|---------------|----------|--------------------------|
+| Name | `name` | ✓ | partial (page title / OG title) | ✓ (profile/display name) | All | Normalize whitespace, strip suffixes ("- Google Maps"), dedupe |
+| Category | `category` | ✓ | partial (schema.org, meta) | partial (bio/category) | All, mostly Maps | Map to a canonical niche list; keyword match for include/exclude |
+| Address | `address` | ✓ | ✓ (contact page) | partial (bio/"contact" link) | All | Parse into area/city/state/pin; geocode |
+| Area / city / state / country | `area`, `city`, `state`, `country` | ✓ | ✓ | partial | All | Canonical names, country whitelist, `groupByCity` key |
+| Latitude / longitude | `latitude`, `longitude` | ✓ | ✗ (geocode) | ✗ | Maps (+ derived) | Geocode website/social addresses; radius filtering needs coords |
+| Phone(s) | `phones` | ✓ | ✓ (`tel:` links, text) | partial (bio, contact button) | All | E.164 normalization + country default, line type (mobile/landline/toll-free), validity, dedupe, `removeInvalidPhones` |
+| Email(s) | `emails` | rare (some listings) | ✓ (`mailto:`, page text) | rare (bio) | Website best, Maps rare | Syntax, MX/domain lookup, role-based flag, disposable domain flag, matches-website-domain, confidence |
+| Website | `website` | ✓ | — (it is the crawl subject) | ✓ (bio link) | All | Reachability, HTTP status/redirect, canonical domain, strip tracking params |
+| Rating | `rating` | ✓ | ✗ | ✗ | **Maps only** | Range 0–5; hide badge, `minRating` filter and `sortBy=rating` for non-Maps leads |
+| Review count | `reviewCount` | ✓ | ✗ | ✗ | **Maps only** | Integer ≥ 0; hide for non-Maps, `minReviews` excludes non-Maps |
+| Open now | `isOpenNow` | ✓ | ✗ | ✗ | **Maps only** | Timezone-aware; refresh policy; hide for non-Maps |
+| Opening hours | `openingHours` | ✓ | partial | partial | Maps + some web/social | Parse into structured hours; compute open/closed |
+| Social profile links | `socialLinks` | partial | ✓ (footer/social icons) | ✓ (canonical profile) | All | Canonicalize URLs, strip query, validate handle/company path, dedupe, confidence |
+| WhatsApp availability | derived from phones / `socialLinks` | partial (`wa.me` in listing) | ✓ (`wa.me` links) | partial (bio link) | Some | Must be a mobile number + `wa.me` evidence, not a guess |
+| Source(s) | `sources` | ✓ | ✓ | ✓ | All | Set semantics; a lead can be Maps + web; drives the source badge |
+| Confidence score | `confidenceScore` | computed | computed | computed | All | 0–100 from contact count, validation status, source agreement |
+| Discovered at | `discoveredAt` | ✓ | ✓ | ✓ | All | Clock handling, "2 days ago" formatting |
+| Saved state / saved at | `isSaved`, `savedAt` | local | local | local | All | Local only, never from a source |
+| Status | `status` | local | local | local | All | Enum only (`newLead`, `contacted`, `replied`, `closed`) |
+| Tags | `tags` | local | local | local | All | Trim, dedupe, max count/length |
+| Note | `note` | local | local | local | All | Length cap |
+| Reminder | `reminderAt` | local | local | local | All | Timezone, past-date handling, local notifications later |
+| List membership | `listIds` | local | local | local | All | Referential integrity with `LeadList` |
+
+### 7.1 Filters and sorts that depend on engine capability
+
+| Filter / sort | Depends on | Behaviour for leads that lack the data |
+|---------------|-----------|-----------------------------------------|
+| `hasEmail` / `hasPhone` / `hasWebsite` / `hasWhatsApp` / `hasSocial` | extraction depth per source | Leads without the field are excluded |
+| `noWebsite` (Pro) | Maps `website` presence | Only meaningful on Maps results; social profiles always have a link, so they are excluded |
+| `minRating`, `minReviews` | Maps rating/reviews | Non-Maps leads cannot satisfy them → excluded when set |
+| `openStatus.openNow` | Maps open state | Non-Maps leads excluded when set |
+| `openStatus.recentlyActive` | Social "last post" (future capability) | Treated as "Any" until D implements it; do not fake it |
+| `mustInclude` / `exclude` | name, category, description keywords | Applied after normalization; case/space-insensitive |
+| `radiusKm` | lat/lng | Non-geocoded leads excluded when radius < country-wide |
+| `depth` fast / deep | website crawl | Deep = fetch contact/about pages for emails/phones |
+| `maxResults` 25/50/100/200 | engine result cap | 200 is Pro |
+| `sortBy` relevance / rating / reviews / newest / name | rating & reviews = Maps only | Rating/review sorts place non-Maps leads last (stable) |
+| `dedupe` | name + phone + domain fingerprint | Merge contact points, keep best confidence |
+| `skipSaved` | local saved set | Exclude already-saved leads |
+| `removeInvalidPhones` | phone validation | Drop leads whose only phones are invalid |
+| `groupByCity` | city normalization | Groups section headers |
+
+---
+
+## 8. Discrepancies and resolutions
+
+### 8.1 The known conflicts (a–g)
+
+**a) `DESIGN.md` colors are obsolete.** It specifies indigo `#4F46E5`, teal `#0D9488`, amber
+`#F59E0B`, semantic green/red/blue, gradients and a pale indigo background `#F8FAFC`. None of this
+appears in the approved screens. **Resolution:** colors come only from `code.html` (Section 2);
+`DESIGN.md` is used for font families, the 4/8/12/16/20/24/32/48 spacing steps, the 4/8/12/16/24/pill
+radius steps (mapped to 8/12/16/pill in code) and the 100/200/300 ms motion tokens.
+
+**b) Bottom navigation 4 tabs vs 3 tabs.** `home_screen` and `saved_leads` show Search, Saved, History,
+Settings; `settings` shows Search, Saved, Settings. There is no History screen mockup. **Resolution:**
+three tabs — Search, Saved, Settings — defined once in `lib/core/constants/nav_tabs.dart` as `navTabs`.
+Adding History later is a one-line data change plus a route; no widget changes. **Needs confirmation.**
+
+**c) Icon names rendered as text in `search_results`.** The contact rows print `call`, `mail`,
+`language` as literal text because the icon font failed to load in that file. **Resolution:** real
+rounded icons (`Icons.call_rounded`, `Icons.mail_rounded`, `Icons.language_rounded`) at 20 px in
+`textMuted`, exactly as the other screens do. No icon name is ever rendered as string content.
+
+**d) Blue dot in `go_pro`.** The paywall's header chip uses `#60A5FA` (`.spec-pill span.dot`). It sits
+outside the phone frame (documentation chrome), but it is still a hue and is removed. **Resolution:**
+neutral dot — `#8A8A8A` light / `#737373` dark (`textMuted`); nothing blue exists in the app.
+
+**e) "Direct & Verified".** `lead_detail` labels its contact card "Direct & Verified". The app does not
+verify emails or phones yet. **Resolution:** the label becomes **"Public contact details"**, and the
+email note stays **"Found on a public page, not verified."** The results-screen notice "Emails are
+unverified" is matched to the same language: **"Contact details are sourced publicly and unverified."**
+No UI copy anywhere claims verification. Status words use icons + weight only.
+
+**f) Sample reviews and rating in `go_pro`.** Three reviews and a "4.7 Play store" metric are invented.
+**Resolution:** kept as design-only dummy data, stored in `AppStrings` with
+`kShowSampleProReviews = true` and a doc comment "SAMPLE DATA — replace with real Play Store reviews
+before release"; the caption "Sample reviews for design only" stays visible.
+
+**g) Mixed Outlined + Rounded Material Symbols.** **Resolution:** `Icons.*_rounded` everywhere,
+centralized in `lib/core/constants/app_icons.dart` so a wrong family cannot sneak in.
+
+### 8.2 Additional discrepancies found
+
+| # | Finding | Resolution |
+|---|---------|-----------|
+| h | Dark frames are inconsistent: `lead_detail` has a light-styled "dark" frame; `saved_leads`, `search_filters`, `export_leads`, `settings` mix light values in; `go_pro` uses its own off-palette dark set | Dark theme normalized to the `home_screen`/`search_results` dark values (Section 2). Every listed alternate maps to a canonical token (Section 2.3) |
+| i | Three different neutral families are mixed (neutral `#525252`, zinc `#71717A/#F4F4F5/#E4E4E7`, slate-ish `#666/#555/#444`) | One neutral scale, role-based tokens. Screening maps are in Section 2.3 |
+| j | Corners: cards are radius 16, but tiles/actions vary 10/12/14/16/20 and chips/badges are pills | Four radius tokens (8/12/16/pill) plus `tile` 14; every value in the mockups falls on one of them |
+| k | Text below 13 px everywhere: 10 px ad tag and filter count, 11 px nav labels/"Pro sources"/"PRO" badges, 12 px Pro pill/ad copy | Raise to 13 px; adjust pill padding so nothing clips. The app-wide minimum is 13 px and is asserted by the gallery |
+| l | Touch targets below 48 px: 16 px checkboxes, 28 px badges, 32–40 px icon buttons, 36 px chips | Visual size preserved where safe; tap area expanded to ≥ 48 px with transparent padding or `MaterialTapTargetSize.padded` |
+| m | `search_results` uses `#FAFAFA` for its body while home/others use `#FFFFFF`; saved uses `#FFFFFF` | Intentional layering: `canvas` (`#FAFAFA`) for list/filter/export/settings bodies, `background` (`#FFFFFF`) for home/detail. Both are tokens |
+| n | Bottom nav shows four tabs on two screens and three on settings; nav heights 56 vs 64, labels 11 vs 12 vs 13 | One `AppBottomNav`: height 64, labels 13, 40 × 28 pill indicator, three tabs |
+| o | `saved_leads` list-chip row fades out with a CSS gradient mask | Gradients are banned. The row clips at the content edge; a 1 px border separates the row. No fade |
+| p | Two different selected-segment styles (white box with shadow vs filled primary) | Both are supported: boxed-white is the default segmented style, filled-primary is used for the lead-detail status control. Nothing blue, both monochrome |
+| q | Switch colors differ per screen (black track/white thumb vs white track/black knob) | One themed monochrome switch: on = `primary` track with `onPrimary` thumb; off = `disabled` track with `background` thumb |
+| r | `search_filters` draws its slider thumb as a white circle with a black border; Material's default thumb is a filled dot | Themed `Slider` with `primary` thumb and `primary`/`disabled` track; no custom painting in A1 |
+| s | `go_pro` prices say "₹2,999 / year" but its bottom bar says "₹2,999 billed yearly"; monthly/weekly captions are only in the list | Keep both: plan row shows unit price, sticky bar shows the selected plan's billing caption |
+| t | `go_pro`'s comparison table uses a literal `—` and plain "Unlimited" (font shifts mid-cell) | `—` stays text; "Unlimited" uses the same 13 px label style as other cells, with Pro column at weight 600 |
+| u | `settings` bottom-nav labels are 11 px while `home_screen` uses 12 px | 13 px everywhere |
+| v | `export_leads` format tiles are 72 px with an icon tile + title + mono extension, but `search_results` labels the same formats only in the bar caption | Both presentations are correct for their context; no change |
+| w | `lead_detail` shows "Mobile (second number)" but the data model must express phone kinds | Label derives from `PhoneKind`: mobile → "Mobile", landline → "Landline", tollFree → "Toll-free", plus a secondary marker when a second phone exists |
+| x | `settings` "Contact support" shows `support@yourdomain`, a placeholder domain | Keep as the mockup's placeholder, flagged in `AppStrings` as a TODO until the real address exists |
+| y | `home_screen` status bar/time and notch are mockup chrome, not app UI | Not implemented; the real system status bar is used |
+| z | `search_results` does not show a bottom nav, but is reached from a tab and the bar has no back-to-search affordance besides the app-bar arrow | Implemented as a pushed route with the app-bar back arrow; bottom nav hidden (as drawn) |
+
+---
+
+## 9. Open questions for the product owner
+
+1. **History tab** — confirm three tabs (Search, Saved, Settings) for launch, and whether History returns
+   later as a fourth tab or as a section inside Search (recent searches already live there).
+2. **Free search quota** — "3/5 free today" implies 5 searches/day. Does a search that returns 0 results
+   count? Do deep searches count double?
+3. **Free export limits** — the paywall says Pro exports "without limits". Is Free CSV-only, is there a
+   row cap (25? 50?), and is VCF/Excel/PDF entirely Pro?
+4. **Free saved-lead cap** — comparison table says 50 saved leads for Free. What happens to existing
+   leads when a Pro subscription lapses — read-only, or oldest hidden?
+5. **Social-only leads** — rating, reviews and open-now do not exist for Instagram/LinkedIn/Facebook/X
+   results. Confirm that those elements are hidden (not shown as "—") and that rating filters silently
+   exclude social leads.
+6. **"Recently active"** status filter — this needs social last-activity data that the engine may not
+   have. Ship it disabled with a "Coming soon" badge, or drop it from launch?
+7. **Verification wording** — "Public contact details" is used now. Is there a planned validation badge
+   (e.g. "Format valid", "Domain has MX") that should appear on lead detail later?
+8. **Phone/WhatsApp** — should a WhatsApp action appear only when a `wa.me` link exists in the source, or
+   also when a mobile number is valid? The mockups show the chat icon on every card.
+9. **Deep search cost** — is Deep limited per day even for Pro (the mockups show no usage meter for Pro)?
+10. **Plans** — are ₹2,999 / ₹299 / ₹99 final, and is there a free trial? The paywall has no trial copy.
+11. **Currency/locale** — the UI is INR-only and English-only. Confirm no localization before v1.
+12. **Support contact** — `support@yourdomain` needs a real address before release.
+13. **Export filename** — should the default name follow the search ("dentists-ahmedabad-leads") and be
+    editable, as drawn?
+14. **Ads** — 320 × 50 placeholder is used everywhere. Confirm ad placement rules (home, results, saved,
+    detail) and that Pro removes all of them.
+
+---
+
+*End of reference.*
