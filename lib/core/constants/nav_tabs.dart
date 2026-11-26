@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+
+import 'app_icons.dart';
+
+/// One destination in the app's bottom navigation.
+@immutable
+class NavTab {
+  const NavTab({
+    required this.label,
+    required this.icon,
+    required this.selectedIcon,
+    required this.path,
+  });
+
+  /// Visible label under the icon.
+  final String label;
+
+  /// Icon shown when the tab is not active.
+  final IconData icon;
+
+  /// Icon shown when the tab is active.
+  final IconData selectedIcon;
+
+  /// GoRouter path for the tab's root page.
+  final String path;
+}
+
+/// **The single bottom-navigation definition.**
+///
+/// The approved mockups disagree: `home_screen` and `saved_leads` draw four tabs
+/// (Search, Saved, History, Settings) while `settings` draws three. There is no
+/// History screen, so the build ships three tabs. To add History later, append a
+/// [NavTab] here and register its branch in `app_router.dart` — no widget change
+/// is needed.
+const List<NavTab> navTabs = <NavTab>[
+  NavTab(
+    label: 'Search',
+    icon: AppIcons.searchOutline,
+    selectedIcon: AppIcons.search,
+    path: '/search',
+  ),
+  NavTab(
+    label: 'Saved',
+    icon: AppIcons.savedOutline,
+    selectedIcon: AppIcons.saved,
+    path: '/saved',
+  ),
+  NavTab(
+    label: 'Settings',
+    icon: AppIcons.settings,
+    selectedIcon: AppIcons.settings,
+    path: '/settings',
+  ),
+];
