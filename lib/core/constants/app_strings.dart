@@ -18,6 +18,7 @@ abstract final class AppStrings {
   // Navigation.
   static const String searchTab = 'Search';
   static const String savedTab = 'Saved';
+  static const String savedLeadsTitle = 'Saved leads';
   static const String settingsTab = 'Settings';
 
   // Search form.

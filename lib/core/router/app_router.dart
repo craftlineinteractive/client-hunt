@@ -56,7 +56,7 @@ final GoRouter appRouter = GoRouter(
               name: AppRoutes.savedName,
               builder: (BuildContext context, GoRouterState state) =>
                   const PlaceholderScreen(
-                    title: AppStrings.savedTab,
+                    title: AppStrings.savedLeadsTitle,
                     subtitle: 'Your on-device lead pipeline.',
                   ),
             ),
