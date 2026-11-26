@@ -1298,3 +1298,74 @@ Golden images are **platform sensitive**: glyph rasterization and shadows differ
 
 Fonts are bundled, so no network is involved. A widget test still starts with the placeholder test font, so the golden file registers Plus Jakarta Sans, Inter, JetBrains Mono and Material Icons from the asset bundle once in `setUpAll`; without that every glyph and icon would render as a block. No other test needs font loading.
 
+## 11. Architecture for B, C and D prompts
+
+### 11.1 Layers and the one seam
+
+```
+core/          theme, constants (strings, icons, nav), router          — no data
+domain/models  immutable data shapes                                   — no logic
+domain/repositories  interfaces only (LeadSearchEngine, LeadRepository,
+                     SearchHistoryRepository, SettingsRepository,
+                     QuotaRepository, SubscriptionRepository, ExportService)
+domain/entitlements  Entitlements + FeatureGate                        — the only Free/Pro truth
+data/fake/     in-memory implementations + DummyData                   — development only
+app/providers.dart   the seam: one provider per interface              — swap point for C and D
+shared/widgets A1 component library                                    — pure props
+features/      screens (prompts B1–B8)                                 — consume providers only
+```
+
+Rules that keep the seam intact:
+
+1. **A screen never imports `data/fake`.** It imports `domain/repositories`, `domain/models` and `app/providers.dart`.
+2. **A screen never compares limits.** It asks `ref.watch(featureGateProvider)` (`canUseSource`, `maxResultsOptions`, `reasonForLock`, …).
+3. **A screen never hard-codes a route or a price.** Routes come from `AppRoutes`/`AppNavigator`; prices from `ProPlan`.
+4. **All copy comes from `core/constants/app_strings.dart`**, grouped per screen.
+5. **Every provider is a plain Riverpod `Provider`/`StreamProvider`**, so a test can `overrideWithValue` any of them.
+
+### 11.2 How a screen prompt consumes providers
+
+Search results, as the pattern for every B prompt:
+
+```dart
+class ResultsPage extends ConsumerStatefulWidget { … }
+
+// 1. Entitlements: locked UI, ads, result caps.
+final FeatureGate gate = ref.watch(featureGateProvider);
+
+// 2. Data: read the interface, never the fake.
+final LeadSearchEngine engine = ref.read(leadSearchEngineProvider);
+final LeadRepository saved = ref.read(leadRepositoryProvider);
+
+// 3. Start a run and drive the UI from the event stream.
+Stream<SearchEvent> run = engine.search(
+  SearchRequest(id: searchId, query: query, filters: filters),
+);
+```
+
+Saved, Home and Settings follow the same shape with `LeadRepository`, `SearchHistoryRepository`, `QuotaRepository` and `SettingsRepository`; the Export screen uses `ExportService`; the paywall uses `SubscriptionRepository`.
+
+### 11.3 The SearchEvent flow the Results screen follows
+
+The stream always ends with exactly one `SearchCompleted` or `SearchFailed`, and the hierarchy is `sealed`, so a `switch` is exhaustive and a state cannot be forgotten:
+
+| Event | What the screen does |
+|-------|----------------------|
+| `SearchStarted(searchId, sources)` | Hide the previous list, show the skeleton, draw the per-source status chips as `pending`. |
+| `SearchProgress(stage, sourceStatuses, leadsFoundSoFar)` | Update the stage caption (`ResultsStrings.loadingQuerying` … `loadingDeduplicating`), the source chip states (`running` / `done` / `blocked` / `skippedPro` / `failed`) and the live count. |
+| `SearchPartialResults(leads, foundSoFar)` | Render these leads immediately and keep the list interactive; keep listening for the rest. |
+| `SearchCompleted(summary)` | Fill the stats strip from `total` / `withEmail` / `withPhone`, show per-source outcomes, enable export, write a `SearchHistoryEntry`. |
+| `SearchFailed(error)` | Switch on `error.type`: `noResults` → empty state, `noNetwork` → retry state, `rateLimited` → “slow down” copy, `sourceBlocked` → partial-warning, `cancelled` → back to the previous screen. Never parse `message` to decide the state. |
+
+Cancelling is `engine.cancel(searchId)` (the stream then ends with a `cancelled` failure). Disposing the subscription must also cancel the run.
+
+### 11.4 How C and D replace the fakes
+
+* **Prompt C (storage)** implements `LeadRepository`, `SearchHistoryRepository`, `SettingsRepository` and `QuotaRepository` over SQLite and changes only those four provider bodies in `app/providers.dart`. The fake already behaves like a real store (async, stream-first, full CRUD, live list counts), so screens need no edits.
+* **Prompt D (engine)** implements `LeadSearchEngine.search`/`cancel` and changes `leadSearchEngineProvider`. It must emit the same events in the same order contract; `test/fake_engine_test.dart` doubles as the contract test, so a real-engine test can assert the identical sequence.
+* **Prompt E (billing/export)** implements `SubscriptionRepository` and `ExportService`, changing two providers. Entitlements then come from the store instead of the debug switch, and every gate in the UI already follows.
+* Nothing in `data/fake` may leak into `features/`. When C and D land, `data/fake` stays as the test double, which is why its latency and seed are injectable.
+
+### 11.5 Debug controls for building screens
+
+`/dev/gallery` (debug builds only) has a “Fake data scenarios” section: `normal`, `slow`, `empty`, `no network`, `rate limited`, `partial: source blocked`, plus a pretend-Pro switch. That is how B prompts check loading, empty, error and locked states without a network or a purchase. The scenario feeds `FakeLeadSearchEngine`; the Pro switch feeds `FakeSubscriptionRepository`, which is the only thing that decides entitlements.
