@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ClientHunt - Search Results (Lead List)</title>
+<!-- Google Fonts: Plus Jakarta Sans, Inter, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Rounded with full opsz and wght range -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-rounded {
+      font-family: 'Material Symbols Rounded';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-rounded.filled {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-rounded.icon-sm { font-size: 18px; }
+    .material-symbols-rounded.icon-md { font-size: 20px; }
+    .material-symbols-rounded.icon-action { font-size: 22px; }
+    .material-symbols-rounded.icon-lg { font-size: 24px; }
+    /* Hide scrollbars for clean UI while preserving scrollability */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    /* Scroll mask for chip row fade */
+    .chips-mask {
+      -webkit-mask-image: linear-gradient(to right, black calc(100% - 32px), transparent 100%);
+      mask-image: linear-gradient(to right, black calc(100% - 32px), transparent 100%);
+    }
+  </style>
+</head>
+<body class="bg-[#0c0d0e] text-[#f4f4f5] min-h-screen py-10 px-4 flex flex-col items-center justify-center font-sans antialiased">
+<!-- Header Specification Banner -->
+<header class="text-center mb-8 max-w-2xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-800 bg-neutral-900/80 text-xs font-mono text-neutral-400 mb-3">
+<span class="material-symbols-rounded icon-sm text-neutral-300">target</span>
+<span>CLIENTHUNT • SEARCH RESULTS / LEAD LIST SPECIFICATION</span>
+</div>
+<h1 class="text-2xl md:text-3xl font-heading font-bold text-white tracking-tight">
+      Search Results: "Dentists in Ahmedabad"
+    </h1>
+<p class="text-xs md:text-sm text-neutral-400 mt-2">
+      High-density, actionable lead list optimized for rapid scanning, single-tap outreach, and batch export.
+      Strict monochrome palette (100% black, white &amp; neutral grays) with zero hue accents.
+    </p>
+</header>
+<!-- Frames Container: Two 390px wide mobile frames -->
+<main class="flex flex-col lg:flex-row items-center justify-center gap-10 w-full max-w-6xl">
+<!-- ========================================================
+         FRAME 1: LIGHT MODE (390 x 844 px)
+         ======================================================== -->
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-between w-[390px] px-2 mb-2 text-xs font-mono text-neutral-400">
+<span class="flex items-center gap-1.5 font-medium text-neutral-200">
+<span class="w-2 h-2 rounded-full bg-neutral-200 inline-block"></span>
+          FRAME 1: LIGHT MODE
+        </span>
+<span>390 × 844 px</span>
+</div>
+<!-- Phone Outer Frame -->
+<div class="w-[390px] h-[844px] bg-[#FFFFFF] text-[#111111] rounded-[44px] shadow-2xl border-[8px] border-[#262626] overflow-hidden flex flex-col relative select-none">
+<!-- Status Bar -->
+<div class="w-full h-11 px-7 flex items-center justify-between shrink-0 bg-[#FFFFFF] text-[#111111] z-30">
+<span class="text-[13px] font-semibold tracking-tight">9:41</span>
+<!-- Dynamic Island placeholder -->
+<div class="w-20 h-4 bg-[#111111] rounded-full mx-auto"></div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-rounded icon-sm">signal_cellular_alt</span>
+<span class="material-symbols-rounded icon-sm">wifi</span>
+<span class="material-symbols-rounded icon-sm">battery_full</span>
+</div>
+</div>
+<!-- 1. Top App Bar (56px) -->
+<div class="h-14 px-4 flex items-center justify-between border-b border-[#E5E5E5] bg-[#FFFFFF] shrink-0 z-20">
+<div class="flex items-center gap-2 min-w-0">
+<button aria-label="Go back" class="w-10 h-10 -ml-1 rounded-full flex items-center justify-center text-[#111111] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] transition-colors">
+<span class="material-symbols-rounded icon-lg">arrow_back</span>
+</button>
+<div class="min-w-0">
+<h2 class="font-heading font-bold text-[16px] text-[#111111] truncate leading-tight">
+                Dentists in Ahmedabad
+              </h2>
+<p class="text-[13px] text-[#8A8A8A] truncate font-medium">
+                42 leads · Maps
+              </p>
+</div>
+</div>
+<div class="flex items-center gap-0.5 shrink-0">
+<button aria-label="Search within leads" class="w-10 h-10 rounded-full flex items-center justify-center text-[#111111] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] transition-colors">
+<span class="material-symbols-rounded icon-md">search</span>
+</button>
+<button aria-label="More options" class="w-10 h-10 rounded-full flex items-center justify-center text-[#111111] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] transition-colors">
+<span class="material-symbols-rounded icon-md">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Body Container -->
+<div class="flex-1 overflow-y-auto no-scrollbar relative flex flex-col bg-[#FAFAFA]">
+<!-- 2. Compact Summary Area -->
+<div class="px-4 pt-3 pb-1 shrink-0 space-y-2">
+<!-- 48px Height Inline Stats Strip -->
+<div class="h-12 bg-[#FFFFFF] border border-[#E5E5E5] rounded-xl px-2 shadow-sm flex items-center justify-around divide-x divide-[#E5E5E5]">
+<div class="flex-1 flex items-center justify-center gap-1.5 px-2">
+<span class="material-symbols-rounded icon-sm text-[#111111]">group</span>
+<span class="text-[14px] font-heading font-bold text-[#111111] leading-none">42</span>
+<span class="text-[13px] font-medium text-[#525252]">Leads</span>
+</div>
+<div class="flex-1 flex items-center justify-center gap-1.5 px-2">
+<span class="material-symbols-rounded icon-sm text-[#111111]">mail</span>
+<span class="text-[14px] font-heading font-bold text-[#111111] leading-none">31</span>
+<span class="text-[13px] font-medium text-[#525252]">Emails</span>
+</div>
+<div class="flex-1 flex items-center justify-center gap-1.5 px-2">
+<span class="material-symbols-rounded icon-sm text-[#111111]">call</span>
+<span class="text-[14px] font-heading font-bold text-[#111111] leading-none">40</span>
+<span class="text-[13px] font-medium text-[#525252]">Phones</span>
+</div>
+</div>
+<!-- Single-line Dismissible Notice -->
+<div class="flex items-center justify-between px-2 py-1 text-[13px] text-[#8A8A8A] leading-snug">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-rounded icon-sm text-[#8A8A8A] shrink-0">info</span>
+<span class="truncate">Emails are unverified</span>
+</div>
+<button aria-label="Dismiss notice" class="w-6 h-6 rounded flex items-center justify-center text-[#8A8A8A] hover:text-[#111111] shrink-0">
+<span class="material-symbols-rounded icon-sm">close</span>
+</button>
+</div>
+</div>
+<!-- 3. Filter Row (NOT STICKY, NO CLIPPING, 36px CHIPS) -->
+<div class="px-4 py-2 shrink-0">
+<div class="chips-mask flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+<button class="h-9 px-4 rounded-full bg-[#111111] text-[#FFFFFF] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                All
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#E5E5E5] bg-[#FFFFFF] text-[#525252] hover:text-[#111111] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                Email
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#E5E5E5] bg-[#FFFFFF] text-[#525252] hover:text-[#111111] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                Phone
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#E5E5E5] bg-[#FFFFFF] text-[#525252] hover:text-[#111111] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                Website
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#E5E5E5] bg-[#FFFFFF] text-[#525252] hover:text-[#111111] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                WhatsApp
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#E5E5E5] bg-[#FFFFFF] text-[#525252] hover:text-[#111111] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                Rating 4+
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#E5E5E5] bg-[#FFFFFF] text-[#525252] hover:text-[#111111] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                Saved
+              </button>
+</div>
+</div>
+<!-- 4. Compact 44px Select Row -->
+<div class="h-11 px-4 flex items-center justify-between shrink-0">
+<label class="flex items-center gap-2 cursor-pointer font-medium text-[14px] text-[#111111]">
+<input class="w-4 h-4 rounded border-[#D4D4D4] text-[#111111] focus:ring-0 accent-[#111111]" type="checkbox"/>
+<span>Select all</span>
+</label>
+<div class="flex items-center gap-1.5">
+<button aria-label="Sort leads" class="w-10 h-10 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] text-[#111111] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center shadow-sm">
+<span class="material-symbols-rounded icon-md">swap_vert</span>
+</button>
+<button aria-label="Filter leads" class="w-10 h-10 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] text-[#111111] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center shadow-sm">
+<span class="material-symbols-rounded icon-md">tune</span>
+</button>
+</div>
+</div>
+<!-- 5. Lead Cards List (~190px per card, 14px padding, 16px radius, 12px gap) -->
+<div class="px-4 pt-1 pb-28 space-y-3">
+<!-- LEAD CARD 1 (Shalby Dental Clinic) -->
+<div class="bg-[#FFFFFF] border border-[#E5E5E5] rounded-2xl p-3.5 shadow-sm space-y-2.5">
+<!-- Row 1: Checkbox, 40px Avatar, Name, Category/Area, Bookmark -->
+<div class="flex items-start gap-2.5">
+<input class="w-4 h-4 mt-1 rounded border-[#D4D4D4] text-[#111111] focus:ring-0 accent-[#111111]" type="checkbox"/>
+<div class="w-10 h-10 rounded-xl bg-[#F5F5F5] border border-[#E5E5E5] text-[#111111] font-heading font-bold text-[14px] flex items-center justify-center shrink-0">
+                  SD
+                </div>
+<div class="min-w-0 flex-1">
+<h3 class="font-heading font-semibold text-[16px] text-[#111111] truncate leading-tight">
+                    Shalby Dental Clinic
+                  </h3>
+<p class="text-[13px] text-[#8A8A8A] truncate font-medium mt-0.5">
+                    Dental clinic · Navrangpura
+                  </p>
+</div>
+<button aria-label="Save lead" class="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-[#525252] hover:text-[#111111] hover:bg-[#F5F5F5]">
+<span class="material-symbols-rounded icon-md">bookmark</span>
+</button>
+</div>
+<!-- Row 2: Star, Rating, Reviews, Maps Badge, Status -->
+<div class="flex items-center gap-2 text-[13px] font-medium text-[#525252]">
+<div class="flex items-center gap-1 font-semibold text-[#111111]">
+<span class="material-symbols-rounded icon-sm filled text-[#111111]">star</span>
+<span>4.8</span>
+<span class="text-[#8A8A8A] font-normal">(184)</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-[#D4D4D4]"></span>
+<span class="h-6 px-2 rounded-full border border-[#E5E5E5] bg-[#F5F5F5] text-[13px] text-[#525252] font-mono flex items-center">Maps</span>
+<span class="w-1 h-1 rounded-full bg-[#D4D4D4]"></span>
+<span class="text-[#111111] font-medium">Open now</span>
+</div>
+<!-- Row 3: Contact Details (20px glyphs, 14px Mono) -->
+<div class="space-y-1 text-[14px] font-mono text-[#525252]">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">call</span>
+<span class="truncate">+91 79 4020 1888</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">mail</span>
+<span class="truncate">contact@shalbydental.com</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">language</span>
+<span class="truncate">shalbydental.com</span>
+</div>
+</div>
+<!-- Row 4: Four Icon-Only Action Buttons (44px, 12px radius, 22px icons) -->
+<div class="grid grid-cols-4 gap-2 pt-0.5">
+<button aria-label="Call clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">call</span>
+</button>
+<button aria-label="WhatsApp clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">chat</span>
+</button>
+<button aria-label="Email clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">mail</span>
+</button>
+<button aria-label="Copy details" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">content_copy</span>
+</button>
+</div>
+</div>
+<!-- LEAD CARD 2 (Perfect Smile Orthodontics - Bookmarked, Missing Website) -->
+<div class="bg-[#FFFFFF] border border-[#E5E5E5] rounded-2xl p-3.5 shadow-sm space-y-2.5">
+<div class="flex items-start gap-2.5">
+<input class="w-4 h-4 mt-1 rounded border-[#D4D4D4] text-[#111111] focus:ring-0 accent-[#111111]" type="checkbox"/>
+<div class="w-10 h-10 rounded-xl bg-[#F5F5F5] border border-[#E5E5E5] text-[#111111] font-heading font-bold text-[14px] flex items-center justify-center shrink-0">
+                  PD
+                </div>
+<div class="min-w-0 flex-1">
+<h3 class="font-heading font-semibold text-[16px] text-[#111111] truncate leading-tight">
+                    Perfect Smile Orthodontics
+                  </h3>
+<p class="text-[13px] text-[#8A8A8A] truncate font-medium mt-0.5">
+                    Orthodontist · Bodakdev
+                  </p>
+</div>
+<button aria-label="Lead is saved" class="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-[#111111] hover:bg-[#F5F5F5]">
+<span class="material-symbols-rounded icon-md filled text-[#111111]">bookmark</span>
+</button>
+</div>
+<div class="flex items-center gap-2 text-[13px] font-medium text-[#525252]">
+<div class="flex items-center gap-1 font-semibold text-[#111111]">
+<span class="material-symbols-rounded icon-sm filled text-[#111111]">star</span>
+<span>4.6</span>
+<span class="text-[#8A8A8A] font-normal">(92)</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-[#D4D4D4]"></span>
+<span class="h-6 px-2 rounded-full border border-[#E5E5E5] bg-[#F5F5F5] text-[13px] text-[#525252] font-mono flex items-center">Maps</span>
+<span class="w-1 h-1 rounded-full bg-[#D4D4D4]"></span>
+<span class="text-[#111111] font-medium">Open now</span>
+</div>
+<!-- Contact rows: phone, email, missing website italic -->
+<div class="space-y-1 text-[14px] font-mono text-[#525252]">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">call</span>
+<span class="truncate">+91 98250 44120</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">mail</span>
+<span class="truncate">dr.patel@perfectsmile.in</span>
+</div>
+<div class="flex items-center gap-2 truncate text-[#8A8A8A]">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">language</span>
+<span class="italic font-sans text-[13px]">No website found</span>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-2 pt-0.5">
+<button aria-label="Call clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">call</span>
+</button>
+<button aria-label="WhatsApp clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">chat</span>
+</button>
+<button aria-label="Email clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">mail</span>
+</button>
+<button aria-label="Copy details" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">content_copy</span>
+</button>
+</div>
+</div>
+<!-- LEAD CARD 3 (Smile Dental Studio - Missing Email, Disabled Email Button) -->
+<div class="bg-[#FFFFFF] border border-[#E5E5E5] rounded-2xl p-3.5 shadow-sm space-y-2.5">
+<div class="flex items-start gap-2.5">
+<input class="w-4 h-4 mt-1 rounded border-[#D4D4D4] text-[#111111] focus:ring-0 accent-[#111111]" type="checkbox"/>
+<div class="w-10 h-10 rounded-xl bg-[#F5F5F5] border border-[#E5E5E5] text-[#111111] font-heading font-bold text-[14px] flex items-center justify-center shrink-0">
+                  SS
+                </div>
+<div class="min-w-0 flex-1">
+<h3 class="font-heading font-semibold text-[16px] text-[#111111] truncate leading-tight">
+                    Smile Dental Studio
+                  </h3>
+<p class="text-[13px] text-[#8A8A8A] truncate font-medium mt-0.5">
+                    Implantologist · Satellite
+                  </p>
+</div>
+<button aria-label="Save lead" class="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-[#525252] hover:text-[#111111] hover:bg-[#F5F5F5]">
+<span class="material-symbols-rounded icon-md">bookmark</span>
+</button>
+</div>
+<div class="flex items-center gap-2 text-[13px] font-medium text-[#525252]">
+<div class="flex items-center gap-1 font-semibold text-[#111111]">
+<span class="material-symbols-rounded icon-sm filled text-[#111111]">star</span>
+<span>4.9</span>
+<span class="text-[#8A8A8A] font-normal">(210)</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-[#D4D4D4]"></span>
+<span class="h-6 px-2 rounded-full border border-[#E5E5E5] bg-[#F5F5F5] text-[13px] text-[#525252] font-mono flex items-center">Maps</span>
+<span class="w-1 h-1 rounded-full bg-[#D4D4D4]"></span>
+<span class="text-[#8A8A8A] font-medium">Closes 8 PM</span>
+</div>
+<!-- Contact details: phone, missing email italic, website -->
+<div class="space-y-1 text-[14px] font-mono text-[#525252]">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">call</span>
+<span class="truncate">+91 79 2676 9911</span>
+</div>
+<div class="flex items-center gap-2 truncate text-[#8A8A8A]">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">mail</span>
+<span class="italic font-sans text-[13px]">No email found</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">language</span>
+<span class="truncate">smilestudioahmedabad.com</span>
+</div>
+</div>
+<!-- Actions: Email disabled at 40% opacity -->
+<div class="grid grid-cols-4 gap-2 pt-0.5">
+<button aria-label="Call clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">call</span>
+</button>
+<button aria-label="WhatsApp clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">chat</span>
+</button>
+<button aria-label="Email unavailable" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#F5F5F5] opacity-40 flex items-center justify-center text-[#8A8A8A] cursor-not-allowed" disabled="">
+<span class="material-symbols-rounded icon-action">mail</span>
+</button>
+<button aria-label="Copy details" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">content_copy</span>
+</button>
+</div>
+</div>
+<!-- LEAD CARD 4 (Ahmedabad Dental Care) -->
+<div class="bg-[#FFFFFF] border border-[#E5E5E5] rounded-2xl p-3.5 shadow-sm space-y-2.5">
+<div class="flex items-start gap-2.5">
+<input class="w-4 h-4 mt-1 rounded border-[#D4D4D4] text-[#111111] focus:ring-0 accent-[#111111]" type="checkbox"/>
+<div class="w-10 h-10 rounded-xl bg-[#F5F5F5] border border-[#E5E5E5] text-[#111111] font-heading font-bold text-[14px] flex items-center justify-center shrink-0">
+                  AD
+                </div>
+<div class="min-w-0 flex-1">
+<h3 class="font-heading font-semibold text-[16px] text-[#111111] truncate leading-tight">
+                    Ahmedabad Dental Care
+                  </h3>
+<p class="text-[13px] text-[#8A8A8A] truncate font-medium mt-0.5">
+                    Cosmetic Dentistry · Vastrapur
+                  </p>
+</div>
+<button aria-label="Save lead" class="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-[#525252] hover:text-[#111111] hover:bg-[#F5F5F5]">
+<span class="material-symbols-rounded icon-md">bookmark</span>
+</button>
+</div>
+<div class="flex items-center gap-2 text-[13px] font-medium text-[#525252]">
+<div class="flex items-center gap-1 font-semibold text-[#111111]">
+<span class="material-symbols-rounded icon-sm filled text-[#111111]">star</span>
+<span>4.7</span>
+<span class="text-[#8A8A8A] font-normal">(146)</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-[#D4D4D4]"></span>
+<span class="h-6 px-2 rounded-full border border-[#E5E5E5] bg-[#F5F5F5] text-[13px] text-[#525252] font-mono flex items-center">Maps</span>
+<span class="w-1 h-1 rounded-full bg-[#D4D4D4]"></span>
+<span class="text-[#111111] font-medium">Open now</span>
+</div>
+<div class="space-y-1 text-[14px] font-mono text-[#525252]">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">call</span>
+<span class="truncate">+91 79 2630 1120</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">mail</span>
+<span class="truncate">care@ahmedabaddental.in</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#8A8A8A] shrink-0 font-sans">language</span>
+<span class="truncate">ahmedabaddental.in</span>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-2 pt-0.5">
+<button aria-label="Call clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">call</span>
+</button>
+<button aria-label="WhatsApp clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">chat</span>
+</button>
+<button aria-label="Email clinic" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">mail</span>
+</button>
+<button aria-label="Copy details" class="h-11 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] flex items-center justify-center text-[#111111]">
+<span class="material-symbols-rounded icon-action">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- 6. Sticky Bottom Export Bar (Ample clear space, 13px captions) -->
+<div class="absolute bottom-0 left-0 right-0 bg-[#FFFFFF] border-t border-[#E5E5E5] px-4 pt-3 pb-6 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] z-30">
+<div class="flex items-center gap-2">
+<!-- Full-width 52px Primary Button -->
+<button class="flex-1 h-[52px] rounded-2xl bg-[#111111] text-[#FFFFFF] hover:bg-[#262626] active:bg-[#000000] font-heading font-semibold text-[15px] flex items-center justify-center gap-2 shadow-sm transition-colors">
+<span class="material-symbols-rounded icon-action">file_download</span>
+<span>Export Leads</span>
+<span class="px-2 py-0.5 rounded-full bg-[#262626] text-[13px] font-mono text-[#FAFAFA]">42</span>
+</button>
+<!-- 52px Square Outlined Copy Button -->
+<button aria-label="Copy emails and phones" class="w-[52px] h-[52px] rounded-2xl border border-[#E5E5E5] bg-[#FFFFFF] hover:bg-[#F5F5F5] active:bg-[#E5E5E5] text-[#111111] flex items-center justify-center shrink-0 transition-colors">
+<span class="material-symbols-rounded icon-action">content_copy</span>
+</button>
+</div>
+<!-- Caption (13px font) -->
+<p class="text-center text-[13px] font-medium text-[#8A8A8A] mt-2">
+            CSV · Excel · PDF · VCF
+          </p>
+</div>
+</div>
+</div>
+<!-- ========================================================
+         FRAME 2: DARK MODE (390 x 844 px)
+         ======================================================== -->
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-between w-[390px] px-2 mb-2 text-xs font-mono text-neutral-400">
+<span class="flex items-center gap-1.5 font-medium text-neutral-200">
+<span class="w-2 h-2 rounded-full bg-neutral-600 inline-block"></span>
+          FRAME 2: DARK MODE
+        </span>
+<span>390 × 844 px</span>
+</div>
+<!-- Phone Outer Frame -->
+<div class="w-[390px] h-[844px] bg-[#0A0A0A] text-[#FAFAFA] rounded-[44px] shadow-2xl border-[8px] border-[#2A2A2A] overflow-hidden flex flex-col relative select-none">
+<!-- Status Bar -->
+<div class="w-full h-11 px-7 flex items-center justify-between shrink-0 bg-[#0A0A0A] text-[#FAFAFA] z-30">
+<span class="text-[13px] font-semibold tracking-tight">9:41</span>
+<!-- Dynamic Island placeholder -->
+<div class="w-20 h-4 bg-[#1F1F1F] rounded-full mx-auto"></div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-rounded icon-sm text-neutral-400">signal_cellular_alt</span>
+<span class="material-symbols-rounded icon-sm text-neutral-400">wifi</span>
+<span class="material-symbols-rounded icon-sm text-neutral-400">battery_full</span>
+</div>
+</div>
+<!-- 1. Top App Bar (56px) -->
+<div class="h-14 px-4 flex items-center justify-between border-b border-[#262626] bg-[#0A0A0A] shrink-0 z-20">
+<div class="flex items-center gap-2 min-w-0">
+<button aria-label="Go back" class="w-10 h-10 -ml-1 rounded-full flex items-center justify-center text-[#FAFAFA] hover:bg-[#1A1A1A] active:bg-[#262626] transition-colors">
+<span class="material-symbols-rounded icon-lg">arrow_back</span>
+</button>
+<div class="min-w-0">
+<h2 class="font-heading font-bold text-[16px] text-[#FAFAFA] truncate leading-tight">
+                Dentists in Ahmedabad
+              </h2>
+<p class="text-[13px] text-[#737373] truncate font-medium">
+                42 leads · Maps
+              </p>
+</div>
+</div>
+<div class="flex items-center gap-0.5 shrink-0">
+<button aria-label="Search within leads" class="w-10 h-10 rounded-full flex items-center justify-center text-[#FAFAFA] hover:bg-[#1A1A1A] active:bg-[#262626] transition-colors">
+<span class="material-symbols-rounded icon-md">search</span>
+</button>
+<button aria-label="More options" class="w-10 h-10 rounded-full flex items-center justify-center text-[#FAFAFA] hover:bg-[#1A1A1A] active:bg-[#262626] transition-colors">
+<span class="material-symbols-rounded icon-md">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Body Container -->
+<div class="flex-1 overflow-y-auto no-scrollbar relative flex flex-col bg-[#0A0A0A]">
+<!-- 2. Compact Summary Area -->
+<div class="px-4 pt-3 pb-1 shrink-0 space-y-2">
+<!-- 48px Height Inline Stats Strip -->
+<div class="h-12 bg-[#141414] border border-[#262626] rounded-xl px-2 shadow-sm flex items-center justify-around divide-x divide-[#262626]">
+<div class="flex-1 flex items-center justify-center gap-1.5 px-2">
+<span class="material-symbols-rounded icon-sm text-[#FAFAFA]">group</span>
+<span class="text-[14px] font-heading font-bold text-[#FAFAFA] leading-none">42</span>
+<span class="text-[13px] font-medium text-[#A3A3A3]">Leads</span>
+</div>
+<div class="flex-1 flex items-center justify-center gap-1.5 px-2">
+<span class="material-symbols-rounded icon-sm text-[#FAFAFA]">mail</span>
+<span class="text-[14px] font-heading font-bold text-[#FAFAFA] leading-none">31</span>
+<span class="text-[13px] font-medium text-[#A3A3A3]">Emails</span>
+</div>
+<div class="flex-1 flex items-center justify-center gap-1.5 px-2">
+<span class="material-symbols-rounded icon-sm text-[#FAFAFA]">call</span>
+<span class="text-[14px] font-heading font-bold text-[#FAFAFA] leading-none">40</span>
+<span class="text-[13px] font-medium text-[#A3A3A3]">Phones</span>
+</div>
+</div>
+<!-- Single-line Dismissible Notice -->
+<div class="flex items-center justify-between px-2 py-1 text-[13px] text-[#737373] leading-snug">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-rounded icon-sm text-[#737373] shrink-0">info</span>
+<span class="truncate">Emails are unverified</span>
+</div>
+<button aria-label="Dismiss notice" class="w-6 h-6 rounded flex items-center justify-center text-[#737373] hover:text-[#FAFAFA] shrink-0">
+<span class="material-symbols-rounded icon-sm">close</span>
+</button>
+</div>
+</div>
+<!-- 3. Filter Row (NOT STICKY, NO CLIPPING, 36px CHIPS) -->
+<div class="px-4 py-2 shrink-0">
+<div class="chips-mask flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+<button class="h-9 px-4 rounded-full bg-[#FAFAFA] text-[#0A0A0A] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                All
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#262626] bg-[#141414] text-[#A3A3A3] hover:text-[#FAFAFA] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                Email
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#262626] bg-[#141414] text-[#A3A3A3] hover:text-[#FAFAFA] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                Phone
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#262626] bg-[#141414] text-[#A3A3A3] hover:text-[#FAFAFA] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                Website
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#262626] bg-[#141414] text-[#A3A3A3] hover:text-[#FAFAFA] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                WhatsApp
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#262626] bg-[#141414] text-[#A3A3A3] hover:text-[#FAFAFA] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                Rating 4+
+              </button>
+<button class="h-9 px-3.5 rounded-full border border-[#262626] bg-[#141414] text-[#A3A3A3] hover:text-[#FAFAFA] text-[14px] font-medium shrink-0 flex items-center justify-center">
+                Saved
+              </button>
+</div>
+</div>
+<!-- 4. Compact 44px Select Row -->
+<div class="h-11 px-4 flex items-center justify-between shrink-0">
+<label class="flex items-center gap-2 cursor-pointer font-medium text-[14px] text-[#FAFAFA]">
+<input class="w-4 h-4 rounded border-[#404040] bg-[#171717] text-[#FAFAFA] focus:ring-0 accent-[#FAFAFA]" type="checkbox"/>
+<span>Select all</span>
+</label>
+<div class="flex items-center gap-1.5">
+<button aria-label="Sort leads" class="w-10 h-10 rounded-xl border border-[#262626] bg-[#141414] text-[#FAFAFA] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center shadow-sm">
+<span class="material-symbols-rounded icon-md">swap_vert</span>
+</button>
+<button aria-label="Filter leads" class="w-10 h-10 rounded-xl border border-[#262626] bg-[#141414] text-[#FAFAFA] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center shadow-sm">
+<span class="material-symbols-rounded icon-md">tune</span>
+</button>
+</div>
+</div>
+<!-- 5. Lead Cards List (~190px per card, 14px padding, 16px radius, 12px gap) -->
+<div class="px-4 pt-1 pb-28 space-y-3">
+<!-- LEAD CARD 1 (Shalby Dental Clinic) -->
+<div class="bg-[#171717] border border-[#2A2A2A] rounded-2xl p-3.5 space-y-2.5">
+<!-- Row 1: Checkbox, 40px Avatar, Name, Category/Area, Bookmark -->
+<div class="flex items-start gap-2.5">
+<input class="w-4 h-4 mt-1 rounded border-[#404040] bg-[#171717] text-[#FAFAFA] focus:ring-0 accent-[#FAFAFA]" type="checkbox"/>
+<div class="w-10 h-10 rounded-xl bg-[#262626] border border-[#333333] text-[#FAFAFA] font-heading font-bold text-[14px] flex items-center justify-center shrink-0">
+                  SD
+                </div>
+<div class="min-w-0 flex-1">
+<h3 class="font-heading font-semibold text-[16px] text-[#FAFAFA] truncate leading-tight">
+                    Shalby Dental Clinic
+                  </h3>
+<p class="text-[13px] text-[#737373] truncate font-medium mt-0.5">
+                    Dental clinic · Navrangpura
+                  </p>
+</div>
+<button aria-label="Save lead" class="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-[#A3A3A3] hover:text-[#FAFAFA] hover:bg-[#262626]">
+<span class="material-symbols-rounded icon-md">bookmark</span>
+</button>
+</div>
+<!-- Row 2: Star, Rating, Reviews, Maps Badge, Status -->
+<div class="flex items-center gap-2 text-[13px] font-medium text-[#A3A3A3]">
+<div class="flex items-center gap-1 font-semibold text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-sm filled text-[#FAFAFA]">star</span>
+<span>4.8</span>
+<span class="text-[#737373] font-normal">(184)</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-[#404040]"></span>
+<span class="h-6 px-2 rounded-full border border-[#333333] bg-[#141414] text-[13px] text-[#A3A3A3] font-mono flex items-center">Maps</span>
+<span class="w-1 h-1 rounded-full bg-[#404040]"></span>
+<span class="text-[#FAFAFA] font-medium">Open now</span>
+</div>
+<!-- Row 3: Contact Details (20px glyphs, 14px Mono) -->
+<div class="space-y-1 text-[14px] font-mono text-[#A3A3A3]">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">call</span>
+<span class="truncate">+91 79 4020 1888</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">mail</span>
+<span class="truncate">contact@shalbydental.com</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">language</span>
+<span class="truncate">shalbydental.com</span>
+</div>
+</div>
+<!-- Row 4: Four Icon-Only Action Buttons (44px, 12px radius, 22px icons) -->
+<div class="grid grid-cols-4 gap-2 pt-0.5">
+<button aria-label="Call clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">call</span>
+</button>
+<button aria-label="WhatsApp clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">chat</span>
+</button>
+<button aria-label="Email clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">mail</span>
+</button>
+<button aria-label="Copy details" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">content_copy</span>
+</button>
+</div>
+</div>
+<!-- LEAD CARD 2 (Perfect Smile Orthodontics - Bookmarked, Missing Website) -->
+<div class="bg-[#171717] border border-[#2A2A2A] rounded-2xl p-3.5 space-y-2.5">
+<div class="flex items-start gap-2.5">
+<input class="w-4 h-4 mt-1 rounded border-[#404040] bg-[#171717] text-[#FAFAFA] focus:ring-0 accent-[#FAFAFA]" type="checkbox"/>
+<div class="w-10 h-10 rounded-xl bg-[#262626] border border-[#333333] text-[#FAFAFA] font-heading font-bold text-[14px] flex items-center justify-center shrink-0">
+                  PD
+                </div>
+<div class="min-w-0 flex-1">
+<h3 class="font-heading font-semibold text-[16px] text-[#FAFAFA] truncate leading-tight">
+                    Perfect Smile Orthodontics
+                  </h3>
+<p class="text-[13px] text-[#737373] truncate font-medium mt-0.5">
+                    Orthodontist · Bodakdev
+                  </p>
+</div>
+<button aria-label="Lead is saved" class="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-[#FAFAFA] hover:bg-[#262626]">
+<span class="material-symbols-rounded icon-md filled text-[#FAFAFA]">bookmark</span>
+</button>
+</div>
+<div class="flex items-center gap-2 text-[13px] font-medium text-[#A3A3A3]">
+<div class="flex items-center gap-1 font-semibold text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-sm filled text-[#FAFAFA]">star</span>
+<span>4.6</span>
+<span class="text-[#737373] font-normal">(92)</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-[#404040]"></span>
+<span class="h-6 px-2 rounded-full border border-[#333333] bg-[#141414] text-[13px] text-[#A3A3A3] font-mono flex items-center">Maps</span>
+<span class="w-1 h-1 rounded-full bg-[#404040]"></span>
+<span class="text-[#FAFAFA] font-medium">Open now</span>
+</div>
+<!-- Contact rows: phone, email, missing website italic -->
+<div class="space-y-1 text-[14px] font-mono text-[#A3A3A3]">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">call</span>
+<span class="truncate">+91 98250 44120</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">mail</span>
+<span class="truncate">dr.patel@perfectsmile.in</span>
+</div>
+<div class="flex items-center gap-2 truncate text-[#737373]">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">language</span>
+<span class="italic font-sans text-[13px]">No website found</span>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-2 pt-0.5">
+<button aria-label="Call clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">call</span>
+</button>
+<button aria-label="WhatsApp clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">chat</span>
+</button>
+<button aria-label="Email clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">mail</span>
+</button>
+<button aria-label="Copy details" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">content_copy</span>
+</button>
+</div>
+</div>
+<!-- LEAD CARD 3 (Smile Dental Studio - Missing Email, Disabled Email Button) -->
+<div class="bg-[#171717] border border-[#2A2A2A] rounded-2xl p-3.5 space-y-2.5">
+<div class="flex items-start gap-2.5">
+<input class="w-4 h-4 mt-1 rounded border-[#404040] bg-[#171717] text-[#FAFAFA] focus:ring-0 accent-[#FAFAFA]" type="checkbox"/>
+<div class="w-10 h-10 rounded-xl bg-[#262626] border border-[#333333] text-[#FAFAFA] font-heading font-bold text-[14px] flex items-center justify-center shrink-0">
+                  SS
+                </div>
+<div class="min-w-0 flex-1">
+<h3 class="font-heading font-semibold text-[16px] text-[#FAFAFA] truncate leading-tight">
+                    Smile Dental Studio
+                  </h3>
+<p class="text-[13px] text-[#737373] truncate font-medium mt-0.5">
+                    Implantologist · Satellite
+                  </p>
+</div>
+<button aria-label="Save lead" class="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-[#A3A3A3] hover:text-[#FAFAFA] hover:bg-[#262626]">
+<span class="material-symbols-rounded icon-md">bookmark</span>
+</button>
+</div>
+<div class="flex items-center gap-2 text-[13px] font-medium text-[#A3A3A3]">
+<div class="flex items-center gap-1 font-semibold text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-sm filled text-[#FAFAFA]">star</span>
+<span>4.9</span>
+<span class="text-[#737373] font-normal">(210)</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-[#404040]"></span>
+<span class="h-6 px-2 rounded-full border border-[#333333] bg-[#141414] text-[13px] text-[#A3A3A3] font-mono flex items-center">Maps</span>
+<span class="w-1 h-1 rounded-full bg-[#404040]"></span>
+<span class="text-[#737373] font-medium">Closes 8 PM</span>
+</div>
+<!-- Contact details: phone, missing email italic, website -->
+<div class="space-y-1 text-[14px] font-mono text-[#A3A3A3]">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">call</span>
+<span class="truncate">+91 79 2676 9911</span>
+</div>
+<div class="flex items-center gap-2 truncate text-[#737373]">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">mail</span>
+<span class="italic font-sans text-[13px]">No email found</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">language</span>
+<span class="truncate">smilestudioahmedabad.com</span>
+</div>
+</div>
+<!-- Actions: Email disabled at 40% opacity -->
+<div class="grid grid-cols-4 gap-2 pt-0.5">
+<button aria-label="Call clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">call</span>
+</button>
+<button aria-label="WhatsApp clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">chat</span>
+</button>
+<button aria-label="Email unavailable" class="h-11 rounded-xl border border-[#262626] bg-[#141414] opacity-40 flex items-center justify-center text-[#737373] cursor-not-allowed" disabled="">
+<span class="material-symbols-rounded icon-action">mail</span>
+</button>
+<button aria-label="Copy details" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">content_copy</span>
+</button>
+</div>
+</div>
+<!-- LEAD CARD 4 (Ahmedabad Dental Care) -->
+<div class="bg-[#171717] border border-[#2A2A2A] rounded-2xl p-3.5 space-y-2.5">
+<div class="flex items-start gap-2.5">
+<input class="w-4 h-4 mt-1 rounded border-[#404040] bg-[#171717] text-[#FAFAFA] focus:ring-0 accent-[#FAFAFA]" type="checkbox"/>
+<div class="w-10 h-10 rounded-xl bg-[#262626] border border-[#333333] text-[#FAFAFA] font-heading font-bold text-[14px] flex items-center justify-center shrink-0">
+                  AD
+                </div>
+<div class="min-w-0 flex-1">
+<h3 class="font-heading font-semibold text-[16px] text-[#FAFAFA] truncate leading-tight">
+                    Ahmedabad Dental Care
+                  </h3>
+<p class="text-[13px] text-[#737373] truncate font-medium mt-0.5">
+                    Cosmetic Dentistry · Vastrapur
+                  </p>
+</div>
+<button aria-label="Save lead" class="w-8 h-8 -mr-1 rounded-full flex items-center justify-center text-[#A3A3A3] hover:text-[#FAFAFA] hover:bg-[#262626]">
+<span class="material-symbols-rounded icon-md">bookmark</span>
+</button>
+</div>
+<div class="flex items-center gap-2 text-[13px] font-medium text-[#A3A3A3]">
+<div class="flex items-center gap-1 font-semibold text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-sm filled text-[#FAFAFA]">star</span>
+<span>4.7</span>
+<span class="text-[#737373] font-normal">(146)</span>
+</div>
+<span class="w-1 h-1 rounded-full bg-[#404040]"></span>
+<span class="h-6 px-2 rounded-full border border-[#333333] bg-[#141414] text-[13px] text-[#A3A3A3] font-mono flex items-center">Maps</span>
+<span class="w-1 h-1 rounded-full bg-[#404040]"></span>
+<span class="text-[#FAFAFA] font-medium">Open now</span>
+</div>
+<div class="space-y-1 text-[14px] font-mono text-[#A3A3A3]">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">call</span>
+<span class="truncate">+91 79 2630 1120</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">mail</span>
+<span class="truncate">care@ahmedabaddental.in</span>
+</div>
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-rounded icon-md text-[#737373] shrink-0 font-sans">language</span>
+<span class="truncate">ahmedabaddental.in</span>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-2 pt-0.5">
+<button aria-label="Call clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">call</span>
+</button>
+<button aria-label="WhatsApp clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">chat</span>
+</button>
+<button aria-label="Email clinic" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">mail</span>
+</button>
+<button aria-label="Copy details" class="h-11 rounded-xl border border-[#2A2A2A] bg-[#171717] hover:bg-[#262626] active:bg-[#333333] flex items-center justify-center text-[#FAFAFA]">
+<span class="material-symbols-rounded icon-action">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- 6. Sticky Bottom Export Bar (Ample clear space, 13px captions) -->
+<div class="absolute bottom-0 left-0 right-0 bg-[#0A0A0A] border-t border-[#262626] px-4 pt-3 pb-6 shadow-[0_-4px_16px_rgba(0,0,0,0.4)] z-30">
+<div class="flex items-center gap-2">
+<!-- Full-width 52px Primary Button -->
+<button class="flex-1 h-[52px] rounded-2xl bg-[#FAFAFA] text-[#0A0A0A] hover:bg-[#E5E5E5] active:bg-[#CCCCCC] font-heading font-semibold text-[15px] flex items-center justify-center gap-2 transition-colors">
+<span class="material-symbols-rounded icon-action">file_download</span>
+<span>Export Leads</span>
+<span class="px-2 py-0.5 rounded-full bg-[#E5E5E5] text-[13px] font-mono text-[#0A0A0A]">42</span>
+</button>
+<!-- 52px Square Outlined Copy Button -->
+<button aria-label="Copy emails and phones" class="w-[52px] h-[52px] rounded-2xl border border-[#262626] bg-[#141414] hover:bg-[#262626] active:bg-[#333333] text-[#FAFAFA] flex items-center justify-center shrink-0 transition-colors">
+<span class="material-symbols-rounded icon-action">content_copy</span>
+</button>
+</div>
+<!-- Caption (13px font) -->
+<p class="text-center text-[13px] font-medium text-[#737373] mt-2">
+            CSV · Excel · PDF · VCF
+          </p>
+</div>
+</div>
+</div>
+</main>
+</body></html>

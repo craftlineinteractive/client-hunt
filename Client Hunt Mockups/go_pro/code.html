@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClientHunt - Go Pro (Light & Dark Monochrome)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #0b0c0e;
+    color: #e5e5e5;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .material-symbols-rounded {
+    font-family: 'Material Symbols Rounded';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    vertical-align: middle;
+  }
+
+  .screen-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .spec-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background: #18191c;
+    border: 1px solid #282a30;
+    color: #9da3ae;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 12px;
+  }
+
+  .spec-pill span.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #60a5fa;
+  }
+
+  .screen-header h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 8px;
+  }
+
+  .screen-header p {
+    color: #8b929e;
+    font-size: 14px;
+    max-width: 640px;
+    line-height: 1.5;
+  }
+
+  .frames-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .frame-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .frame-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: #828a96;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .frame-label .indicator {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  /* Phone mock device 390 x 844 */
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    border-radius: 44px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 10px #1e2025, 0 0 0 12px #2d3038;
+    user-select: none;
+  }
+
+  /* Status Bar */
+  .status-bar {
+    height: 44px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    z-index: 30;
+    position: relative;
+  }
+
+  .status-bar .notch {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 28px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 31;
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+  }
+
+  /* Top App Bar (56px) */
+  .top-app-bar {
+    height: 56px;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 20;
+    border-bottom: 1px solid transparent;
+  }
+
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .text-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  /* Scrollable Content */
+  .scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px 16px 140px 16px; /* 140px bottom padding to clear sticky CTA */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .scroll-content::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Centered Header */
+  .pro-hero-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0 4px 0;
+  }
+
+  .hero-icon-tile {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .pro-hero-header h2 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+
+  .pro-hero-header p.subtitle {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  /* Plan Selector Stack */
+  .plans-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .plan-row {
+    min-height: 72px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid;
+    position: relative;
+  }
+
+  .plan-row.selected {
+    border-width: 2px;
+  }
+
+  .plan-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .radio-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .radio-circle .inner-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .plan-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .plan-title-badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .plan-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .badge-filled {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+
+  .badge-outlined {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 999px;
+    border: 1px solid;
+    line-height: 1.2;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .plan-detail {
+    font-size: 13px;
+  }
+
+  .plan-price-block {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .plan-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* Cards */
+  .section-card {
+    border-radius: 16px;
+    border: 1px solid;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .section-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .section-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  /* Included in all plans list */
+  .features-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .feature-item {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .feature-item .material-symbols-rounded {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .coming-soon-row {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    border-top: 1px dashed;
+    margin-top: 4px;
+    padding-top: 4px;
+  }
+
+  .coming-soon-pill {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    border: 1px solid;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  /* Free vs Pro Table */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .comparison-table th {
+    padding: 6px 8px 10px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .comparison-table th:first-child {
+    text-align: left;
+    padding-left: 0;
+  }
+
+  .comparison-table td {
+    height: 36px;
+    padding: 0 8px;
+    text-align: center;
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+
+  .comparison-table td:first-child {
+    text-align: left;
+    padding-left: 0;
+  }
+
+  .comparison-table tr:not(:last-child) td {
+    border-bottom: 1px solid;
+  }
+
+  .pro-pill-header {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* Reviews Carousel */
+  .reviews-header-metric {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+
+  .reviews-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 2px 0 6px 0;
+    scrollbar-width: none;
+  }
+  .reviews-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .review-card {
+    width: 280px;
+    min-width: 280px;
+    border-radius: 16px;
+    border: 1px solid;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .review-stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .review-text {
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+
+  .review-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .user-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .user-name {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .user-role {
+    font-size: 12px;
+  }
+
+  .review-disclaimer {
+    font-size: 12px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: -4px;
+  }
+
+  /* Footer Links */
+  .pro-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px 12px 8px;
+    text-align: center;
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .footer-links a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .dot-separator {
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+  .footer-legal-notice {
+    font-size: 13px;
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    max-width: 320px;
+  }
+
+  /* Fixed Bottom Bar */
+  .fixed-bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid;
+    padding: 10px 16px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    z-index: 40;
+  }
+
+  .fixed-price-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .primary-cta-btn {
+    width: 100%;
+    height: 56px;
+    border-radius: 16px;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+  }
+
+  .home-indicator {
+    width: 134px;
+    height: 4px;
+    border-radius: 999px;
+    margin-top: 6px;
+  }
+
+  /* ========================================================= */
+  /* LIGHT MODE THEME TOKENS                                   */
+  /* ========================================================= */
+  .light-theme {
+    background-color: #ffffff;
+    color: #111111;
+  }
+
+  .light-theme .status-bar {
+    color: #111111;
+  }
+
+  .light-theme .top-app-bar {
+    border-color: #f0f0f0;
+  }
+
+  .light-theme .icon-btn {
+    color: #111111;
+  }
+  .light-theme .icon-btn:active {
+    background: #f0f0f0;
+  }
+
+  .light-theme .text-btn {
+    color: #555555;
+  }
+  .light-theme .text-btn:hover {
+    color: #111111;
+  }
+
+  .light-theme .hero-icon-tile {
+    background: #111111;
+    color: #ffffff;
+  }
+
+  .light-theme .pro-hero-header h2 {
+    color: #111111;
+  }
+
+  .light-theme .pro-hero-header p.subtitle {
+    color: #666666;
+  }
+
+  .light-theme .plan-row {
+    background: #fafafa;
+    border-color: #e5e5e5;
+  }
+
+  .light-theme .plan-row.selected {
+    background: #ffffff;
+    border-color: #111111;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  }
+
+  .light-theme .radio-circle {
+    border-color: #bbbbbb;
+  }
+
+  .light-theme .plan-row.selected .radio-circle {
+    border-color: #111111;
+  }
+
+  .light-theme .radio-circle .inner-dot {
+    background: #111111;
+  }
+
+  .light-theme .plan-title {
+    color: #111111;
+  }
+
+  .light-theme .badge-filled {
+    background: #111111;
+    color: #ffffff;
+  }
+
+  .light-theme .badge-outlined {
+    border-color: #111111;
+    color: #111111;
+  }
+
+  .light-theme .plan-detail {
+    color: #666666;
+  }
+
+  .light-theme .plan-price {
+    color: #111111;
+  }
+
+  .light-theme .section-card {
+    background: #ffffff;
+    border-color: #e5e5e5;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  }
+
+  .light-theme .section-title-wrap {
+    color: #111111;
+  }
+
+  .light-theme .feature-item {
+    color: #222222;
+  }
+
+  .light-theme .feature-item .material-symbols-rounded {
+    color: #111111;
+  }
+
+  .light-theme .coming-soon-row {
+    border-color: #e5e5e5;
+    color: #777777;
+  }
+
+  .light-theme .coming-soon-pill {
+    border-color: #cccccc;
+    color: #555555;
+  }
+
+  .light-theme .comparison-table th {
+    color: #666666;
+  }
+
+  .light-theme .comparison-table td {
+    color: #222222;
+  }
+
+  .light-theme .comparison-table tr:not(:last-child) td {
+    border-color: #eeeeee;
+  }
+
+  .light-theme .pro-pill-header {
+    background: #111111;
+    color: #ffffff;
+  }
+
+  .light-theme .reviews-header-metric {
+    color: #555555;
+  }
+
+  .light-theme .review-card {
+    background: #fafafa;
+    border-color: #e5e5e5;
+  }
+
+  .light-theme .review-stars {
+    color: #111111;
+  }
+
+  .light-theme .review-text {
+    color: #333333;
+  }
+
+  .light-theme .user-avatar {
+    background: #e5e5e5;
+    color: #111111;
+  }
+
+  .light-theme .user-name {
+    color: #111111;
+  }
+
+  .light-theme .user-role {
+    color: #777777;
+  }
+
+  .light-theme .review-disclaimer {
+    color: #888888;
+  }
+
+  .light-theme .footer-links {
+    color: #666666;
+  }
+
+  .light-theme .footer-links a {
+    color: #444444;
+  }
+
+  .light-theme .footer-legal-notice {
+    color: #777777;
+  }
+
+  .light-theme .fixed-bottom-bar {
+    background: #ffffff;
+    border-color: #eeeeee;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+  }
+
+  .light-theme .fixed-price-caption {
+    color: #666666;
+  }
+
+  .light-theme .primary-cta-btn {
+    background: #111111;
+    color: #ffffff;
+  }
+  .light-theme .primary-cta-btn:active {
+    background: #2a2a2a;
+  }
+
+  .light-theme .home-indicator {
+    background: #111111;
+  }
+
+  /* ========================================================= */
+  /* DARK MODE THEME TOKENS                                    */
+  /* ========================================================= */
+  .dark-theme {
+    background-color: #0d0e11;
+    color: #f3f3f3;
+  }
+
+  .dark-theme .status-bar {
+    color: #ffffff;
+  }
+
+  .dark-theme .top-app-bar {
+    border-color: #1a1c22;
+  }
+
+  .dark-theme .icon-btn {
+    color: #ffffff;
+  }
+  .dark-theme .icon-btn:active {
+    background: #1e2026;
+  }
+
+  .dark-theme .text-btn {
+    color: #9da3ae;
+  }
+  .dark-theme .text-btn:hover {
+    color: #ffffff;
+  }
+
+  .dark-theme .hero-icon-tile {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .dark-theme .pro-hero-header h2 {
+    color: #ffffff;
+  }
+
+  .dark-theme .pro-hero-header p.subtitle {
+    color: #9da3ae;
+  }
+
+  .dark-theme .plan-row {
+    background: #14161b;
+    border-color: #242730;
+  }
+
+  .dark-theme .plan-row.selected {
+    background: #191c22;
+    border-color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .dark-theme .radio-circle {
+    border-color: #4b5262;
+  }
+
+  .dark-theme .plan-row.selected .radio-circle {
+    border-color: #ffffff;
+  }
+
+  .dark-theme .radio-circle .inner-dot {
+    background: #ffffff;
+  }
+
+  .dark-theme .plan-title {
+    color: #ffffff;
+  }
+
+  .dark-theme .badge-filled {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .dark-theme .badge-outlined {
+    border-color: #ffffff;
+    color: #ffffff;
+  }
+
+  .dark-theme .plan-detail {
+    color: #9da3ae;
+  }
+
+  .dark-theme .plan-price {
+    color: #ffffff;
+  }
+
+  .dark-theme .section-card {
+    background: #14161b;
+    border-color: #242730;
+  }
+
+  .dark-theme .section-title-wrap {
+    color: #ffffff;
+  }
+
+  .dark-theme .feature-item {
+    color: #e5e5e5;
+  }
+
+  .dark-theme .feature-item .material-symbols-rounded {
+    color: #ffffff;
+  }
+
+  .dark-theme .coming-soon-row {
+    border-color: #242730;
+    color: #8b929e;
+  }
+
+  .dark-theme .coming-soon-pill {
+    border-color: #3f4452;
+    color: #9da3ae;
+  }
+
+  .dark-theme .comparison-table th {
+    color: #8b929e;
+  }
+
+  .dark-theme .comparison-table td {
+    color: #e5e5e5;
+  }
+
+  .dark-theme .comparison-table tr:not(:last-child) td {
+    border-color: #242730;
+  }
+
+  .dark-theme .pro-pill-header {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .dark-theme .reviews-header-metric {
+    color: #9da3ae;
+  }
+
+  .dark-theme .review-card {
+    background: #171920;
+    border-color: #242730;
+  }
+
+  .dark-theme .review-stars {
+    color: #ffffff;
+  }
+
+  .dark-theme .review-text {
+    color: #cfd3dc;
+  }
+
+  .dark-theme .user-avatar {
+    background: #2a2e38;
+    color: #ffffff;
+  }
+
+  .dark-theme .user-name {
+    color: #ffffff;
+  }
+
+  .dark-theme .user-role {
+    color: #8b929e;
+  }
+
+  .dark-theme .review-disclaimer {
+    color: #717784;
+  }
+
+  .dark-theme .footer-links {
+    color: #8b929e;
+  }
+
+  .dark-theme .footer-links a {
+    color: #cfd3dc;
+  }
+
+  .dark-theme .footer-legal-notice {
+    color: #8b929e;
+  }
+
+  .dark-theme .fixed-bottom-bar {
+    background: #0d0e11;
+    border-color: #1f222a;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .dark-theme .fixed-price-caption {
+    color: #9da3ae;
+  }
+
+  .dark-theme .primary-cta-btn {
+    background: #ffffff;
+    color: #000000;
+  }
+  .dark-theme .primary-cta-btn:active {
+    background: #e2e2e2;
+  }
+
+  .dark-theme .home-indicator {
+    background: #ffffff;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Screen Meta Header -->
+  <div class="screen-header">
+    <div class="spec-pill">
+      <span class="dot"></span>
+      ClientHunt • Pro Subscription Paywall
+    </div>
+    <h1>ClientHunt Pro</h1>
+    <p>High-conversion, zero-distraction paywall specification with stacked pricing tiers, comprehensive feature matrix, comparison table, verified user reviews, and sticky CTA.</p>
+  </div>
+
+  <!-- Frames Side by Side -->
+  <div class="frames-container">
+
+    <!-- ============================================================== -->
+    <!-- FRAME 1: LIGHT MODE                                            -->
+    <!-- ============================================================== -->
+    <div class="frame-wrapper">
+      <div class="frame-label">
+        <span class="indicator" style="background:#ffffff; border: 1px solid #777;"></span>
+        FRAME 1: LIGHT MODE (390 × 844 px)
+      </div>
+
+      <div class="phone-frame light-theme">
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="notch"></div>
+          <div class="status-icons">
+            <span class="material-symbols-rounded" style="font-size:16px;">signal_cellular_alt</span>
+            <span class="material-symbols-rounded" style="font-size:16px;">wifi</span>
+            <span class="material-symbols-rounded" style="font-size:18px;">battery_full</span>
+          </div>
+        </div>
+
+        <!-- 1. Top App Bar (56px) -->
+        <div class="top-app-bar">
+          <button class="icon-btn" aria-label="Close">
+            <span class="material-symbols-rounded" style="font-size: 24px;">close</span>
+          </button>
+          <button class="text-btn">Restore</button>
+        </div>
+
+        <!-- Scrollable Body -->
+        <div class="scroll-content">
+
+          <!-- 2. Compact Header -->
+          <div class="pro-hero-header">
+            <div class="hero-icon-tile">
+              <span class="material-symbols-rounded" style="font-size: 28px;">workspace_premium</span>
+            </div>
+            <h2>ClientHunt Pro</h2>
+            <p class="subtitle">Find more leads, from more places.</p>
+          </div>
+
+          <!-- 3. Plan Selector (3 stacked rows, 72px) -->
+          <div class="plans-stack">
+            <!-- Yearly (Selected) -->
+            <div class="plan-row selected">
+              <div class="plan-left">
+                <div class="radio-circle">
+                  <div class="inner-dot"></div>
+                </div>
+                <div class="plan-info">
+                  <div class="plan-title-badges">
+                    <span class="plan-title">Yearly</span>
+                    <span class="badge-filled">Best value</span>
+                    <span class="badge-outlined">Save 16%</span>
+                  </div>
+                  <span class="plan-detail">About ₹250 / month</span>
+                </div>
+              </div>
+              <div class="plan-price-block">
+                <span class="plan-price">₹2,999 / year</span>
+              </div>
+            </div>
+
+            <!-- Monthly -->
+            <div class="plan-row">
+              <div class="plan-left">
+                <div class="radio-circle"></div>
+                <div class="plan-info">
+                  <span class="plan-title">Monthly</span>
+                  <span class="plan-detail">Billed every month</span>
+                </div>
+              </div>
+              <div class="plan-price-block">
+                <span class="plan-price">₹299 / month</span>
+              </div>
+            </div>
+
+            <!-- Weekly -->
+            <div class="plan-row">
+              <div class="plan-left">
+                <div class="radio-circle"></div>
+                <div class="plan-info">
+                  <span class="plan-title">Weekly</span>
+                  <span class="plan-detail">Billed every week</span>
+                </div>
+              </div>
+              <div class="plan-price-block">
+                <span class="plan-price">₹99 / week</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Included in all plans -->
+          <div class="section-card">
+            <div class="section-title-wrap">
+              <span class="material-symbols-rounded" style="font-size: 22px;">workspace_premium</span>
+              <span>Included in all plans</span>
+            </div>
+            <div class="features-list">
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Search Instagram, LinkedIn, Facebook and X</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Deep search that scans websites for emails</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Up to 200 results per search</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Unlimited saved leads and lists</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Find businesses with no website</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Export to CSV, Excel, PDF and VCF without limits</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Ad-free experience</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Priority support</span>
+              </div>
+              <div class="coming-soon-row">
+                <span class="material-symbols-rounded" style="font-size: 19px;">lock</span>
+                <span style="flex:1;">AI to organize, format and verify leads</span>
+                <span class="coming-soon-pill">Coming soon</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Free vs Pro mini comparison -->
+          <div class="section-card">
+            <div class="section-title-wrap">
+              <span class="material-symbols-rounded" style="font-size: 20px;">balance</span>
+              <span>Free vs Pro comparison</span>
+            </div>
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th style="width: 50%;">Feature</th>
+                  <th style="width: 25%;">Free</th>
+                  <th style="width: 25%;"><span class="pro-pill-header">Pro</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Maps leads</td>
+                  <td><span class="material-symbols-rounded" style="font-size: 18px;">check</span></td>
+                  <td><span class="material-symbols-rounded" style="font-size: 18px; font-weight:700;">check</span></td>
+                </tr>
+                <tr>
+                  <td>Social sources</td>
+                  <td><span style="font-family:'JetBrains Mono';">—</span></td>
+                  <td><span class="material-symbols-rounded" style="font-size: 18px; font-weight:700;">check</span></td>
+                </tr>
+                <tr>
+                  <td>Deep search</td>
+                  <td><span style="font-family:'JetBrains Mono';">—</span></td>
+                  <td><span class="material-symbols-rounded" style="font-size: 18px; font-weight:700;">check</span></td>
+                </tr>
+                <tr>
+                  <td>Results per search</td>
+                  <td style="font-family: 'JetBrains Mono', monospace;">25</td>
+                  <td style="font-family: 'JetBrains Mono', monospace; font-weight:700;">200</td>
+                </tr>
+                <tr>
+                  <td>Saved leads</td>
+                  <td style="font-family: 'JetBrains Mono', monospace;">50</td>
+                  <td style="font-weight:700;">Unlimited</td>
+                </tr>
+                <tr>
+                  <td>Ads</td>
+                  <td>Yes</td>
+                  <td style="font-weight:700;">No</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 6. Reviews section -->
+          <div class="section-card" style="padding-bottom: 12px;">
+            <div class="section-header-row">
+              <div class="section-title-wrap">
+                <span class="material-symbols-rounded" style="font-size: 20px;">forum</span>
+                <span>What users say</span>
+              </div>
+              <div class="reviews-header-metric">
+                <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                <span>4.7</span>
+                <span style="font-size: 12px; color: #777; font-weight: normal;">Play store</span>
+              </div>
+            </div>
+
+            <!-- Horizontally scrolling review cards -->
+            <div class="reviews-scroll">
+              <!-- Review 1 -->
+              <div class="review-card">
+                <div class="review-stars">
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                </div>
+                <div class="review-text">
+                  "Exporting 200 clinic contacts directly into Excel with verified email addresses saved me over 15 hours of manual lookup this week alone."
+                </div>
+                <div class="review-user">
+                  <div class="user-avatar">AK</div>
+                  <div class="user-meta">
+                    <span class="user-name">Amit K.</span>
+                    <span class="user-role">Agency Owner</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Review 2 -->
+              <div class="review-card">
+                <div class="review-stars">
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                </div>
+                <div class="review-text">
+                  "The deep search feature pulls personal outreach emails from websites that other scrapers consistently miss. Worth every rupee."
+                </div>
+                <div class="review-user">
+                  <div class="user-avatar">PS</div>
+                  <div class="user-meta">
+                    <span class="user-name">Priya S.</span>
+                    <span class="user-role">B2B Consultant</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Review 3 -->
+              <div class="review-card">
+                <div class="review-stars">
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star_half</span>
+                </div>
+                <div class="review-text">
+                  "Targeting local businesses with no website has been a goldmine for selling web design packages. Paid for the yearly plan on day one."
+                </div>
+                <div class="review-user">
+                  <div class="user-avatar">RM</div>
+                  <div class="user-meta">
+                    <span class="user-name">Rahul M.</span>
+                    <span class="user-role">Freelancer</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="review-disclaimer">Sample reviews for design only</div>
+          </div>
+
+          <!-- 7. Footer -->
+          <div class="pro-footer">
+            <div class="footer-links">
+              <a>Terms</a>
+              <span class="dot-separator">•</span>
+              <a>Privacy Policy</a>
+              <span class="dot-separator">•</span>
+              <a>Restore purchases</a>
+            </div>
+            <div class="footer-legal-notice">
+              <span class="material-symbols-rounded" style="font-size: 16px; flex-shrink: 0; margin-top: 1px;">info</span>
+              <span>Subscription renews automatically until cancelled. Cancel anytime in Google Play.</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 8. Fixed Bottom Bar -->
+        <div class="fixed-bottom-bar">
+          <div class="fixed-price-caption">₹2,999 billed yearly</div>
+          <button class="primary-cta-btn">
+            <span>Continue</span>
+            <span class="material-symbols-rounded" style="font-size: 20px;">arrow_forward</span>
+          </button>
+          <div class="home-indicator"></div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ============================================================== -->
+    <!-- FRAME 2: DARK MODE                                             -->
+    <!-- ============================================================== -->
+    <div class="frame-wrapper">
+      <div class="frame-label">
+        <span class="indicator" style="background:#000000; border: 1px solid #444;"></span>
+        FRAME 2: DARK MODE (390 × 844 px)
+      </div>
+
+      <div class="phone-frame dark-theme">
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="notch"></div>
+          <div class="status-icons">
+            <span class="material-symbols-rounded" style="font-size:16px;">signal_cellular_alt</span>
+            <span class="material-symbols-rounded" style="font-size:16px;">wifi</span>
+            <span class="material-symbols-rounded" style="font-size:18px;">battery_full</span>
+          </div>
+        </div>
+
+        <!-- 1. Top App Bar (56px) -->
+        <div class="top-app-bar">
+          <button class="icon-btn" aria-label="Close">
+            <span class="material-symbols-rounded" style="font-size: 24px;">close</span>
+          </button>
+          <button class="text-btn">Restore</button>
+        </div>
+
+        <!-- Scrollable Body -->
+        <div class="scroll-content">
+
+          <!-- 2. Compact Header -->
+          <div class="pro-hero-header">
+            <div class="hero-icon-tile">
+              <span class="material-symbols-rounded" style="font-size: 28px;">workspace_premium</span>
+            </div>
+            <h2>ClientHunt Pro</h2>
+            <p class="subtitle">Find more leads, from more places.</p>
+          </div>
+
+          <!-- 3. Plan Selector (3 stacked rows, 72px) -->
+          <div class="plans-stack">
+            <!-- Yearly (Selected) -->
+            <div class="plan-row selected">
+              <div class="plan-left">
+                <div class="radio-circle">
+                  <div class="inner-dot"></div>
+                </div>
+                <div class="plan-info">
+                  <div class="plan-title-badges">
+                    <span class="plan-title">Yearly</span>
+                    <span class="badge-filled">Best value</span>
+                    <span class="badge-outlined">Save 16%</span>
+                  </div>
+                  <span class="plan-detail">About ₹250 / month</span>
+                </div>
+              </div>
+              <div class="plan-price-block">
+                <span class="plan-price">₹2,999 / year</span>
+              </div>
+            </div>
+
+            <!-- Monthly -->
+            <div class="plan-row">
+              <div class="plan-left">
+                <div class="radio-circle"></div>
+                <div class="plan-info">
+                  <span class="plan-title">Monthly</span>
+                  <span class="plan-detail">Billed every month</span>
+                </div>
+              </div>
+              <div class="plan-price-block">
+                <span class="plan-price">₹299 / month</span>
+              </div>
+            </div>
+
+            <!-- Weekly -->
+            <div class="plan-row">
+              <div class="plan-left">
+                <div class="radio-circle"></div>
+                <div class="plan-info">
+                  <span class="plan-title">Weekly</span>
+                  <span class="plan-detail">Billed every week</span>
+                </div>
+              </div>
+              <div class="plan-price-block">
+                <span class="plan-price">₹99 / week</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Included in all plans -->
+          <div class="section-card">
+            <div class="section-title-wrap">
+              <span class="material-symbols-rounded" style="font-size: 22px;">workspace_premium</span>
+              <span>Included in all plans</span>
+            </div>
+            <div class="features-list">
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Search Instagram, LinkedIn, Facebook and X</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Deep search that scans websites for emails</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Up to 200 results per search</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Unlimited saved leads and lists</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Find businesses with no website</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Export to CSV, Excel, PDF and VCF without limits</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Ad-free experience</span>
+              </div>
+              <div class="feature-item">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span>Priority support</span>
+              </div>
+              <div class="coming-soon-row">
+                <span class="material-symbols-rounded" style="font-size: 19px;">lock</span>
+                <span style="flex:1;">AI to organize, format and verify leads</span>
+                <span class="coming-soon-pill">Coming soon</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Free vs Pro mini comparison -->
+          <div class="section-card">
+            <div class="section-title-wrap">
+              <span class="material-symbols-rounded" style="font-size: 20px;">balance</span>
+              <span>Free vs Pro comparison</span>
+            </div>
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th style="width: 50%;">Feature</th>
+                  <th style="width: 25%;">Free</th>
+                  <th style="width: 25%;"><span class="pro-pill-header">Pro</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Maps leads</td>
+                  <td><span class="material-symbols-rounded" style="font-size: 18px;">check</span></td>
+                  <td><span class="material-symbols-rounded" style="font-size: 18px; font-weight:700;">check</span></td>
+                </tr>
+                <tr>
+                  <td>Social sources</td>
+                  <td><span style="font-family:'JetBrains Mono';">—</span></td>
+                  <td><span class="material-symbols-rounded" style="font-size: 18px; font-weight:700;">check</span></td>
+                </tr>
+                <tr>
+                  <td>Deep search</td>
+                  <td><span style="font-family:'JetBrains Mono';">—</span></td>
+                  <td><span class="material-symbols-rounded" style="font-size: 18px; font-weight:700;">check</span></td>
+                </tr>
+                <tr>
+                  <td>Results per search</td>
+                  <td style="font-family: 'JetBrains Mono', monospace;">25</td>
+                  <td style="font-family: 'JetBrains Mono', monospace; font-weight:700;">200</td>
+                </tr>
+                <tr>
+                  <td>Saved leads</td>
+                  <td style="font-family: 'JetBrains Mono', monospace;">50</td>
+                  <td style="font-weight:700;">Unlimited</td>
+                </tr>
+                <tr>
+                  <td>Ads</td>
+                  <td>Yes</td>
+                  <td style="font-weight:700;">No</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 6. Reviews section -->
+          <div class="section-card" style="padding-bottom: 12px;">
+            <div class="section-header-row">
+              <div class="section-title-wrap">
+                <span class="material-symbols-rounded" style="font-size: 20px;">forum</span>
+                <span>What users say</span>
+              </div>
+              <div class="reviews-header-metric">
+                <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                <span>4.7</span>
+                <span style="font-size: 12px; color: #8b929e; font-weight: normal;">Play store</span>
+              </div>
+            </div>
+
+            <!-- Horizontally scrolling review cards -->
+            <div class="reviews-scroll">
+              <!-- Review 1 -->
+              <div class="review-card">
+                <div class="review-stars">
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                </div>
+                <div class="review-text">
+                  "Exporting 200 clinic contacts directly into Excel with verified email addresses saved me over 15 hours of manual lookup this week alone."
+                </div>
+                <div class="review-user">
+                  <div class="user-avatar">AK</div>
+                  <div class="user-meta">
+                    <span class="user-name">Amit K.</span>
+                    <span class="user-role">Agency Owner</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Review 2 -->
+              <div class="review-card">
+                <div class="review-stars">
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                </div>
+                <div class="review-text">
+                  "The deep search feature pulls personal outreach emails from websites that other scrapers consistently miss. Worth every rupee."
+                </div>
+                <div class="review-user">
+                  <div class="user-avatar">PS</div>
+                  <div class="user-meta">
+                    <span class="user-name">Priya S.</span>
+                    <span class="user-role">B2B Consultant</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Review 3 -->
+              <div class="review-card">
+                <div class="review-stars">
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star</span>
+                  <span class="material-symbols-rounded" style="font-size: 17px;">star_half</span>
+                </div>
+                <div class="review-text">
+                  "Targeting local businesses with no website has been a goldmine for selling web design packages. Paid for the yearly plan on day one."
+                </div>
+                <div class="review-user">
+                  <div class="user-avatar">RM</div>
+                  <div class="user-meta">
+                    <span class="user-name">Rahul M.</span>
+                    <span class="user-role">Freelancer</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="review-disclaimer">Sample reviews for design only</div>
+          </div>
+
+          <!-- 7. Footer -->
+          <div class="pro-footer">
+            <div class="footer-links">
+              <a>Terms</a>
+              <span class="dot-separator">•</span>
+              <a>Privacy Policy</a>
+              <span class="dot-separator">•</span>
+              <a>Restore purchases</a>
+            </div>
+            <div class="footer-legal-notice">
+              <span class="material-symbols-rounded" style="font-size: 16px; flex-shrink: 0; margin-top: 1px;">info</span>
+              <span>Subscription renews automatically until cancelled. Cancel anytime in Google Play.</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 8. Fixed Bottom Bar -->
+        <div class="fixed-bottom-bar">
+          <div class="fixed-price-caption">₹2,999 billed yearly</div>
+          <button class="primary-cta-btn">
+            <span>Continue</span>
+            <span class="material-symbols-rounded" style="font-size: 20px;">arrow_forward</span>
+          </button>
+          <div class="home-indicator"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

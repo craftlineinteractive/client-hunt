@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClientHunt - Settings (Light & Dark Monochrome)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+/* CSS Reset & Base */
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  margin: 0;
+  padding: 40px 20px;
+  background-color: #0b0c0e;
+  font-family: 'Inter', sans-serif;
+  color: #111111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Custom scrollbar hiding for clean app preview */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.device-frame {
+  width: 390px;
+  height: 844px;
+  border-radius: 44px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 12px #1f2127, 0 0 0 14px #2e323b;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Toggle switch styling */
+.toggle-track-on-light {
+  width: 44px;
+  height: 24px;
+  background-color: #111111;
+  border-radius: 9999px;
+  position: relative;
+  transition: all 0.2s;
+}
+.toggle-thumb-on-light {
+  width: 18px;
+  height: 18px;
+  background-color: #ffffff;
+  border-radius: 9999px;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+}
+
+.toggle-track-on-dark {
+  width: 44px;
+  height: 24px;
+  background-color: #ffffff;
+  border-radius: 9999px;
+  position: relative;
+  transition: all 0.2s;
+}
+.toggle-thumb-on-dark {
+  width: 18px;
+  height: 18px;
+  background-color: #000000;
+  border-radius: 9999px;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+}
+</style>
+</head>
+<body class="bg-[#0b0c0e] text-[#e0e0e0]">
+
+  <!-- Header Specification Info -->
+  <header class="text-center mb-10 max-w-2xl">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#181a20] border border-[#2b2f3a] text-xs font-mono tracking-wider text-[#a0a5b5] uppercase mb-3">
+      <span class="w-1.5 h.1.5 rounded-full bg-emerald-400"></span>
+      ClientHunt • Settings Specification
+    </div>
+    <h1 class="text-3xl font-heading font-extrabold text-white tracking-tight mb-2">Settings</h1>
+    <p class="text-sm text-[#949aa8] max-w-lg mx-auto">
+      Comprehensive settings pipeline with Pro membership prompt, theme preference switch, defaults tuning, device storage controls, privacy controls, and bottom navigation.
+    </p>
+    <div class="flex items-center justify-center gap-6 mt-4 text-xs font-mono text-[#717684]">
+      <span>● FRAME 1: LIGHT MODE (390 × 844 px)</span>
+      <span>○ FRAME 2: DARK MODE (390 × 844 px)</span>
+    </div>
+  </header>
+
+  <!-- Frames Grid -->
+  <main class="flex flex-wrap items-start justify-center gap-12 max-w-7xl">
+
+    <!-- ========================================== -->
+    <!-- FRAME 1: LIGHT MODE -->
+    <!-- ========================================== -->
+    <div class="flex flex-col items-center">
+      <div class="text-xs font-mono text-[#888e9d] mb-3 flex items-center gap-1.5">
+        <span class="inline-block w-2 h-2 rounded-full bg-white border border-gray-400"></span>
+        FRAME 1 • LIGHT MODE
+      </div>
+
+      <div class="device-frame bg-white text-[#111111] select-none">
+        
+        <!-- Status Bar -->
+        <div class="w-full h-11 pt-3 px-6 flex items-center justify-between text-xs font-mono font-medium text-black z-30 shrink-0 bg-white">
+          <span>9:41</span>
+          <!-- Dynamic Island Pill -->
+          <div class="w-24 h-4 bg-black rounded-full mx-auto"></div>
+          <div class="flex items-center gap-1.5">
+            <!-- Cellular -->
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25A10.95 10.95 0 0 1 2 12C2 6.48 6.48 2 12 2s10 4.48 10 10c0 2.32-.73 4.47-1.97 6.25l-.62-.64C20.46 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9zm-5.66 12.34C5.51 14.39 5 13.25 5 12c0-3.87 3.13-7 7-7s7 3.13 7 7c0 1.25-.51 2.39-1.34 3.34l-.71-.71C17.58 13.88 18 12.99 18 12c0-3.31-2.69-6-6-6s-6 2.69-6 6c0 .99.42 1.88 1.05 2.63l-.71.71zM12 9c-1.66 0-3 1.34-3 3 0 .8.32 1.53.84 2.06l-.71.71C8.42 14.06 8 13.08 8 12c0-2.21 1.79-4 4-4s4 1.79 4 4c0 1.08-.42 2.06-1.13 2.77l-.71-.71c.52-.53.84-1.26.84-2.06 0-1.66-1.34-3-3-3zm0 2c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"/>
+            </svg>
+            <!-- Wifi -->
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4zm0 3.5c3.55 0 6.8 1.33 9.29 3.52L12 19.34 2.71 11.02A14.28 14.28 0 0 1 12 7.5z"/>
+            </svg>
+            <!-- Battery -->
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17 5v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2zm2 5h1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1v-4z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Top App Bar (56px) - No back button as this is a main tab -->
+        <div class="h-14 px-5 flex items-center shrink-0 border-b border-[#f0f0f0] bg-white z-20">
+          <h1 class="text-[22px] font-heading font-bold text-black tracking-tight">Settings</h1>
+        </div>
+
+        <!-- Scrollable Content Area -->
+        <div class="flex-1 overflow-y-auto px-4 py-4 space-y-5 no-scrollbar bg-[#fafafa]">
+          
+          <!-- 1. Pro Status Card -->
+          <div>
+            <div class="bg-black text-white p-4 rounded-2xl shadow-sm border border-neutral-800">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <!-- Workspace Premium Tile -->
+                  <div class="w-10 h-10 rounded-xl bg-neutral-900 border border-neutral-700 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="8" r="6"/>
+                      <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="font-heading font-bold text-[16px] leading-tight text-white flex items-center gap-1.5">
+                      ClientHunt Pro
+                    </div>
+                    <div class="text-[13px] text-neutral-400 mt-0.5 leading-snug">
+                      Unlock social sources and unlimited leads
+                    </div>
+                  </div>
+                </div>
+                <button class="px-3.5 py-1.5 rounded-full bg-white text-black font-semibold text-[13px] shrink-0 active:scale-95 transition-transform">
+                  Go Pro
+                </button>
+              </div>
+            </div>
+            <!-- Subtitle action row -->
+            <div class="flex items-center justify-between px-2 pt-2 text-[13px] text-[#737373] cursor-pointer">
+              <span>Manage subscription</span>
+              <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 2. Group "Appearance" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#666666] mb-2 px-1">
+              Appearance
+            </div>
+            <div class="bg-white rounded-2xl border border-[#e5e5e5] divide-y divide-[#f0f0f0] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+              
+              <!-- Row: Theme -->
+              <div class="min-h-[52px] p-3 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+                      <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                      <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+                      <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Theme</span>
+                </div>
+                <!-- Segmented Control (Light, Dark, System [Selected]) -->
+                <div class="flex items-center p-0.5 rounded-lg bg-[#f0f0f0] border border-[#e5e5e5] text-[13px]">
+                  <span class="px-2 py-0.5 rounded text-[#737373]">Light</span>
+                  <span class="px-2 py-0.5 rounded text-[#737373]">Dark</span>
+                  <span class="px-2.5 py-0.5 rounded bg-black text-white font-medium shadow-xs">System</span>
+                </div>
+              </div>
+
+              <!-- Row: Default Country -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Default country</span>
+                </div>
+                <div class="flex items-center gap-1 text-[13px] text-[#555555]">
+                  <span>India</span>
+                  <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 3. Group "Search defaults" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#666666] mb-2 px-1">
+              Search defaults
+            </div>
+            <div class="bg-white rounded-2xl border border-[#e5e5e5] divide-y divide-[#f0f0f0] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+              
+              <!-- Default sources -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                      <polyline points="2 17 12 22 22 17"/>
+                      <polyline points="2 12 12 17 22 12"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Default sources</span>
+                </div>
+                <div class="flex items-center gap-1 text-[13px] text-[#555555]">
+                  <span>Maps</span>
+                  <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Max results per search -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="10" x2="21" y1="6" y2="6"/>
+                      <line x1="10" x2="21" y1="12" y2="12"/>
+                      <line x1="10" x2="21" y1="18" y2="18"/>
+                      <path d="M4 6h1v4M4 10h2"/>
+                      <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Max results per search</span>
+                </div>
+                <div class="flex items-center gap-1 text-[13px] text-[#555555] font-mono">
+                  <span>50</span>
+                  <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Remove duplicates (Toggle ON) -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Remove duplicates</span>
+                </div>
+                <div class="toggle-track-on-light cursor-pointer">
+                  <div class="toggle-thumb-on-light"></div>
+                </div>
+              </div>
+
+              <!-- Skip leads I already saved (Toggle ON) -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Skip leads I already saved</span>
+                </div>
+                <div class="toggle-track-on-light cursor-pointer">
+                  <div class="toggle-thumb-on-light"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 4. Group "Data and storage" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#666666] mb-2 px-1">
+              Data and storage
+            </div>
+            <div class="bg-white rounded-2xl border border-[#e5e5e5] divide-y divide-[#f0f0f0] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+              
+              <!-- Storage used -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                      <path d="M3 5V19A9 3 0 0 0 21 19V5"/>
+                      <path d="M3 12A9 3 0 0 0 21 12"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Storage used</span>
+                </div>
+                <span class="text-[13px] font-mono text-[#737373]">2.4 MB</span>
+              </div>
+
+              <!-- Export all saved leads -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" x2="12" y1="15" y2="3"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Export all saved leads</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- Clear search history -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                      <path d="M3 3v5h5"/>
+                      <path d="M12 7v5l4 2"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Clear search history</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- Clear all saved leads (Destructive, monochrome plain) -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 6h18"/>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Clear all saved leads</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+            </div>
+            <!-- Subtitle caption -->
+            <div class="flex items-center gap-1.5 px-2 pt-2 text-[13px] text-[#737373]">
+              <svg class="w-3.5 h-3.5 text-[#8a8a8a] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span>Your leads are stored only on this device.</span>
+            </div>
+          </div>
+
+          <!-- 5. Group "Privacy and ads" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#666666] mb-2 px-1">
+              Privacy and ads
+            </div>
+            <div class="bg-white rounded-2xl border border-[#e5e5e5] divide-y divide-[#f0f0f0] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+              
+              <!-- Ad personalization (Toggle ON) -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="m3 3 3 9-3 9 19-9Z"/>
+                      <path d="M6 12h16"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Ad personalization</span>
+                </div>
+                <div class="toggle-track-on-light cursor-pointer">
+                  <div class="toggle-thumb-on-light"></div>
+                </div>
+              </div>
+
+              <!-- Reset advertising ID -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                      <path d="M21 3v5h-5"/>
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                      <path d="M8 16H3v5"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Reset advertising ID</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" x2="21" y1="14" y2="3"/>
+                </svg>
+              </div>
+
+              <!-- Privacy choices -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Privacy choices</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 6. Group "Support" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#666666] mb-2 px-1">
+              Support
+            </div>
+            <div class="bg-white rounded-2xl border border-[#e5e5e5] divide-y divide-[#f0f0f0] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+              
+              <!-- Rate ClientHunt -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Rate ClientHunt</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- Share the app -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="18" cy="5" r="3"/>
+                      <circle cx="6" cy="12" r="3"/>
+                      <circle cx="18" cy="19" r="3"/>
+                      <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                      <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Share the app</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- Send feedback -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Send feedback</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- Contact support -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="20" height="16" x="2" y="4" rx="2"/>
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Contact support</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-[13px] text-[#737373] font-mono">
+                  <span>support@yourdomain</span>
+                  <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Help and FAQ -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                      <path d="M12 17h.01"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Help and FAQ</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 7. Group "About and legal" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#666666] mb-2 px-1">
+              About and legal
+            </div>
+            <div class="bg-white rounded-2xl border border-[#e5e5e5] divide-y divide-[#f0f0f0] overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+              
+              <!-- Privacy Policy -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                      <line x1="16" x2="8" y1="13" y2="13"/>
+                      <line x1="16" x2="8" y1="17" y2="17"/>
+                      <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Privacy Policy</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" x2="21" y1="14" y2="3"/>
+                </svg>
+              </div>
+
+              <!-- Terms of Use -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="m14 13-7.5 7.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L11 10"/>
+                      <path d="m16 16 6-6"/>
+                      <path d="m8 8 6-6"/>
+                      <path d="m9 7 8 8"/>
+                      <path d="m21 11-8-8"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Terms of Use</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" x2="21" y1="14" y2="3"/>
+                </svg>
+              </div>
+
+              <!-- Open source licenses -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="16 18 22 12 16 6"/>
+                      <polyline points="8 6 2 12 8 18"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">Open source licenses</span>
+                </div>
+                <svg class="w-4 h-4 text-[#8a8a8a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- App version -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#f5f5f5] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#333333]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" x2="12" y1="16" y2="12"/>
+                      <line x1="12" x2="12.01" y1="8" y2="8"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#111111]">App version</span>
+                </div>
+                <span class="text-[13px] font-mono text-[#737373]">1.0.0 (1)</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Footer Attribution -->
+          <div class="pt-2 pb-6 text-center text-[13px] text-[#8a8a8a]">
+            Made with care by Craftline Interactive
+          </div>
+
+        </div>
+
+        <!-- Bottom Navigation Bar (3 items: Search, Saved, Settings [active]) -->
+        <div class="h-16 border-t border-[#e5e5e5] bg-white flex items-center justify-around px-4 z-30 shrink-0">
+          
+          <!-- Tab 1: Search -->
+          <div class="flex flex-col items-center justify-center w-20 py-1 text-[#737373] cursor-pointer">
+            <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" x2="16.65" y1="21" y2="16.65"/>
+            </svg>
+            <span class="text-[11px] font-medium">Search</span>
+          </div>
+
+          <!-- Tab 2: Saved -->
+          <div class="flex flex-col items-center justify-center w-20 py-1 text-[#737373] cursor-pointer">
+            <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+            </svg>
+            <span class="text-[11px] font-medium">Saved</span>
+          </div>
+
+          <!-- Tab 3: Settings (Active with pill indicator) -->
+          <div class="flex flex-col items-center justify-center w-20 py-1 text-black cursor-pointer relative">
+            <div class="px-3 py-1 rounded-full bg-[#f0f0f0] flex items-center justify-center mb-0.5">
+              <svg class="w-5 h-5 text-black" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+              </svg>
+            </div>
+            <span class="text-[11px] font-semibold text-black">Settings</span>
+          </div>
+
+        </div>
+
+        <!-- Bottom Gesture Home Indicator -->
+        <div class="w-full h-5 pb-1 flex justify-center items-center bg-white shrink-0">
+          <div class="w-32 h-1 bg-black rounded-full"></div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- FRAME 2: DARK MODE -->
+    <!-- ========================================== -->
+    <div class="flex flex-col items-center">
+      <div class="text-xs font-mono text-[#888e9d] mb-3 flex items-center gap-1.5">
+        <span class="inline-block w-2 h-2 rounded-full bg-black border border-gray-600"></span>
+        FRAME 2 • DARK MODE
+      </div>
+
+      <div class="device-frame bg-[#0a0a0a] text-[#f5f5f5] select-none">
+        
+        <!-- Status Bar -->
+        <div class="w-full h-11 pt-3 px-6 flex items-center justify-between text-xs font-mono font-medium text-white z-30 shrink-0 bg-[#0a0a0a]">
+          <span>9:41</span>
+          <!-- Dynamic Island Pill -->
+          <div class="w-24 h-4 bg-neutral-900 rounded-full mx-auto border border-neutral-800"></div>
+          <div class="flex items-center gap-1.5">
+            <!-- Cellular -->
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25A10.95 10.95 0 0 1 2 12C2 6.48 6.48 2 12 2s10 4.48 10 10c0 2.32-.73 4.47-1.97 6.25l-.62-.64C20.46 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9zm-5.66 12.34C5.51 14.39 5 13.25 5 12c0-3.87 3.13-7 7-7s7 3.13 7 7c0 1.25-.51 2.39-1.34 3.34l-.71-.71C17.58 13.88 18 12.99 18 12c0-3.31-2.69-6-6-6s-6 2.69-6 6c0 .99.42 1.88 1.05 2.63l-.71.71zM12 9c-1.66 0-3 1.34-3 3 0 .8.32 1.53.84 2.06l-.71.71C8.42 14.06 8 13.08 8 12c0-2.21 1.79-4 4-4s4 1.79 4 4c0 1.08-.42 2.06-1.13 2.77l-.71-.71c.52-.53.84-1.26.84-2.06 0-1.66-1.34-3-3-3zm0 2c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"/>
+            </svg>
+            <!-- Wifi -->
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4zm0 3.5c3.55 0 6.8 1.33 9.29 3.52L12 19.34 2.71 11.02A14.28 14.28 0 0 1 12 7.5z"/>
+            </svg>
+            <!-- Battery -->
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17 5v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2zm2 5h1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1v-4z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Top App Bar (56px) - No back button as this is a main tab -->
+        <div class="h-14 px-5 flex items-center shrink-0 border-b border-[#222222] bg-[#0a0a0a] z-20">
+          <h1 class="text-[22px] font-heading font-bold text-white tracking-tight">Settings</h1>
+        </div>
+
+        <!-- Scrollable Content Area -->
+        <div class="flex-1 overflow-y-auto px-4 py-4 space-y-5 no-scrollbar bg-[#0f0f0f]">
+          
+          <!-- 1. Pro Status Card -->
+          <div>
+            <div class="bg-white text-black p-4 rounded-2xl shadow-sm border border-neutral-200">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <!-- Workspace Premium Tile -->
+                  <div class="w-10 h-10 rounded-xl bg-neutral-100 border border-neutral-300 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="8" r="6"/>
+                      <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="font-heading font-bold text-[16px] leading-tight text-black flex items-center gap-1.5">
+                      ClientHunt Pro
+                    </div>
+                    <div class="text-[13px] text-neutral-600 mt-0.5 leading-snug">
+                      Unlock social sources and unlimited leads
+                    </div>
+                  </div>
+                </div>
+                <button class="px-3.5 py-1.5 rounded-full bg-black text-white font-semibold text-[13px] shrink-0 active:scale-95 transition-transform">
+                  Go Pro
+                </button>
+              </div>
+            </div>
+            <!-- Subtitle action row -->
+            <div class="flex items-center justify-between px-2 pt-2 text-[13px] text-[#999999] cursor-pointer">
+              <span>Manage subscription</span>
+              <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 2. Group "Appearance" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#888888] mb-2 px-1">
+              Appearance
+            </div>
+            <div class="bg-[#151515] rounded-2xl border border-[#262626] divide-y divide-[#222222] overflow-hidden">
+              
+              <!-- Row: Theme -->
+              <div class="min-h-[52px] p-3 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+                      <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                      <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+                      <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Theme</span>
+                </div>
+                <!-- Segmented Control (Light, Dark, System [Selected]) -->
+                <div class="flex items-center p-0.5 rounded-lg bg-[#202020] border border-[#2e2e2e] text-[13px]">
+                  <span class="px-2 py-0.5 rounded text-[#888888]">Light</span>
+                  <span class="px-2 py-0.5 rounded text-[#888888]">Dark</span>
+                  <span class="px-2.5 py-0.5 rounded bg-white text-black font-semibold shadow-xs">System</span>
+                </div>
+              </div>
+
+              <!-- Row: Default Country -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Default country</span>
+                </div>
+                <div class="flex items-center gap-1 text-[13px] text-[#aaaaaa]">
+                  <span>India</span>
+                  <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 3. Group "Search defaults" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#888888] mb-2 px-1">
+              Search defaults
+            </div>
+            <div class="bg-[#151515] rounded-2xl border border-[#262626] divide-y divide-[#222222] overflow-hidden">
+              
+              <!-- Default sources -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                      <polyline points="2 17 12 22 22 17"/>
+                      <polyline points="2 12 12 17 22 12"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Default sources</span>
+                </div>
+                <div class="flex items-center gap-1 text-[13px] text-[#aaaaaa]">
+                  <span>Maps</span>
+                  <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Max results per search -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="10" x2="21" y1="6" y2="6"/>
+                      <line x1="10" x2="21" y1="12" y2="12"/>
+                      <line x1="10" x2="21" y1="18" y2="18"/>
+                      <path d="M4 6h1v4M4 10h2"/>
+                      <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Max results per search</span>
+                </div>
+                <div class="flex items-center gap-1 text-[13px] text-[#aaaaaa] font-mono">
+                  <span>50</span>
+                  <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Remove duplicates (Toggle ON) -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Remove duplicates</span>
+                </div>
+                <div class="toggle-track-on-dark cursor-pointer">
+                  <div class="toggle-thumb-on-dark"></div>
+                </div>
+              </div>
+
+              <!-- Skip leads I already saved (Toggle ON) -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Skip leads I already saved</span>
+                </div>
+                <div class="toggle-track-on-dark cursor-pointer">
+                  <div class="toggle-thumb-on-dark"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 4. Group "Data and storage" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#888888] mb-2 px-1">
+              Data and storage
+            </div>
+            <div class="bg-[#151515] rounded-2xl border border-[#262626] divide-y divide-[#222222] overflow-hidden">
+              
+              <!-- Storage used -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                      <path d="M3 5V19A9 3 0 0 0 21 19V5"/>
+                      <path d="M3 12A9 3 0 0 0 21 12"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Storage used</span>
+                </div>
+                <span class="text-[13px] font-mono text-[#888888]">2.4 MB</span>
+              </div>
+
+              <!-- Export all saved leads -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" x2="12" y1="15" y2="3"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Export all saved leads</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- Clear search history -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                      <path d="M3 3v5h5"/>
+                      <path d="M12 7v5l4 2"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Clear search history</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- Clear all saved leads (Destructive, monochrome plain) -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 6h18"/>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Clear all saved leads</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+            </div>
+            <!-- Subtitle caption -->
+            <div class="flex items-center gap-1.5 px-2 pt-2 text-[13px] text-[#888888]">
+              <svg class="w-3.5 h-3.5 text-[#777777] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span>Your leads are stored only on this device.</span>
+            </div>
+          </div>
+
+          <!-- 5. Group "Privacy and ads" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#888888] mb-2 px-1">
+              Privacy and ads
+            </div>
+            <div class="bg-[#151515] rounded-2xl border border-[#262626] divide-y divide-[#222222] overflow-hidden">
+              
+              <!-- Ad personalization (Toggle ON) -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="m3 3 3 9-3 9 19-9Z"/>
+                      <path d="M6 12h16"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Ad personalization</span>
+                </div>
+                <div class="toggle-track-on-dark cursor-pointer">
+                  <div class="toggle-thumb-on-dark"></div>
+                </div>
+              </div>
+
+              <!-- Reset advertising ID -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                      <path d="M21 3v5h-5"/>
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                      <path d="M8 16H3v5"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Reset advertising ID</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" x2="21" y1="14" y2="3"/>
+                </svg>
+              </div>
+
+              <!-- Privacy choices -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Privacy choices</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 6. Group "Support" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#888888] mb-2 px-1">
+              Support
+            </div>
+            <div class="bg-[#151515] rounded-2xl border border-[#262626] divide-y divide-[#222222] overflow-hidden">
+              
+              <!-- Rate ClientHunt -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Rate ClientHunt</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- Share the app -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="18" cy="5" r="3"/>
+                      <circle cx="6" cy="12" r="3"/>
+                      <circle cx="18" cy="19" r="3"/>
+                      <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/>
+                      <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Share the app</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- Send feedback -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Send feedback</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- Contact support -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="20" height="16" x="2" y="4" rx="2"/>
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Contact support</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-[13px] text-[#888888] font-mono">
+                  <span>support@yourdomain</span>
+                  <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Help and FAQ -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                      <path d="M12 17h.01"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Help and FAQ</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 7. Group "About and legal" -->
+          <div>
+            <div class="text-[13px] font-semibold text-[#888888] mb-2 px-1">
+              About and legal
+            </div>
+            <div class="bg-[#151515] rounded-2xl border border-[#262626] divide-y divide-[#222222] overflow-hidden">
+              
+              <!-- Privacy Policy -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                      <line x1="16" x2="8" y1="13" y2="13"/>
+                      <line x1="16" x2="8" y1="17" y2="17"/>
+                      <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Privacy Policy</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" x2="21" y1="14" y2="3"/>
+                </svg>
+              </div>
+
+              <!-- Terms of Use -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="m14 13-7.5 7.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L11 10"/>
+                      <path d="m16 16 6-6"/>
+                      <path d="m8 8 6-6"/>
+                      <path d="m9 7 8 8"/>
+                      <path d="m21 11-8-8"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Terms of Use</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" x2="21" y1="14" y2="3"/>
+                </svg>
+              </div>
+
+              <!-- Open source licenses -->
+              <div class="h-[52px] px-3 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="16 18 22 12 16 6"/>
+                      <polyline points="8 6 2 12 8 18"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">Open source licenses</span>
+                </div>
+                <svg class="w-4 h-4 text-[#777777]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                </svg>
+              </div>
+
+              <!-- App version -->
+              <div class="h-[52px] px-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-[#202020] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-[#e0e0e0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" x2="12" y1="16" y2="12"/>
+                      <line x1="12" x2="12.01" y1="8" y2="8"/>
+                    </svg>
+                  </div>
+                  <span class="text-[14px] font-medium text-[#f5f5f5]">App version</span>
+                </div>
+                <span class="text-[13px] font-mono text-[#888888]">1.0.0 (1)</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Footer Attribution -->
+          <div class="pt-2 pb-6 text-center text-[13px] text-[#777777]">
+            Made with care by Craftline Interactive
+          </div>
+
+        </div>
+
+        <!-- Bottom Navigation Bar (3 items: Search, Saved, Settings [active]) -->
+        <div class="h-16 border-t border-[#222222] bg-[#0a0a0a] flex items-center justify-around px-4 z-30 shrink-0">
+          
+          <!-- Tab 1: Search -->
+          <div class="flex flex-col items-center justify-center w-20 py-1 text-[#888888] cursor-pointer">
+            <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" x2="16.65" y1="21" y2="16.65"/>
+            </svg>
+            <span class="text-[11px] font-medium">Search</span>
+          </div>
+
+          <!-- Tab 2: Saved -->
+          <div class="flex flex-col items-center justify-center w-20 py-1 text-[#888888] cursor-pointer">
+            <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+            </svg>
+            <span class="text-[11px] font-medium">Saved</span>
+          </div>
+
+          <!-- Tab 3: Settings (Active with pill indicator) -->
+          <div class="flex flex-col items-center justify-center w-20 py-1 text-white cursor-pointer relative">
+            <div class="px-3 py-1 rounded-full bg-[#202020] border border-[#2e2e2e] flex items-center justify-center mb-0.5">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+              </svg>
+            </div>
+            <span class="text-[11px] font-semibold text-white">Settings</span>
+          </div>
+
+        </div>
+
+        <!-- Bottom Gesture Home Indicator -->
+        <div class="w-full h-5 pb-1 flex justify-center items-center bg-[#0a0a0a] shrink-0">
+          <div class="w-32 h-1 bg-white rounded-full"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>

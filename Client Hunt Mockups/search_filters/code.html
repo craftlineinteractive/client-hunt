@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClientHunt - Search Filters (Light & Dark Monochrome)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar hiding */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-[#09090b] text-[#f4f4f5] min-h-screen py-10 px-4 flex flex-col items-center justify-start antialiased font-sans">
+
+  <!-- Spec Header Banner -->
+  <header class="max-w-5xl w-full text-center mb-10">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a] text-[12px] font-mono tracking-wide uppercase text-[#a1a1aa] mb-3">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#a1a1aa]"></span>
+      CLIENTHUNT &bull; SEARCH FILTERS SPECIFICATION
+    </div>
+    <h1 class="text-3xl md:text-4xl font-heading font-extrabold text-white tracking-tight">Search Filters</h1>
+    <p class="text-[14px] text-[#a1a1aa] mt-2 max-w-xl mx-auto">
+      Pre-search precision tuning with contact validation, business quality tiers, keyword inclusions, geographic radius, depth limits, and automated list cleanup.
+    </p>
+    <div class="flex items-center justify-center gap-6 mt-4 text-[12px] font-mono text-[#71717a]">
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-white"></span> FRAME 1: LIGHT MODE (390 &times; 844 px)</span>
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#27272a] border border-[#52525b]"></span> FRAME 2: DARK MODE (390 &times; 844 px)</span>
+    </div>
+  </header>
+
+  <!-- Dual Device Display Showcase -->
+  <main class="max-w-6xl w-full flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 lg:gap-12 pb-16">
+
+    <!-- ==========================================
+         FRAME 1: LIGHT MODE (390 x 844)
+         ========================================== -->
+    <div class="flex flex-col items-center">
+      <div class="text-[12px] font-mono text-[#a1a1aa] mb-2 uppercase tracking-wider flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-white"></span>
+        Frame 1 &bull; Light Mode
+      </div>
+
+      <!-- Phone Outer Wrapper -->
+      <div class="w-[390px] h-[844px] bg-[#ffffff] rounded-[44px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5),0_0_0_10px_#18181b,0_0_0_12px_#27272a] overflow-hidden flex flex-col relative text-[#111111] select-none border border-[#e4e4e7]">
+        
+        <!-- Status Bar -->
+        <div class="h-11 px-7 flex items-center justify-between text-[13px] font-mono font-semibold text-[#111111] pt-2 z-20 shrink-0 bg-[#ffffff]">
+          <span>9:41</span>
+          <!-- Dynamic Island / Punch Hole -->
+          <div class="w-24 h-5 bg-[#000000] rounded-full mx-auto -mt-1"></div>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4z"/></svg>
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M17 4h-3V2h-4v2H7v18h10V4z"/></svg>
+          </div>
+        </div>
+
+        <!-- Top App Bar (56 px) -->
+        <div class="h-14 px-4 flex items-center justify-between border-b border-[#e5e5e5] bg-[#ffffff] shrink-0 z-10">
+          <div class="flex items-center gap-3">
+            <button class="w-10 h-10 -ml-1 rounded-full flex items-center justify-center hover:bg-[#f4f4f5] transition-colors" aria-label="Close">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <h2 class="text-[18px] font-heading font-bold text-[#111111] tracking-tight">Filters</h2>
+          </div>
+          <button class="text-[14px] font-medium text-[#71717a] hover:text-[#111111] px-2 py-1 rounded transition-colors">
+            Reset
+          </button>
+        </div>
+
+        <!-- Scrollable Content Body -->
+        <div class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-3 pb-32 bg-[#fafafa]">
+          
+          <!-- SECTION 1: CONTACT -->
+          <div class="bg-[#ffffff] rounded-2xl border border-[#e5e5e5] p-4 shadow-sm">
+            <div class="flex items-center gap-2 mb-3">
+              <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#111111]">Contact</h3>
+            </div>
+            
+            <div class="divide-y divide-[#f0f0f0] text-[13px]">
+              <!-- Row 1: Has email (ON) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#111111]">Has email</span>
+                <!-- Switch ON -->
+                <div class="w-11 h-6 bg-[#111111] rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+                  <div class="w-5 h-5 bg-[#ffffff] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 2: Has phone (ON) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#111111]">Has phone</span>
+                <div class="w-11 h-6 bg-[#111111] rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+                  <div class="w-5 h-5 bg-[#ffffff] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 3: Has website (OFF) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#525252]">Has website</span>
+                <div class="w-11 h-6 bg-[#e4e4e7] rounded-full p-0.5 flex items-center justify-start cursor-pointer">
+                  <div class="w-5 h-5 bg-[#ffffff] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 4: Has WhatsApp number (OFF) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#525252]">Has WhatsApp number</span>
+                <div class="w-11 h-6 bg-[#e4e4e7] rounded-full p-0.5 flex items-center justify-start cursor-pointer">
+                  <div class="w-5 h-5 bg-[#ffffff] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 5: Has social profile link (OFF) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#525252]">Has social profile link</span>
+                <div class="w-11 h-6 bg-[#e4e4e7] rounded-full p-0.5 flex items-center justify-start cursor-pointer">
+                  <div class="w-5 h-5 bg-[#ffffff] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 6: No website (Pro lock badge, OFF) -->
+              <div class="h-12 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="font-medium text-[#71717a]">No website</span>
+                  <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-[#111111] text-[#ffffff]">
+                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    PRO
+                  </span>
+                </div>
+                <div class="w-11 h-6 bg-[#e4e4e7] opacity-60 rounded-full p-0.5 flex items-center justify-start cursor-not-allowed">
+                  <div class="w-5 h-5 bg-[#ffffff] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: BUSINESS QUALITY -->
+          <div class="bg-[#ffffff] rounded-2xl border border-[#e5e5e5] p-4 shadow-sm space-y-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#111111]">Business quality</h3>
+            </div>
+
+            <!-- Minimum rating -->
+            <div>
+              <div class="text-[13px] font-medium text-[#525252] mb-2">Minimum rating</div>
+              <div class="grid grid-cols-5 gap-1.5">
+                <button class="h-9 rounded-lg border border-[#e5e5e5] text-[13px] font-mono text-[#525252] flex items-center justify-center hover:border-[#111111]">Any</button>
+                <button class="h-9 rounded-lg border border-[#e5e5e5] text-[13px] font-mono text-[#525252] flex items-center justify-center hover:border-[#111111]">3.0+</button>
+                <button class="h-9 rounded-lg border border-[#e5e5e5] text-[13px] font-mono text-[#525252] flex items-center justify-center hover:border-[#111111]">3.5+</button>
+                <button class="h-9 rounded-lg bg-[#111111] text-[#ffffff] border border-[#111111] text-[13px] font-mono font-semibold flex items-center justify-center">4.0+</button>
+                <button class="h-9 rounded-lg border border-[#e5e5e5] text-[13px] font-mono text-[#525252] flex items-center justify-center hover:border-[#111111]">4.5+</button>
+              </div>
+            </div>
+
+            <!-- Minimum reviews -->
+            <div>
+              <div class="text-[13px] font-medium text-[#525252] mb-2">Minimum reviews</div>
+              <div class="grid grid-cols-4 gap-2">
+                <button class="h-9 rounded-lg border border-[#e5e5e5] text-[13px] font-mono text-[#525252] flex items-center justify-center hover:border-[#111111]">Any</button>
+                <button class="h-9 rounded-lg bg-[#111111] text-[#ffffff] border border-[#111111] text-[13px] font-mono font-semibold flex items-center justify-center">10+</button>
+                <button class="h-9 rounded-lg border border-[#e5e5e5] text-[13px] font-mono text-[#525252] flex items-center justify-center hover:border-[#111111]">50+</button>
+                <button class="h-9 rounded-lg border border-[#e5e5e5] text-[13px] font-mono text-[#525252] flex items-center justify-center hover:border-[#111111]">100+</button>
+              </div>
+            </div>
+
+            <!-- Status segmented control -->
+            <div>
+              <div class="text-[13px] font-medium text-[#525252] mb-2">Status</div>
+              <div class="p-1 bg-[#f4f4f5] rounded-xl flex items-center gap-1 border border-[#e5e5e5]">
+                <button class="flex-1 h-8 rounded-lg bg-[#ffffff] text-[#111111] shadow-sm font-semibold text-[13px] flex items-center justify-center">Any</button>
+                <button class="flex-1 h-8 rounded-lg text-[#71717a] font-medium text-[13px] flex items-center justify-center hover:text-[#111111]">Open now</button>
+                <button class="flex-1 h-8 rounded-lg text-[#71717a] font-medium text-[13px] flex items-center justify-center hover:text-[#111111]">Recently active</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: KEYWORDS -->
+          <div class="bg-[#ffffff] rounded-2xl border border-[#e5e5e5] p-4 shadow-sm space-y-3">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#111111]">Keywords</h3>
+            </div>
+
+            <!-- Must include -->
+            <div>
+              <label class="block text-[13px] font-medium text-[#525252] mb-1.5">Must include</label>
+              <div class="min-h-[44px] p-1.5 bg-[#ffffff] border border-[#e5e5e5] rounded-xl flex flex-wrap items-center gap-1.5">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-[#f4f4f5] border border-[#e5e5e5] rounded-lg text-[13px] font-mono text-[#111111]">
+                  implants
+                  <svg class="w-3.5 h-3.5 text-[#71717a] cursor-pointer hover:text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </span>
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-[#f4f4f5] border border-[#e5e5e5] rounded-lg text-[13px] font-mono text-[#111111]">
+                  family
+                  <svg class="w-3.5 h-3.5 text-[#71717a] cursor-pointer hover:text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </span>
+                <input type="text" placeholder="Type keyword..." class="flex-1 min-w-[100px] bg-transparent text-[13px] text-[#111111] placeholder-[#a1a1aa] outline-none px-1">
+              </div>
+            </div>
+
+            <!-- Exclude -->
+            <div>
+              <label class="block text-[13px] font-medium text-[#525252] mb-1.5">Exclude</label>
+              <div class="min-h-[44px] p-1.5 bg-[#ffffff] border border-[#e5e5e5] rounded-xl flex flex-wrap items-center gap-1.5">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-[#f4f4f5] border border-[#e5e5e5] rounded-lg text-[13px] font-mono text-[#525252]">
+                  supplies
+                  <svg class="w-3.5 h-3.5 text-[#71717a] cursor-pointer hover:text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </span>
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-[#f4f4f5] border border-[#e5e5e5] rounded-lg text-[13px] font-mono text-[#525252]">
+                  training
+                  <svg class="w-3.5 h-3.5 text-[#71717a] cursor-pointer hover:text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 4: AREA -->
+          <div class="bg-[#ffffff] rounded-2xl border border-[#e5e5e5] p-4 shadow-sm space-y-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#111111]">Area</h3>
+            </div>
+
+            <!-- Country Dropdown -->
+            <div>
+              <label class="block text-[13px] font-medium text-[#525252] mb-1.5">Country</label>
+              <div class="h-11 px-3 bg-[#ffffff] border border-[#e5e5e5] rounded-xl flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-2.5">
+                  <svg class="w-4 h-4 text-[#71717a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                  <span class="text-[14px] font-medium text-[#111111]">India</span>
+                </div>
+                <svg class="w-4 h-4 text-[#71717a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </div>
+            </div>
+
+            <!-- Radius with Slider -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[13px] font-medium text-[#525252]">Radius</span>
+                <span class="px-2 py-0.5 bg-[#f4f4f5] border border-[#e5e5e5] rounded-full text-[13px] font-mono font-semibold text-[#111111]">25 km</span>
+              </div>
+              <div class="relative py-2">
+                <div class="h-1.5 w-full bg-[#e4e4e7] rounded-full overflow-hidden">
+                  <div class="h-full bg-[#111111] rounded-full" style="width: 25%;"></div>
+                </div>
+                <div class="absolute left-[25%] top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 bg-[#ffffff] border-2 border-[#111111] rounded-full shadow cursor-grab"></div>
+              </div>
+              <div class="flex justify-between text-[11px] font-mono text-[#a1a1aa] mt-1">
+                <span>1 km</span>
+                <span>50 km</span>
+                <span>100 km</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 5: RESULTS -->
+          <div class="bg-[#ffffff] rounded-2xl border border-[#e5e5e5] p-4 shadow-sm space-y-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#111111]">Results</h3>
+            </div>
+
+            <!-- Search depth -->
+            <div>
+              <div class="text-[13px] font-medium text-[#525252] mb-2">Search depth</div>
+              <div class="space-y-2">
+                <!-- Option 1: Fast (Selected) -->
+                <div class="p-3 rounded-xl border-2 border-[#111111] bg-[#fafafa] flex items-center justify-between cursor-pointer">
+                  <div>
+                    <div class="text-[13px] font-semibold text-[#111111]">Fast</div>
+                    <div class="text-[13px] text-[#71717a]">Listing details only</div>
+                  </div>
+                  <div class="w-5 h-5 rounded-full border-2 border-[#111111] flex items-center justify-center">
+                    <div class="w-2.5 h-2.5 rounded-full bg-[#111111]"></div>
+                  </div>
+                </div>
+
+                <!-- Option 2: Deep (Pro) -->
+                <div class="p-3 rounded-xl border border-[#e5e5e5] bg-[#ffffff] flex items-center justify-between opacity-80 cursor-pointer">
+                  <div class="flex items-start gap-2">
+                    <div>
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[13px] font-semibold text-[#71717a]">Deep</span>
+                        <span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[11px] font-mono font-semibold bg-[#111111] text-[#ffffff]">
+                          <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                          PRO
+                        </span>
+                      </div>
+                      <div class="text-[13px] text-[#a1a1aa]">Also scans websites for emails</div>
+                    </div>
+                  </div>
+                  <div class="w-5 h-5 rounded-full border border-[#d4d4d8]"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Max results -->
+            <div>
+              <div class="text-[13px] font-medium text-[#525252] mb-2">Max results</div>
+              <div class="grid grid-cols-4 gap-2">
+                <button class="h-9 rounded-lg border border-[#e5e5e5] text-[13px] font-mono text-[#525252] flex items-center justify-center hover:border-[#111111]">25</button>
+                <button class="h-9 rounded-lg bg-[#111111] text-[#ffffff] border border-[#111111] text-[13px] font-mono font-semibold flex items-center justify-center">50</button>
+                <button class="h-9 rounded-lg border border-[#e5e5e5] text-[13px] font-mono text-[#525252] flex items-center justify-center hover:border-[#111111]">100</button>
+                <button class="h-9 rounded-lg border border-[#e5e5e5] text-[13px] font-mono text-[#71717a] flex items-center justify-center gap-1 opacity-70">
+                  <span>200</span>
+                  <svg class="w-3 h-3 text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Sort by -->
+            <div>
+              <label class="block text-[13px] font-medium text-[#525252] mb-1.5">Sort by</label>
+              <div class="h-11 px-3 bg-[#ffffff] border border-[#e5e5e5] rounded-xl flex items-center justify-between cursor-pointer">
+                <span class="text-[14px] font-medium text-[#111111]">Relevance</span>
+                <svg class="w-4 h-4 text-[#71717a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 6: CLEANUP -->
+          <div class="bg-[#ffffff] rounded-2xl border border-[#e5e5e5] p-4 shadow-sm">
+            <div class="flex items-center gap-2 mb-3">
+              <svg class="w-4 h-4 text-[#111111]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#111111]">Cleanup</h3>
+            </div>
+
+            <div class="divide-y divide-[#f0f0f0] text-[13px]">
+              <!-- Row 1: Remove duplicates (ON) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#111111]">Remove duplicates</span>
+                <div class="w-11 h-6 bg-[#111111] rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+                  <div class="w-5 h-5 bg-[#ffffff] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 2: Skip leads I already saved (ON) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#111111]">Skip leads I already saved</span>
+                <div class="w-11 h-6 bg-[#111111] rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+                  <div class="w-5 h-5 bg-[#ffffff] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 3: Remove invalid phone numbers (ON) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#111111]">Remove invalid phone numbers</span>
+                <div class="w-11 h-6 bg-[#111111] rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+                  <div class="w-5 h-5 bg-[#ffffff] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 4: Group by city (OFF) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#525252]">Group by city</span>
+                <div class="w-11 h-6 bg-[#e4e4e7] rounded-full p-0.5 flex items-center justify-start cursor-pointer">
+                  <div class="w-5 h-5 bg-[#ffffff] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sticky Bottom Bar -->
+        <div class="absolute bottom-0 left-0 right-0 bg-[#ffffff] border-t border-[#e5e5e5] p-4 pb-7 shadow-lg z-20">
+          <div class="flex items-center justify-center gap-1.5 text-[13px] font-mono text-[#71717a] mb-2.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            <span>5 filters active</span>
+          </div>
+          <button class="w-full h-[52px] bg-[#111111] hover:bg-[#000000] active:scale-[0.99] text-[#ffffff] rounded-2xl font-heading font-semibold text-[15px] flex items-center justify-center gap-2 shadow transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            Apply filters
+          </button>
+        </div>
+
+        <!-- Gesture Bar -->
+        <div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#111111] rounded-full z-30 opacity-70"></div>
+      </div>
+    </div>
+
+
+    <!-- ==========================================
+         FRAME 2: DARK MODE (390 x 844)
+         ========================================== -->
+    <div class="flex flex-col items-center">
+      <div class="text-[12px] font-mono text-[#a1a1aa] mb-2 uppercase tracking-wider flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-[#27272a] border border-[#71717a]"></span>
+        Frame 2 &bull; Dark Mode
+      </div>
+
+      <!-- Phone Outer Wrapper -->
+      <div class="w-[390px] h-[844px] bg-[#0a0a0a] rounded-[44px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_10px_#18181b,0_0_0_12px_#27272a] overflow-hidden flex flex-col relative text-[#fafafa] select-none border border-[#27272a]">
+        
+        <!-- Status Bar -->
+        <div class="h-11 px-7 flex items-center justify-between text-[13px] font-mono font-semibold text-[#fafafa] pt-2 z-20 shrink-0 bg-[#0a0a0a]">
+          <span>9:41</span>
+          <!-- Dynamic Island / Punch Hole -->
+          <div class="w-24 h-5 bg-[#000000] border border-[#27272a] rounded-full mx-auto -mt-1"></div>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4z"/></svg>
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M17 4h-3V2h-4v2H7v18h10V4z"/></svg>
+          </div>
+        </div>
+
+        <!-- Top App Bar (56 px) -->
+        <div class="h-14 px-4 flex items-center justify-between border-b border-[#262626] bg-[#0a0a0a] shrink-0 z-10">
+          <div class="flex items-center gap-3">
+            <button class="w-10 h-10 -ml-1 rounded-full flex items-center justify-center hover:bg-[#1f1f1f] transition-colors" aria-label="Close">
+              <svg class="w-5 h-5 text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <h2 class="text-[18px] font-heading font-bold text-[#fafafa] tracking-tight">Filters</h2>
+          </div>
+          <button class="text-[14px] font-medium text-[#a3a3a3] hover:text-[#fafafa] px-2 py-1 rounded transition-colors">
+            Reset
+          </button>
+        </div>
+
+        <!-- Scrollable Content Body -->
+        <div class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-3 pb-32 bg-[#0a0a0a]">
+          
+          <!-- SECTION 1: CONTACT -->
+          <div class="bg-[#141414] rounded-2xl border border-[#262626] p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <svg class="w-4 h-4 text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#fafafa]">Contact</h3>
+            </div>
+            
+            <div class="divide-y divide-[#212121] text-[13px]">
+              <!-- Row 1: Has email (ON) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#fafafa]">Has email</span>
+                <!-- Switch ON -->
+                <div class="w-11 h-6 bg-[#fafafa] rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+                  <div class="w-5 h-5 bg-[#0a0a0a] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 2: Has phone (ON) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#fafafa]">Has phone</span>
+                <div class="w-11 h-6 bg-[#fafafa] rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+                  <div class="w-5 h-5 bg-[#0a0a0a] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 3: Has website (OFF) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#a3a3a3]">Has website</span>
+                <div class="w-11 h-6 bg-[#262626] rounded-full p-0.5 flex items-center justify-start cursor-pointer">
+                  <div class="w-5 h-5 bg-[#737373] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 4: Has WhatsApp number (OFF) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#a3a3a3]">Has WhatsApp number</span>
+                <div class="w-11 h-6 bg-[#262626] rounded-full p-0.5 flex items-center justify-start cursor-pointer">
+                  <div class="w-5 h-5 bg-[#737373] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 5: Has social profile link (OFF) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#a3a3a3]">Has social profile link</span>
+                <div class="w-11 h-6 bg-[#262626] rounded-full p-0.5 flex items-center justify-start cursor-pointer">
+                  <div class="w-5 h-5 bg-[#737373] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 6: No website (Pro lock badge, OFF) -->
+              <div class="h-12 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="font-medium text-[#737373]">No website</span>
+                  <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-[#fafafa] text-[#0a0a0a]">
+                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    PRO
+                  </span>
+                </div>
+                <div class="w-11 h-6 bg-[#262626] opacity-60 rounded-full p-0.5 flex items-center justify-start cursor-not-allowed">
+                  <div class="w-5 h-5 bg-[#525252] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: BUSINESS QUALITY -->
+          <div class="bg-[#141414] rounded-2xl border border-[#262626] p-4 space-y-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#fafafa]">Business quality</h3>
+            </div>
+
+            <!-- Minimum rating -->
+            <div>
+              <div class="text-[13px] font-medium text-[#a3a3a3] mb-2">Minimum rating</div>
+              <div class="grid grid-cols-5 gap-1.5">
+                <button class="h-9 rounded-lg border border-[#262626] text-[13px] font-mono text-[#a3a3a3] flex items-center justify-center hover:border-[#fafafa]">Any</button>
+                <button class="h-9 rounded-lg border border-[#262626] text-[13px] font-mono text-[#a3a3a3] flex items-center justify-center hover:border-[#fafafa]">3.0+</button>
+                <button class="h-9 rounded-lg border border-[#262626] text-[13px] font-mono text-[#a3a3a3] flex items-center justify-center hover:border-[#fafafa]">3.5+</button>
+                <button class="h-9 rounded-lg bg-[#fafafa] text-[#0a0a0a] border border-[#fafafa] text-[13px] font-mono font-semibold flex items-center justify-center">4.0+</button>
+                <button class="h-9 rounded-lg border border-[#262626] text-[13px] font-mono text-[#a3a3a3] flex items-center justify-center hover:border-[#fafafa]">4.5+</button>
+              </div>
+            </div>
+
+            <!-- Minimum reviews -->
+            <div>
+              <div class="text-[13px] font-medium text-[#a3a3a3] mb-2">Minimum reviews</div>
+              <div class="grid grid-cols-4 gap-2">
+                <button class="h-9 rounded-lg border border-[#262626] text-[13px] font-mono text-[#a3a3a3] flex items-center justify-center hover:border-[#fafafa]">Any</button>
+                <button class="h-9 rounded-lg bg-[#fafafa] text-[#0a0a0a] border border-[#fafafa] text-[13px] font-mono font-semibold flex items-center justify-center">10+</button>
+                <button class="h-9 rounded-lg border border-[#262626] text-[13px] font-mono text-[#a3a3a3] flex items-center justify-center hover:border-[#fafafa]">50+</button>
+                <button class="h-9 rounded-lg border border-[#262626] text-[13px] font-mono text-[#a3a3a3] flex items-center justify-center hover:border-[#fafafa]">100+</button>
+              </div>
+            </div>
+
+            <!-- Status segmented control -->
+            <div>
+              <div class="text-[13px] font-medium text-[#a3a3a3] mb-2">Status</div>
+              <div class="p-1 bg-[#1a1a1a] rounded-xl flex items-center gap-1 border border-[#262626]">
+                <button class="flex-1 h-8 rounded-lg bg-[#262626] text-[#fafafa] font-semibold text-[13px] flex items-center justify-center shadow-sm">Any</button>
+                <button class="flex-1 h-8 rounded-lg text-[#737373] font-medium text-[13px] flex items-center justify-center hover:text-[#fafafa]">Open now</button>
+                <button class="flex-1 h-8 rounded-lg text-[#737373] font-medium text-[13px] flex items-center justify-center hover:text-[#fafafa]">Recently active</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: KEYWORDS -->
+          <div class="bg-[#141414] rounded-2xl border border-[#262626] p-4 space-y-3">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#fafafa]">Keywords</h3>
+            </div>
+
+            <!-- Must include -->
+            <div>
+              <label class="block text-[13px] font-medium text-[#a3a3a3] mb-1.5">Must include</label>
+              <div class="min-h-[44px] p-1.5 bg-[#191919] border border-[#262626] rounded-xl flex flex-wrap items-center gap-1.5">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-[#262626] border border-[#333333] rounded-lg text-[13px] font-mono text-[#fafafa]">
+                  implants
+                  <svg class="w-3.5 h-3.5 text-[#a3a3a3] cursor-pointer hover:text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </span>
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-[#262626] border border-[#333333] rounded-lg text-[13px] font-mono text-[#fafafa]">
+                  family
+                  <svg class="w-3.5 h-3.5 text-[#a3a3a3] cursor-pointer hover:text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </span>
+                <input type="text" placeholder="Type keyword..." class="flex-1 min-w-[100px] bg-transparent text-[13px] text-[#fafafa] placeholder-[#737373] outline-none px-1">
+              </div>
+            </div>
+
+            <!-- Exclude -->
+            <div>
+              <label class="block text-[13px] font-medium text-[#a3a3a3] mb-1.5">Exclude</label>
+              <div class="min-h-[44px] p-1.5 bg-[#191919] border border-[#262626] rounded-xl flex flex-wrap items-center gap-1.5">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-[#262626] border border-[#333333] rounded-lg text-[13px] font-mono text-[#a3a3a3]">
+                  supplies
+                  <svg class="w-3.5 h-3.5 text-[#737373] cursor-pointer hover:text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </span>
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-[#262626] border border-[#333333] rounded-lg text-[13px] font-mono text-[#a3a3a3]">
+                  training
+                  <svg class="w-3.5 h-3.5 text-[#737373] cursor-pointer hover:text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 4: AREA -->
+          <div class="bg-[#141414] rounded-2xl border border-[#262626] p-4 space-y-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#fafafa]">Area</h3>
+            </div>
+
+            <!-- Country Dropdown -->
+            <div>
+              <label class="block text-[13px] font-medium text-[#a3a3a3] mb-1.5">Country</label>
+              <div class="h-11 px-3 bg-[#191919] border border-[#262626] rounded-xl flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-2.5">
+                  <svg class="w-4 h-4 text-[#737373]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                  <span class="text-[14px] font-medium text-[#fafafa]">India</span>
+                </div>
+                <svg class="w-4 h-4 text-[#737373]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </div>
+            </div>
+
+            <!-- Radius with Slider -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[13px] font-medium text-[#a3a3a3]">Radius</span>
+                <span class="px-2 py-0.5 bg-[#262626] border border-[#333333] rounded-full text-[13px] font-mono font-semibold text-[#fafafa]">25 km</span>
+              </div>
+              <div class="relative py-2">
+                <div class="h-1.5 w-full bg-[#262626] rounded-full overflow-hidden">
+                  <div class="h-full bg-[#fafafa] rounded-full" style="width: 25%;"></div>
+                </div>
+                <div class="absolute left-[25%] top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 bg-[#0a0a0a] border-2 border-[#fafafa] rounded-full shadow cursor-grab"></div>
+              </div>
+              <div class="flex justify-between text-[11px] font-mono text-[#737373] mt-1">
+                <span>1 km</span>
+                <span>50 km</span>
+                <span>100 km</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 5: RESULTS -->
+          <div class="bg-[#141414] rounded-2xl border border-[#262626] p-4 space-y-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#fafafa]">Results</h3>
+            </div>
+
+            <!-- Search depth -->
+            <div>
+              <div class="text-[13px] font-medium text-[#a3a3a3] mb-2">Search depth</div>
+              <div class="space-y-2">
+                <!-- Option 1: Fast (Selected) -->
+                <div class="p-3 rounded-xl border-2 border-[#fafafa] bg-[#1a1a1a] flex items-center justify-between cursor-pointer">
+                  <div>
+                    <div class="text-[13px] font-semibold text-[#fafafa]">Fast</div>
+                    <div class="text-[13px] text-[#a3a3a3]">Listing details only</div>
+                  </div>
+                  <div class="w-5 h-5 rounded-full border-2 border-[#fafafa] flex items-center justify-center">
+                    <div class="w-2.5 h-2.5 rounded-full bg-[#fafafa]"></div>
+                  </div>
+                </div>
+
+                <!-- Option 2: Deep (Pro) -->
+                <div class="p-3 rounded-xl border border-[#262626] bg-[#141414] flex items-center justify-between opacity-70 cursor-pointer">
+                  <div class="flex items-start gap-2">
+                    <div>
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[13px] font-semibold text-[#737373]">Deep</span>
+                        <span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[11px] font-mono font-semibold bg-[#fafafa] text-[#0a0a0a]">
+                          <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                          PRO
+                        </span>
+                      </div>
+                      <div class="text-[13px] text-[#737373]">Also scans websites for emails</div>
+                    </div>
+                  </div>
+                  <div class="w-5 h-5 rounded-full border border-[#404040]"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Max results -->
+            <div>
+              <div class="text-[13px] font-medium text-[#a3a3a3] mb-2">Max results</div>
+              <div class="grid grid-cols-4 gap-2">
+                <button class="h-9 rounded-lg border border-[#262626] text-[13px] font-mono text-[#a3a3a3] flex items-center justify-center hover:border-[#fafafa]">25</button>
+                <button class="h-9 rounded-lg bg-[#fafafa] text-[#0a0a0a] border border-[#fafafa] text-[13px] font-mono font-semibold flex items-center justify-center">50</button>
+                <button class="h-9 rounded-lg border border-[#262626] text-[13px] font-mono text-[#a3a3a3] flex items-center justify-center hover:border-[#fafafa]">100</button>
+                <button class="h-9 rounded-lg border border-[#262626] text-[13px] font-mono text-[#737373] flex items-center justify-center gap-1 opacity-70">
+                  <span>200</span>
+                  <svg class="w-3 h-3 text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Sort by -->
+            <div>
+              <label class="block text-[13px] font-medium text-[#a3a3a3] mb-1.5">Sort by</label>
+              <div class="h-11 px-3 bg-[#191919] border border-[#262626] rounded-xl flex items-center justify-between cursor-pointer">
+                <span class="text-[14px] font-medium text-[#fafafa]">Relevance</span>
+                <svg class="w-4 h-4 text-[#737373]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 6: CLEANUP -->
+          <div class="bg-[#141414] rounded-2xl border border-[#262626] p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <svg class="w-4 h-4 text-[#fafafa]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              <h3 class="text-[14px] font-heading font-semibold text-[#fafafa]">Cleanup</h3>
+            </div>
+
+            <div class="divide-y divide-[#212121] text-[13px]">
+              <!-- Row 1: Remove duplicates (ON) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#fafafa]">Remove duplicates</span>
+                <div class="w-11 h-6 bg-[#fafafa] rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+                  <div class="w-5 h-5 bg-[#0a0a0a] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 2: Skip leads I already saved (ON) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#fafafa]">Skip leads I already saved</span>
+                <div class="w-11 h-6 bg-[#fafafa] rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+                  <div class="w-5 h-5 bg-[#0a0a0a] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 3: Remove invalid phone numbers (ON) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#fafafa]">Remove invalid phone numbers</span>
+                <div class="w-11 h-6 bg-[#fafafa] rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+                  <div class="w-5 h-5 bg-[#0a0a0a] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+
+              <!-- Row 4: Group by city (OFF) -->
+              <div class="h-12 flex items-center justify-between">
+                <span class="font-medium text-[#a3a3a3]">Group by city</span>
+                <div class="w-11 h-6 bg-[#262626] rounded-full p-0.5 flex items-center justify-start cursor-pointer">
+                  <div class="w-5 h-5 bg-[#737373] rounded-full shadow-sm"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sticky Bottom Bar -->
+        <div class="absolute bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-[#262626] p-4 pb-7 shadow-2xl z-20">
+          <div class="flex items-center justify-center gap-1.5 text-[13px] font-mono text-[#a3a3a3] mb-2.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            <span>5 filters active</span>
+          </div>
+          <button class="w-full h-[52px] bg-[#fafafa] hover:bg-[#ffffff] active:scale-[0.99] text-[#0a0a0a] rounded-2xl font-heading font-semibold text-[15px] flex items-center justify-center gap-2 shadow transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            Apply filters
+          </button>
+        </div>
+
+        <!-- Gesture Bar -->
+        <div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#fafafa] rounded-full z-30 opacity-60"></div>
+      </div>
+    </div>
+
+  </main>
+</body>
+</html>
