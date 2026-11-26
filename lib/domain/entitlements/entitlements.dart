@@ -51,7 +51,12 @@ class Entitlements {
   /// Whether the "No website" filter is allowed.
   final bool noWebsiteFilterAllowed;
 
-  /// Whether ad slots render. True on Free, false on Pro.
+  /// Whether the rewarded prompt and interstitials are active.
+  ///
+  /// True on Free, false on Pro. The app has **no banner or native ad
+  /// placements**: `true` means a Free search is preceded by an opt-in rewarded
+  /// ad and `AdTrigger` breaks may show an interstitial. Pro never sees
+  /// either.
   final bool adsEnabled;
 
   /// Formats the export screen may produce.

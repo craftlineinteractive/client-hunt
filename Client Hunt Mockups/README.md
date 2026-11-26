@@ -105,7 +105,7 @@ with `AppColors.light` and `AppColors.dark` instances.
 |------|-------|-------|------|------------------|
 | Background | `background` | `#FFFFFF` | `#0A0A0A` | Phone/screen body on home, detail, export, settings, saved |
 | Canvas / list background | `canvas` | `#FAFAFA` | `#0A0A0A` | Search results list body, filters body, settings body, lead-detail hero card |
-| Surface | `surface` | `#F5F5F5` | `#141414` | Grouped input fill, unselected chip fill, segmented-control track, ad slot, pill backgrounds |
+| Surface | `surface` | `#F5F5F5` | `#141414` | Grouped input fill, unselected chip fill, segmented-control track, pill backgrounds |
 | Card | `card` | `#FFFFFF` | `#171717` | All cards, list rows, result cards, plan rows (dark) |
 | Card subtle | `cardSubtle` | `#FAFAFA` | `#141414` | Plan rows (light), review cards, fact tiles, section header rows |
 | Border | `border` | `#E5E5E5` | `#2A2A2A` | 1 px card/input/chip outlines, app bar and bottom nav top border |
@@ -148,7 +148,7 @@ play: neutral, zinc and slate). Each maps to the nearest role above.
 | `#FAFAFA` | Search-results body, hero card, plan rows, review cards, chips' selected label | `canvas` / `cardSubtle` |
 | `#F9F9F9` | Saved-card status pill fill, ad strip, quick-copy hover | `cardSubtle` |
 | `#F7F7F7` | Selected CSV format tile | `surface` |
-| `#F5F5F5` | Grouped fields, chips, ad slot, off rows, dividers in export | `surface` / `dividerSubtle` |
+| `#F5F5F5` | Grouped fields, chips, off rows, dividers in export | `surface` / `dividerSubtle` |
 | `#F4F4F5` | Filters: segmented track, keyword chips (zinc-100) | `surface` |
 | `#F2F2F2` | Export: count badge behind "42" | `surface` |
 | `#F0F0F0` | Soft dividers (saved, settings, filters), icon tiles, segmented track, settings nav pill | `dividerSubtle` / `surface` |
@@ -446,13 +446,21 @@ groups, profiles, recent searches, scope options).
   (44 tap target) for export, add-to-list, tag and delete, with `overlayHover` = `#262626` / `#E5E5E5`.
   Inverted in both themes.
 
-### 3.9 Ad slot
+### 3.9 Ads — no banner slots
 
-`AdBannerPlaceholder` — 320 × 50, radius 12, fill `surface` (`#F9F9F9` dashed in saved), 1 px border
-(`#E5E5E5`; dashed `#D4D4D4` in saved), centered "Ad" label 13 mono uppercase (mockup 10 px) in
-`textMuted` and a 13 px supporting line in `textSecondary`. Variant with a `Learn more` underlined
-action. Free users only; Pro removes it. Real ads arrive in prompt E — until then this is a labelled
-placeholder, never a fake ad.
+**The mockups draw a 320 × 50 banner on Home, Results, Saved and Lead detail. The product has only
+rewarded and interstitial ads, so that element is intentionally removed — there is no banner, native
+or inline ad placement anywhere in the app.** `AdBannerPlaceholder` no longer exists, and
+`test/ads_test.dart` fails if the word "banner" or that class returns under `lib/`.
+
+What replaces it:
+
+* **Rewarded, opt-in.** A Free user taps Find Leads, confirms in a dialog, watches a short ad, and
+  only then does the search run. Pro users never see it.
+* **Interstitial, at natural breaks.** Controlled by `AdPolicy` (35% chance, 2 actions, 120 s apart,
+  never in the first 60 s, never within 60 s of a rewarded ad, never for Pro).
+
+Full rules, failure handling and the AdMob swap: Section 12.
 
 ### 3.10 Mono text
 
@@ -510,7 +518,7 @@ tracking −0.02); right: Pro pill (28 h, `workspace_premium_rounded` 16 filled 
      11→13 `textMuted` ("42 leads · Maps · 2 days ago"), trailing `icon:chevron_right_rounded` 18.
      Mockup data: "Dentists in Ahmedabad" (42, Maps, 2 days ago), "Cafes in Mumbai" (88, Maps, 4 days
      ago).
-   - **Ad slot** centered 320 × 50: "AD" + "Scale B2B Outbound on Autopilot".
+   - ~~Ad slot~~ — **removed.** The mockup's banner is not part of the product (Section 3.9).
 3. **Bottom nav** — 3 tabs, Search active.
 
 **States.** Empty fields; niche filled only; both filled (CTA enabled); free quota exhausted (quota pill
@@ -525,7 +533,7 @@ shows "0/5" and CTA opens paywall); locked source tapped; recent list empty (hid
 informational, not a control.
 
 **Shared components.** `AppTopBar.tab`, `ProBadge`, `AppChip`, `AppTextField` (+ group), `AppButton`,
-`AppCard`, `AdBannerPlaceholder`, `AppBottomNav`, `SectionHeader` (Recent/Sources).
+`AppCard`, `AppBottomNav`, `SectionHeader` (Recent/Sources), `AppDialog`.
 
 **Lead fields.** None directly (the screen produces `SearchQuery`); recent rows show result counts and
 source.
@@ -595,7 +603,7 @@ per-card checkbox, card body, bookmark, 4 action buttons per card, export, copy 
 
 **Shared components.** `AppTopBar.pushed`, `StatsStrip`, `InfoNote`, `AppChip`, `AppCard`,
 `InitialsAvatar`, `SourceBadge`, `RatingBadge` (inline variant), `ContactRow` (compact result variant),
-`AppIconButton`, `BottomActionBar`, `AdBannerPlaceholder` (Free only, below the list).
+`AppIconButton`, `BottomActionBar`.
 
 **Lead fields.** name, category, area, phones, emails, website, rating, reviewCount, isOpenNow,
 sources, isSaved, id.
@@ -614,7 +622,7 @@ notes/tags/status/reminder, destructive actions.
 Share → share sheet. More → menu (copy all, export single, remove). Call/WhatsApp/Email/Directions →
 external intents. Save to contacts → contacts insert (D/E). Website `open_in_new` → browser. Address
 `directions` → maps. Pro badge on profiles → `/pro`. Add tag → tag sheet. Reminder row → date/time
-picker. "Remove lead" → confirm dialog. Ad slot only for Free.
+picker. "Remove lead" → confirm dialog. No ad placement (Section 3.9).
 
 **Layout, top to bottom**
 
@@ -657,7 +665,7 @@ picker. "Remove lead" → confirm dialog. Ad slot only for Free.
 8. **Secondary actions**: two 44 px outlined buttons, "Copy all details" (`content_copy_rounded`) and
    "Remove lead" (`delete_rounded`). Destructive action stays monochrome; confirmation dialog carries the
    weight (title + body + destructive-styled button using `primary`, not red).
-9. **Ad slot** 320 × 50, centered, 24 px bottom padding.
+9. **No ad slot.** The mockup's banner is intentionally not built (Section 3.9).
 
 **States.** Saved/unsaved; missing email/phone/website/address (row hidden or "Not found"); social found
 vs not found; Pro vs Free (profiles unlocked vs locked); status per value; reminder set/not set; note
@@ -672,7 +680,7 @@ until Pro; lock + Pro badge).
 
 **Shared components.** `AppTopBar.pushed`, `AppCard`, `SectionHeader`, `InitialsAvatar`, `RatingBadge`,
 `SourceBadge`, `AppChip`, `ContactRow`, `MonoText`, `AppSegmentedControl`, `ProBadge`, `ToggleRow`,
-`AppButton`, `AppIconButton`, `AdBannerPlaceholder`, `InfoNote`.
+`AppButton`, `AppIconButton`, `InfoNote`, `AppDialog`.
 
 **Lead fields.** name, category, area, city, state, address, phones (all, with kind), emails (all),
 website, socialLinks, rating, reviewCount, isOpenNow, openingHours, sources, tags, note, status,
@@ -722,15 +730,14 @@ Selection bar actions → export (`/export`), add to list, tag, delete. Pro upse
      Roastery Coffee House (Replied, Hot lead/Cafes, 1w, "Owner interested in coffee bean wholesale
      supply", email disabled); Apex Dental Care (Closed, Dentists, 2w, no note); Cafe De Bella (New,
      Follow up/Cafes, 3w, "Found via Instagram outreach, needs tasting appointment").
-6. **Ad slot** 320 × 50 dashed variant: "Ad" tag + "Auto-sync leads with CRM integration" +
-   "Learn more" (Free only).
+6. **No ad slot.** The mockup's dashed banner is intentionally not built (Section 3.9).
 7. **Floating selection bar** (when selection > 0): inverse pill above the nav, live dot + "1 selected",
    actions `file_download_rounded`, `playlist_add_rounded`, `sell_rounded`, `delete_rounded` (36 px
    buttons, 44 tap).
 8. **Bottom nav** — 3 tabs, Saved active.
 
 **States.** Empty (EmptyState: bookmark icon, "Nothing saved yet", body, "Find leads" → `/search`);
-no results for a filter; free saved-lead limit reached (banner/upsell card); selection 0 vs n; missing
+no results for a filter; free saved-lead limit reached (upsell card); selection 0 vs n; missing
 note; missing channel; reminder overdue (icon + weight, no red).
 
 **Interactive elements.** Search, more, list chips, New list, 5 status segments, select all, sort, view
@@ -743,7 +750,7 @@ five cards above.
 `ProUpsellCard` and the save action opens the paywall.
 
 **Shared components.** `AppTopBar.tab`, `AppChip`, `AppSegmentedControl`, `StatusPill`, `AppCard`,
-`InitialsAvatar`, `AppIconButton`, `SelectionActionBar`, `AdBannerPlaceholder`, `EmptyState`,
+`InitialsAvatar`, `AppIconButton`, `SelectionActionBar`, `EmptyState`,
 `ProUpsellCard`, `AppBottomNav`.
 
 **Lead fields.** name, category, area/city, status, tags, note, reminderAt, savedAt, phones, emails,
@@ -1068,7 +1075,7 @@ routes and absent — and restored after pop — on every pushed route.
 | "No website" filter | ✗ | ✓ | Filters → Contact → No website (PRO, disabled switch) |
 | Saved leads / lists | 50 | unlimited | Saved leads limit + upsell; comparison table |
 | Export formats | CSV, Excel, PDF, VCF | same four, without limits | Export format tiles; paywall list. All four formats are allowed on Free — the Pro claim is "without limits", not "more formats" |
-| Ads | shown | removed | Every ad slot (home, results, saved, lead detail) |
+| Ads | opt-in rewarded ad before each search, plus interstitials at breaks | none | Home Find Leads dialog; `AdPolicy` triggers. **No banner slots exist** (Section 3.9) |
 | Social profile values | hidden/teaser | ✓ | Lead detail profiles card (Pro badge + "Not found" until Pro) |
 | Priority support | ✗ | ✓ | Paywall feature list only |
 | AI organize/format/verify leads | — | coming soon | Paywall coming-soon row |

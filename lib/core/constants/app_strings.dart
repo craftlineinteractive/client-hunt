@@ -70,12 +70,41 @@ abstract final class CommonStrings {
       'Placeholder screen — built in a later prompt.';
 }
 
-/// Ad slot copy (Free builds only).
+/// Copy for the rewarded and interstitial ad model.
+///
+/// There are no banner or native ad placements in the product. A Free search is
+/// preceded by an opt-in rewarded ad, and interstitials only appear at natural
+/// breaks (see the README "Ads model" section).
 abstract final class AdsStrings {
-  static const String adLabel = 'Ad';
-  static const String adHeadline = 'Scale B2B Outbound on Autopilot';
-  static const String defaultHeadline = 'Auto-sync leads with CRM integration';
-  static const String learnMore = 'Learn more';
+  // Rewarded opt-in dialog, shown before a Free search.
+  static const String rewardedTitle = 'Watch a short ad to search';
+  static const String rewardedBody =
+      'Free searches are supported by a short ad. Pro searches run without '
+      'ads.';
+  static const String rewardedWatch = 'Watch ad';
+  static const String rewardedGoPro = 'Go Pro';
+
+  // Rewarded outcomes.
+  static const String rewardedDismissed =
+      'Watch the full ad to run your search.';
+  static const String rewardedFailed = 'The ad could not be shown. Try again.';
+
+  // Test ad page. Debug builds only; prompt E replaces it with AdMob.
+  static const String testAdLabel = 'Test ad';
+  static const String testAdRewardedHeadline = 'Sample rewarded ad';
+  static const String testAdInterstitialHeadline = 'Sample interstitial ad';
+  static const String testAdBody =
+      'This stands in for a real ad. Prompt E swaps it for AdMob with test ad '
+      'unit ids first.';
+  static const String testAdRewardNote =
+      'The reward is earned when this countdown ends.';
+  static const String testAdClose = 'Close';
+  static const String testAdSecondsSuffix = 's';
+
+  // Settings and paywall copy that describes the ad model.
+  static const String noBannersNote =
+      'ClientHunt shows no banner ads — only an optional ad before a free '
+      'search, and occasional full-screen ads at natural breaks.';
 }
 
 /// Search tab (`/search`).

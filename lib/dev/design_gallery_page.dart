@@ -805,26 +805,11 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
             ),
           ),
           _Section(
-            title: 'Pro upsell and ad slot',
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                ProUpsellCard(
-                  title: 'ClientHunt Pro',
-                  body: 'Unlock social sources and unlimited leads',
-                  onTap: () {},
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Center(child: AdBannerPlaceholder(onTap: () {})),
-                const SizedBox(height: AppSpacing.sm),
-                const Center(
-                  child: AdBannerPlaceholder(
-                    headline: 'Auto-sync leads with CRM integration',
-                    isDashed: true,
-                    actionLabel: 'Learn more',
-                  ),
-                ),
-              ],
+            title: 'Pro upsell',
+            child: ProUpsellCard(
+              title: 'ClientHunt Pro',
+              body: 'Unlock social sources and unlimited leads',
+              onTap: () {},
             ),
           ),
           _Section(
