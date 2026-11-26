@@ -1,8 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/router/app_router.dart';
 import '../data/fake/fake.dart';
+import '../domain/ads/ad_coordinator.dart';
+import '../domain/ads/ad_policy.dart';
 import '../domain/entitlements/entitlements.dart';
 import '../domain/entitlements/feature_gate.dart';
+import '../domain/models/models.dart';
+import '../domain/repositories/ad_service.dart';
+import '../domain/repositories/location_service.dart';
 import '../domain/repositories/repositories.dart';
 
 /// **The provider graph — the seam between UI and data.**
@@ -95,4 +101,65 @@ final Provider<FeatureGate> featureGateProvider = Provider<FeatureGate>((
   final Entitlements entitlements =
       ref.watch(entitlementsProvider).value ?? freeEntitlements;
   return FeatureGate(entitlements);
+});
+
+/// The user's settings, streamed. Home reads its defaults from here.
+final StreamProvider<AppSettings> settingsProvider =
+    StreamProvider<AppSettings>(
+      (Ref ref) => ref.watch(settingsRepositoryProvider).watch(),
+    );
+
+/// Searches left today, streamed. `null` until the first value arrives.
+final StreamProvider<int> remainingSearchesProvider = StreamProvider<int>(
+  (Ref ref) => ref.watch(quotaRepositoryProvider).watchRemainingToday(),
+);
+
+/// The most recent searches, newest first.
+///
+/// Two rows, matching the mockup's Recent block; the repo supports any limit.
+final StreamProvider<List<SearchHistoryEntry>> recentSearchesProvider =
+    StreamProvider<List<SearchHistoryEntry>>(
+      (Ref ref) =>
+          ref.watch(searchHistoryRepositoryProvider).watchRecent(limit: 2),
+    );
+
+/// Resolves the current city. Fake by default; prompt E supplies the platform
+/// implementation behind the same interface.
+final Provider<LocationService> locationServiceProvider =
+    Provider<LocationService>((Ref ref) {
+      return FakeLocationService(
+        outcome: ref.watch(fakeLocationOutcomeProvider),
+      );
+    });
+
+/// Rewarded and interstitial ads.
+///
+/// Rebuilt when the debug panel changes the fake outcomes, so the next ad picks
+/// them up. The test-ad page is pushed on [rootNavigatorKey].
+final Provider<AdService> adServiceProvider = Provider<AdService>((Ref ref) {
+  return FakeAdService(
+    config: ref.watch(fakeAdConfigProvider),
+    navigatorKey: rootNavigatorKey,
+  );
+});
+
+/// The single interstitial frequency policy for the session.
+///
+/// A plain provider, so its counters survive tab switches and screen pushes.
+final Provider<AdPolicy> adPolicyProvider = Provider<AdPolicy>(
+  (Ref ref) => AdPolicy(),
+);
+
+/// The only object screens may use to run an ad.
+final Provider<AdCoordinator> adCoordinatorProvider = Provider<AdCoordinator>((
+  Ref ref,
+) {
+  final Entitlements entitlements =
+      ref.watch(entitlementsProvider).value ?? freeEntitlements;
+  return AdCoordinator(
+    adService: ref.watch(adServiceProvider),
+    policy: ref.watch(adPolicyProvider),
+    entitlements: entitlements,
+    isInterstitialForced: () => ref.read(forcedInterstitialProvider),
+  );
 });

@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'fake_ad_service.dart';
+import 'fake_location_service.dart';
+
 /// Which behaviour the fake engine shows on the next search.
 ///
 /// This is how the B prompts check every state without a network: loading,
@@ -62,3 +65,64 @@ class FakeProController extends Notifier<bool> {
 /// Debug Pro switch for the fake subscription.
 final NotifierProvider<FakeProController, bool> fakeProEnabledProvider =
     NotifierProvider<FakeProController, bool>(FakeProController.new);
+
+/// Ad outcomes used by the fake ad service.
+///
+/// Changing any of these rebuilds the fake service, which is exactly what the
+/// next ad should pick up.
+class FakeAdConfigController extends Notifier<FakeAdConfig> {
+  @override
+  FakeAdConfig build() => const FakeAdConfig();
+
+  /// Replaces the whole configuration.
+  void set(FakeAdConfig config) => state = config;
+
+  /// Picks the rewarded outcome.
+  void setRewarded(FakeRewardedOutcome outcome) =>
+      state = state.copyWith(rewarded: outcome);
+
+  /// Picks the interstitial outcome.
+  void setInterstitial(FakeInterstitialOutcome outcome) =>
+      state = state.copyWith(interstitial: outcome);
+}
+
+/// Current fake ad configuration.
+final NotifierProvider<FakeAdConfigController, FakeAdConfig>
+fakeAdConfigProvider = NotifierProvider<FakeAdConfigController, FakeAdConfig>(
+  FakeAdConfigController.new,
+);
+
+/// Debug switch that makes the next [AdTrigger] show an interstitial even when
+/// the 35% roll and the action counter would refuse.
+///
+/// The rest of the policy still applies: Pro and `isBusy` always win.
+class ForcedInterstitialController extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  /// Turns the override on or off.
+  void set(bool value) => state = value;
+}
+
+/// Debug "force the next interstitial" switch.
+final NotifierProvider<ForcedInterstitialController, bool>
+forcedInterstitialProvider =
+    NotifierProvider<ForcedInterstitialController, bool>(
+      ForcedInterstitialController.new,
+    );
+
+/// Location outcome used by the fake location service.
+class FakeLocationController extends Notifier<FakeLocationOutcome> {
+  @override
+  FakeLocationOutcome build() => FakeLocationOutcome.found;
+
+  /// Chooses found, denied or unavailable.
+  void set(FakeLocationOutcome outcome) => state = outcome;
+}
+
+/// Current fake location outcome.
+final NotifierProvider<FakeLocationController, FakeLocationOutcome>
+fakeLocationOutcomeProvider =
+    NotifierProvider<FakeLocationController, FakeLocationOutcome>(
+      FakeLocationController.new,
+    );

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../domain/models/search_filters.dart';
+import '../../domain/repositories/lead_search_engine.dart';
 
 /// **Every route path and name in one place.**
 ///
@@ -70,8 +71,16 @@ abstract final class AppNavigator {
   const AppNavigator._();
 
   /// Pushes the results screen for a search.
-  static Future<void> goToResults(BuildContext context, {String? searchId}) {
-    return context.push<void>(AppRoutes.results, extra: searchId);
+  ///
+  /// The [SearchRequest] is the route `extra`, so Results runs exactly the query
+  /// Home built (normalized niche and city, chosen sources, filters, capped
+  /// result count) instead of reconstructing it. A restored route has no extra,
+  /// so Results must handle `null` with a safe message rather than crash.
+  static Future<void> goToResults(
+    BuildContext context, {
+    SearchRequest? request,
+  }) {
+    return context.push<void>(AppRoutes.results, extra: request);
   }
 
   /// Pushes the detail screen for [leadId].

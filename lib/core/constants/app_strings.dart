@@ -131,6 +131,46 @@ abstract final class HomeStrings {
       'You have used today\'s free searches. Go Pro for unlimited searches, or '
       'wait until tomorrow.';
   static const String leadsReadySuffix = 'leads found';
+
+  // Field affordances and validation. Errors are plain text with an info icon,
+  // never red: the palette has no hue.
+  static const String clearNiche = 'Clear niche';
+  static const String clearLocation = 'Clear city';
+  static const String nicheSemantic = 'Niche';
+  static const String locationSemantic = 'City or area';
+  static const String tooShortHint = 'Enter at least 2 characters';
+  static const String tooLongHint = 'Keep it under 60 characters';
+  static const String invalidCharactersHint =
+      "Use letters, numbers and . , & ' - /";
+
+  // Location.
+  static const String locationDenied =
+      'Location permission is off. Type a city instead.';
+  static const String locationUnavailable =
+      'Could not find your location. Type a city instead.';
+  static const String locating = 'Finding your city…';
+
+  // Sources and filters.
+  static const String lastSourceRequired = 'Keep at least one source selected.';
+  static const String lockedSourceSemantics = 'Pro feature, locked';
+  static const String filtersBadgeTooltip = 'Filters';
+
+  // Quota.
+  static const String unlimited = 'Unlimited';
+  static const String quotaTooltip = 'Free searches left today';
+  static const String dailyLimitReached = 'Daily limit reached';
+
+  // Recent.
+  static const String recentLeadsSuffix = 'leads';
+  static const String clearRecentToast = 'Search history cleared';
+  static const String metaSeparator = ' · ';
+
+  // Top bar.
+  static const String proTooltip = 'ClientHunt Pro';
+  static const String proLabel = 'Pro';
+
+  // Rewarded outcomes shown on Home.
+  static const String searchReady = 'Free search available';
 }
 
 /// Results (`/results`).
@@ -152,6 +192,19 @@ abstract final class ResultsStrings {
   static const String filterWhatsApp = 'WhatsApp';
   static const String filterRating4 = 'Rating 4+';
   static const String filterSaved = 'Saved';
+
+  // Route hand-off from Home (placeholder until B2).
+  static const String handoffTitle = 'Search request';
+  static const String handoffCaption =
+      'Passed from Home through the route extra. Results arrive in the next '
+      'prompt.';
+  static const String handoffMissing =
+      'This search could not be restored. Go back and run it again.';
+  static const String nicheLabel = 'Niche';
+  static const String locationLabel = 'Location';
+  static const String sourcesLabel = 'Sources';
+  static const String filtersLabel = 'Filters';
+  static const String filtersNone = 'None';
 
   static const String selectAll = 'Select all';
   static const String exportLeads = 'Export Leads';

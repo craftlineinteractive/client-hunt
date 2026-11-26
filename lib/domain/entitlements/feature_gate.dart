@@ -27,6 +27,10 @@ enum LockReason {
 
   /// Today's free search allowance is used up.
   dailySearchLimitReached,
+
+  /// The paywall was opened from the rewarded-ad opt-in dialog ("Go Pro"), so
+  /// the ad-free benefit should lead.
+  adFreeRequiresPro,
 }
 
 /// One choice in the Filters screen's "Max results" row.
@@ -80,8 +84,13 @@ class FeatureGate {
   /// True when the "No website" filter may be switched on.
   bool get canUseNoWebsiteFilter => entitlements.noWebsiteFilterAllowed;
 
-  /// True when ad slots render.
+  /// True when the rewarded prompt and interstitials are active.
   bool get showsAds => entitlements.adsEnabled;
+
+  /// Why the rewarded opt-in dialog offers Pro, or `null` when ads are already
+  /// off for this plan.
+  LockReason? get reasonForAdFree =>
+      showsAds ? LockReason.adFreeRequiresPro : null;
 
   /// True when [format] may be exported.
   bool canExport(ExportFormat format) =>

@@ -147,27 +147,38 @@ class SearchFilters {
   /// Group results under city headers.
   final bool groupByCity;
 
+  /// How many filters differ from the defaults.
+  ///
+  /// Home's Filters button shows this number and the Filters screen uses it for
+  /// its "n filters active" caption, so the two can never disagree. Quick toggles
+  /// count too: switching Email off is an active filter even though it is a
+  /// one-tap control.
+  int get activeFilterCount {
+    int count = 0;
+    if (hasEmail != true) count++;
+    if (hasPhone != true) count++;
+    if (hasWebsite) count++;
+    if (hasWhatsApp) count++;
+    if (hasSocial) count++;
+    if (noWebsite) count++;
+    if (minRating != null) count++;
+    if (minReviews != null) count++;
+    if (openStatus != OpenStatus.any) count++;
+    if (mustInclude.isNotEmpty) count++;
+    if (exclude.isNotEmpty) count++;
+    if (depth != SearchDepth.fast) count++;
+    if (maxResults != 50) count++;
+    if (sortBy != SortOption.relevance) count++;
+    if (!dedupe) count++;
+    if (!skipSaved) count++;
+    if (!removeInvalidPhones) count++;
+    if (groupByCity) count++;
+    return count;
+  }
+
   /// True when any filter deviates from the defaults; drives the "5 filters
   /// active" caption on the Filters screen.
-  bool get hasActiveChanges =>
-      hasEmail != true ||
-      hasPhone != true ||
-      hasWebsite ||
-      hasWhatsApp ||
-      hasSocial ||
-      noWebsite ||
-      minRating != null ||
-      minReviews != null ||
-      openStatus != OpenStatus.any ||
-      mustInclude.isNotEmpty ||
-      exclude.isNotEmpty ||
-      depth != SearchDepth.fast ||
-      maxResults != 50 ||
-      sortBy != SortOption.relevance ||
-      !dedupe ||
-      !skipSaved ||
-      !removeInvalidPhones ||
-      groupByCity;
+  bool get hasActiveChanges => activeFilterCount > 0;
 
   /// Copy with selected fields replaced; null keeps the current value.
   SearchFilters copyWith({
