@@ -5,6 +5,7 @@
 /// and D. Import this barrel rather than individual files.
 library;
 
+export 'app_settings.dart';
 export 'contact_point.dart';
 export 'export_options.dart';
 export 'lead.dart';
