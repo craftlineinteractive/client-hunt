@@ -3,16 +3,16 @@ import 'package:flutter/foundation.dart';
 import 'model_equality.dart';
 
 /// Business open-state filter.
+///
+/// There are exactly two values. "Recently active" was dropped from the product:
+/// it needs social last-activity data the engine does not have, so offering it
+/// would be a promise the app cannot keep. Open-now applies to Maps leads only.
 enum OpenStatus {
   /// Any state.
   any(displayName: 'Any'),
 
   /// Open right now. Maps only.
-  openNow(displayName: 'Open now'),
-
-  /// Recently posted / recently active. Requires social activity data that the
-  /// engine does not have yet; treated as [any] until prompt D supports it.
-  recentlyActive(displayName: 'Recently active');
+  openNow(displayName: 'Open now');
 
   const OpenStatus({required this.displayName});
 

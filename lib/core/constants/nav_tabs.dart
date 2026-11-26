@@ -27,11 +27,11 @@ class NavTab {
 
 /// **The single bottom-navigation definition.**
 ///
-/// The approved mockups disagree: `home_screen` and `saved_leads` draw four tabs
-/// (Search, Saved, History, Settings) while `settings` draws three. There is no
-/// History screen, so the build ships three tabs. To add History later, append a
-/// [NavTab] here and register its branch in `app_router.dart` — no widget change
-/// is needed.
+/// Decided: exactly three tabs — Search, Saved, Settings. History is not a
+/// destination; recent searches live on the Search screen and "Clear all" lives
+/// with them. The three-tab mockups are therefore authoritative and the four-tab
+/// frames are noise. To add History later, append a [NavTab] here and register its
+/// branch in `app_router.dart` — no widget change is needed.
 const List<NavTab> navTabs = <NavTab>[
   NavTab(
     label: 'Search',

@@ -427,7 +427,6 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                   options: const <AppSegmentOption<int>>[
                     AppSegmentOption<int>(value: 0, label: 'Any'),
                     AppSegmentOption<int>(value: 1, label: 'Open now'),
-                    AppSegmentOption<int>(value: 2, label: 'Recently active'),
                   ],
                   selected: _segmentIndex,
                   onChanged: (int value) =>

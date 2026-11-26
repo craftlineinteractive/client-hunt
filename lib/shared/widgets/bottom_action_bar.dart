@@ -36,7 +36,8 @@ class BottomActionBar extends StatelessWidget {
   /// Optional primary button icon.
   final IconData? primaryIcon;
 
-  /// Optional 13 px caption above the row ("5 filters active", "₹2,999 billed yearly").
+  /// Optional 13 px caption above the row ("5 filters active", a plan's billing
+  /// summary). Never write a price here: prices come from [ProPlan].
   final String? caption;
 
   /// Optional secondary icon button.

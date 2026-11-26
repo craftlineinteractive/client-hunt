@@ -1,7 +1,13 @@
+import 'package:flutter/foundation.dart';
+
 /// Shared copy used in more than one place.
 ///
 /// Screen-local strings can live with their screen; anything repeated, or any
 /// string with a legal/trust implication, belongs here so it stays consistent.
+///
+/// **Trust rule:** the app never claims our contact data is verified. The only
+/// approved use of "verify" is [aiVerifyFeature], a Pro feature that is marked
+/// "Coming soon" and describes a future product capability, not our data.
 abstract final class AppStrings {
   // Product.
   static const String appName = 'ClientHunt';
@@ -32,6 +38,12 @@ abstract final class AppStrings {
   static const String notVerifiedNote = 'Found on a public page, not verified.';
   static const String unverifiedNotice =
       'Contact details are sourced publicly and unverified.';
+
+  /// The only approved use of the word "verify": a *future* Pro capability,
+  /// always shown with a "Coming soon" badge. It describes the product, not the
+  /// contact data, and `app_strings_test.dart` allowlists exactly this name.
+  static const String aiVerifyFeature =
+      'AI to organize, format and verify leads';
   static const String storedOnDevice =
       'Your leads are stored only on this device.';
 
@@ -53,9 +65,12 @@ abstract final class AppStrings {
 ///
 /// The paywall mockup shows three invented reviews and a 4.7 rating. They are
 /// design-only and **must be replaced with real Play Store data before release**.
-/// Set this to `false` to hide the whole "What users say" section until real
-/// reviews exist.
-const bool kShowSampleProReviews = true;
+///
+/// The flag follows [kDebugMode]: sample reviews and the sample rating render in
+/// debug builds only, so a release build shows no social proof at all rather than
+/// shipping invented testimonials. Replace this flag *and* [kSampleProReviews]
+/// with real, fetched reviews before launch.
+const bool kShowSampleProReviews = kDebugMode;
 
 /// **SAMPLE DATA — do not ship.** Invented review copy, names and roles from the
 /// paywall mockup. Replace with real reviews before release.
@@ -63,7 +78,7 @@ const List<({String text, String name, String role, String initials})>
 kSampleProReviews = <({String text, String name, String role, String initials})>[
   (
     text:
-        'Exporting 200 clinic contacts directly into Excel with verified email '
+        'Exporting 200 clinic contacts directly into Excel with usable email '
         'addresses saved me over 15 hours of manual lookup this week alone.',
     name: 'Amit K.',
     role: 'Agency Owner',
