@@ -70,10 +70,14 @@ class StatsStrip extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: AppSpacing.xs + 1),
-                    Text(
-                      items[index].label,
-                      style: AppTypography.labelMd.copyWith(
-                        color: colors.textSecondary,
+                    Flexible(
+                      child: Text(
+                        items[index].label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.labelMd.copyWith(
+                          color: colors.textSecondary,
+                        ),
                       ),
                     ),
                   ],

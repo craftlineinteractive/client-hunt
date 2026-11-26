@@ -81,14 +81,17 @@ class SelectionActionBar extends StatelessWidget {
             decoration: BoxDecoration(color: content, shape: BoxShape.circle),
           ),
           const SizedBox(width: AppSpacing.sm),
-          Text(
-            '$selectedCount selected',
-            style: AppTypography.titleSm.copyWith(
-              color: content,
-              fontSize: 14,
+          Expanded(
+            child: Text(
+              '$selectedCount selected',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.titleSm.copyWith(
+                color: content,
+                fontSize: 14,
+              ),
             ),
           ),
-          const Spacer(),
           for (final SelectionAction action in actions)
             Tooltip(
               message: action.tooltip,
