@@ -26,6 +26,9 @@ abstract final class AppStrings {
 
 /// Copy shared by several screens.
 abstract final class CommonStrings {
+  // States.
+  static const String loading = 'Loading';
+
   // Navigation.
   static const String searchTab = 'Search';
   static const String savedTab = 'Saved';
@@ -49,6 +52,14 @@ abstract final class CommonStrings {
   static const String emailsSuffix = 'emails';
   static const String phonesSuffix = 'phones';
   static const String resultsLabel = 'Results';
+
+  // Contact-launch outcomes, shared by Results and Lead Detail.
+  static const String launchingCall = 'Opening the phone app';
+  static const String launchingWhatsApp = 'Opening WhatsApp';
+  static const String launchingEmail = 'Opening the email app';
+  static const String contactUnavailable =
+      'No app on this device can handle that.';
+  static const String contactFailed = 'Could not open the app. Try again.';
 
   // Tooltips.
   static const String backTooltip = 'Back';
@@ -310,13 +321,12 @@ abstract final class ResultsStrings {
       'You reached this plan\'s result limit.';
   static const String cancelledNotice = 'Search cancelled.';
 
-  // Outreach outcomes.
-  static const String launchingCall = 'Opening the phone app';
-  static const String launchingWhatsApp = 'Opening WhatsApp';
-  static const String launchingEmail = 'Opening the email app';
-  static const String contactUnavailable =
-      'No app on this device can handle that.';
-  static const String contactFailed = 'Could not open the app. Try again.';
+  // Outreach outcomes (shared with Lead Detail).
+  static const String launchingCall = CommonStrings.launchingCall;
+  static const String launchingWhatsApp = CommonStrings.launchingWhatsApp;
+  static const String launchingEmail = CommonStrings.launchingEmail;
+  static const String contactUnavailable = CommonStrings.contactUnavailable;
+  static const String contactFailed = CommonStrings.contactFailed;
   static const String nothingToCopy = 'There is no contact detail to copy.';
 
   // Fallback when the route extra is missing.
@@ -360,6 +370,8 @@ abstract final class LeadDetailStrings {
       'Social profiles are included with Pro.';
 
   static const String businessDetails = 'Business details';
+  static const String openNow = 'Open now';
+  static const String changeDate = 'Change date';
   static const String factRating = 'Rating';
   static const String factReviews = 'Reviews';
   static const String factHours = 'Hours';
@@ -371,8 +383,35 @@ abstract final class LeadDetailStrings {
   static const String addTag = 'Add tag';
   static const String noteHint = 'Add a note about this lead...';
   static const String leadStatus = 'Lead status';
-  static const String followUpReminder = 'Follow-up reminder';
-  static const String reminderNotSet = 'Not set';
+
+  /// A date, never an alert: no notification is scheduled in B3.
+  static const String followUpDate = 'Follow-up date';
+  static const String followUpNotSet = 'Not set';
+  static const String followUpClear = 'Clear';
+
+  // Tag sheet.
+  static const String addTagTitle = 'Add a tag';
+  static const String addTagHint = 'e.g. Hot lead';
+  static const String addTagSuggestions = 'Your tags';
+  static const String addTagAction = 'Add';
+  static const String tagErrorEmpty = 'Type a tag first.';
+  static const String tagErrorTooLong = 'Tags are up to 24 characters.';
+  static const String tagErrorInvalid =
+      'Use letters, numbers, spaces, - _ or & only.';
+  static const String tagErrorDuplicate = 'This lead already has that tag.';
+  static const String tagErrorLimit = 'A lead can have up to 10 tags.';
+  static const String tagRemoveTooltip = 'Remove tag';
+
+  // Profiles.
+  static const String profileFound = 'Found';
+  static const String openLinkTooltip = 'Open link';
+
+  /// Announced on a Free user's locked profile row.
+  static const String lockedProLabel = 'Pro feature, locked';
+
+  // Contact details.
+  static const String noContactDetails = 'No public contact details found';
+  static const String foundOnPrefix = 'Found on';
   static const String copyAllDetails = 'Copy all details';
   static const String removeLead = 'Remove lead';
 
@@ -383,6 +422,7 @@ abstract final class LeadDetailStrings {
   static const String directionsTooltip = 'Directions';
   static const String shareTooltip = 'Share';
   static const String bookmarkTooltip = 'Save lead';
+  static const String unsaveTooltip = 'Remove from saved';
   static const String openWebsiteTooltip = 'Open website';
   static const String copyValueTooltip = 'Copy';
 
@@ -393,14 +433,36 @@ abstract final class LeadDetailStrings {
       'undone.';
   static const String removeConfirm = 'Remove';
 
+  /// Shown when unsaving would delete notes, tags, status or a follow-up date.
+  static const String unsaveTitle = 'Remove this saved lead?';
+  static const String unsaveBody =
+      'Removing this lead also deletes your notes and tags.';
+  static const String unsaveConfirm = 'Remove';
+
   // Toasts.
   static const String allDetailsCopied = 'All details copied';
+  static const String copiedToast = 'Copied';
   static const String savedToast = 'Lead saved';
+  static const String unsavedToast = 'Lead unsaved';
   static const String removedToast = 'Lead removed';
   static const String statusUpdatedToast = 'Status updated';
   static const String noteSavedToast = 'Note saved';
-  static const String reminderSetToast = 'Reminder set';
-  static const String reminderClearedToast = 'Reminder cleared';
+  static const String followUpSetToast = 'Follow-up date set';
+  static const String followUpClearedToast = 'Follow-up date cleared';
+  static const String saveFailedToast =
+      'Could not save your change. Try again.';
+  static const String shareFailedToast = 'Could not open the share sheet.';
+
+  // States.
+  static const String notFoundTitle = 'This lead is no longer available';
+  static const String notFoundBody =
+      'It was removed from this device. Saved leads and new searches can be '
+      'opened again.';
+  static const String notFoundAction = 'Go back';
+
+  // Save to contacts / directions results.
+  static const String saveContactToast = 'Saved to contacts';
+  static const String directionsToast = 'Opening directions';
 }
 
 /// Saved leads (`/saved`).
