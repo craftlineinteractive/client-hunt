@@ -292,6 +292,33 @@ void main() {
     expect(badge, findsOneWidget);
   });
 
+  testWidgets('the quick filters and the Filters button share one line', (
+    WidgetTester tester,
+  ) async {
+    // Task 1 of B2: the three quick filters and the pinned Filters button must
+    // sit on one row from 360 dp up, with the visible chips at ~40 px and a
+    // 48 px tap target. The row is measured, not eyeballed: the Website chip's
+    // right edge must stay left of the Filters button.
+    for (final double width in <double>[360, 390, 411]) {
+      await pumpHome(tester, size: Size(width, 1400));
+
+      final Finder website = find.text(ResultsStrings.filterWebsite);
+      await tester.ensureVisible(website);
+      await tester.pump();
+
+      final Rect chip = tester.getRect(website);
+      final Rect filters = tester.getRect(
+        find.byKey(const Key('home-filters-button')),
+      );
+      expect(
+        chip.right,
+        lessThanOrEqualTo(filters.left),
+        reason: 'The Website label overlaps Filters at $width dp',
+      );
+      expect(tester.takeException(), isNull, reason: '$width dp');
+    }
+  });
+
   testWidgets('a denied location is a snackbar, not a dead field', (
     WidgetTester tester,
   ) async {

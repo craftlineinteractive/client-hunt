@@ -826,6 +826,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 AppChip(
                   label: ResultsStrings.filterEmail,
                   leadingIcon: AppIcons.email,
+                  size: AppChipSize.compact,
                   isSelected: state.filters.hasEmail,
                   onTap: () => ref
                       .read(homeControllerProvider.notifier)
@@ -835,6 +836,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 AppChip(
                   label: ResultsStrings.filterPhone,
                   leadingIcon: AppIcons.phone,
+                  size: AppChipSize.compact,
                   isSelected: state.filters.hasPhone,
                   onTap: () => ref
                       .read(homeControllerProvider.notifier)
@@ -844,6 +846,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 AppChip(
                   label: ResultsStrings.filterWebsite,
                   leadingIcon: AppIcons.website,
+                  size: AppChipSize.compact,
                   isSelected: state.filters.hasWebsite,
                   onTap: () => ref
                       .read(homeControllerProvider.notifier)
@@ -1120,19 +1123,19 @@ class _FiltersButton extends StatelessWidget {
               constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
               child: Center(
                 child: Container(
-                  height: 36,
+                  height: 40,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
+                    horizontal: AppSpacing.sm + 2,
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Icon(
                         AppIcons.filters,
-                        size: 16,
+                        size: 15,
                         color: colors.textSecondary,
                       ),
-                      const SizedBox(width: AppSpacing.xs + 2),
+                      const SizedBox(width: AppSpacing.xs),
                       Text(
                         HomeStrings.filtersChip,
                         style: AppTypography.labelLg.copyWith(

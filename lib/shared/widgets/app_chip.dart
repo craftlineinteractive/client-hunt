@@ -19,7 +19,10 @@ enum AppChipTone {
 
 /// Height of an [AppChip].
 enum AppChipSize {
-  /// 36 px — quick filters and column chips.
+  /// 40 px — the Home quick filters, which must fit on one line at 390 dp.
+  compact,
+
+  /// 36 px — column chips and result filters.
   medium,
 
   /// 44 px — source pills and saved-list filters.
@@ -80,8 +83,19 @@ class AppChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppColors colors = AppColors.of(context);
-    final double height = size == AppChipSize.large ? 44 : 36;
+    final double height = switch (size) {
+      AppChipSize.compact => 40,
+      AppChipSize.medium => 36,
+      AppChipSize.large => 44,
+    };
+    // The visible pill may be shorter than 48 px; the padding around it expands
+    // the tap target to the minimum instead of growing the pill.
     final double verticalInset = math.max(0, (48 - height) / 2);
+    final bool isCompact = size == AppChipSize.compact;
+    final double horizontalInset = isCompact
+        ? AppSpacing.sm
+        : AppSpacing.md + 2;
+    final double iconGap = isCompact ? AppSpacing.xs : AppSpacing.xs + 2;
 
     final Color background;
     final Color foreground;
@@ -102,7 +116,7 @@ class AppChip extends StatelessWidget {
 
     final Widget pill = Container(
       height: height,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md + 2),
+      padding: EdgeInsets.symmetric(horizontal: horizontalInset),
       decoration: BoxDecoration(
         color: background,
         borderRadius: AppRadius.pillAll,
@@ -113,17 +127,17 @@ class AppChip extends StatelessWidget {
         children: <Widget>[
           if (isLocked) ...<Widget>[
             Icon(AppIcons.lock, size: 15, color: colors.textMuted),
-            const SizedBox(width: AppSpacing.xs + 2),
+            SizedBox(width: iconGap),
           ] else if (isSelected && showCheckWhenSelected) ...<Widget>[
             Icon(AppIcons.check, size: 16, color: foreground),
-            const SizedBox(width: AppSpacing.xs + 2),
+            SizedBox(width: iconGap),
           ] else if (leadingIcon != null) ...<Widget>[
             Icon(
               leadingIcon,
-              size: size == AppChipSize.large ? 18 : 16,
+              size: size == AppChipSize.large ? 18 : (isCompact ? 15 : 16),
               color: contentColor,
             ),
-            const SizedBox(width: AppSpacing.xs + 2),
+            SizedBox(width: iconGap),
           ],
           Text(
             label,
