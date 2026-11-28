@@ -635,6 +635,118 @@ sources, isSaved, id.
 them scrolling). Bottom bar via `bottomNavigationBar`. Result card is its own widget
 `features/results/widgets/lead_result_card.dart` in B.
 
+#### Implemented behavior (B2)
+
+`/results` is the real screen (`lib/features/results/results_page.dart`), driven by the fake
+`LeadSearchEngine` stream through `ResultsController`. No network, no storage, no ad SDK, no engine logic:
+Lead Detail, Filters, Export and Pro are still placeholders, and Results only navigates to them.
+
+**Route contract.** `/results` takes a `SearchRequest` as `extra`. A route with no extra (a restored
+deep link) renders a calm `EmptyState` with "Back to search" instead of an error.
+
+**State machine.** `ResultsPhase` is `searching`, `partial`, `completed`, `empty`, `failed`, `cancelled`.
+`ResultsState` holds the request, the search id, the phase and stage, the source list and per-source
+`SourceStatus`, the leads seen so far and the full list, the filter (chip + text), the sort, the selection,
+the filtered-and-sorted `visibleLeads`, live and final counts, the error, the session-only dismissed flag for
+the unverified note, the live saved ids and the `filtersChanged` flag. Counts are live while searching and
+final on completion.
+
+**Quota and history — the completion rule.** Results owns both. One `QuotaRepository.consumeOne()` and one
+`SearchHistoryEntry` are written **only** when `SearchCompleted` arrives with `summary.total >= 1`, and only
+for the first completion of a search id: the controller keeps `Set<String> _finalisedSearchIds` and records
+the id before the writes, so a duplicate event, a late batch from a replaced run or a rebuild of the screen
+cannot spend twice. `SearchCompleted` with `total == 0` becomes the empty phase and writes nothing; a failure,
+a cancel or an empty result consumes nothing and writes no history. Each run uses its own search id, so a
+retry is a new search and a new entry.
+
+**Interstitial.** No ad while searching or on arrival. Leaving a **completed** search (app bar back or system
+back) records one policy user action and calls
+`AdCoordinator.maybeShowInterstitial(AdTrigger.resultsClosed, isBusy: false)` after the pop. Leaving during a
+running search cancels it silently, shows nothing and never triggers an ad.
+
+**Copy.** Every string comes from `app_strings.dart`. Emails and phones are unverified; the screen says
+"Emails are unverified" and never claims a value was checked.
+
+**Free cap.** Free returns at most 50 leads, Pro 200 (`Entitlements.maxResultsPerSearch`). When a completed
+search's total **equals** the Free cap, a flat `InfoNote` under the stats reads "Showing the first 50 leads.
+Pro shows up to 200." with a Go Pro action that opens `/pro` with
+`LockReason.maxResultsRequiresPro`. Pro never sees it, and neither does a search below the cap.
+
+**Maps-only data.** Rating, review count, Maps badge and open/closed state are hidden — not zeroed — for
+leads that did not come from Maps. `ResultsSort` puts leads missing a rating or review count **last** instead
+of treating them as 0, and keeps arrival order as the tie-break.
+
+**Client-side filtering.** `ResultsFilter` (chips `all`, `email`, `phone`, `website`, `whatsApp`,
+`rating4Plus`, `saved`, plus a text query) and `ResultsSort` live in `domain/results` as pure tested code.
+Chips and the query combine with AND. The query matches name, category, area, phone digits, email and website
+domain, case-insensitively. `saved` reads the live saved ids, so a bookmark shows up immediately.
+
+**Filters hand-off.** `tune` opens `/filters` with the request's filters. On return, the parts that can be
+applied locally (website, WhatsApp, social, no-website, minimum rating, minimum reviews, required and
+excluded keywords) apply to the current leads through `matchesLocalFilters`; settings that change the search
+itself (sources, depth, max results, open status, cleanup flags) show "Filters changed. Search again to
+apply." with a Search again action that starts a new run — whose quota follows the normal completion rule.
+Engine-level `hasEmail`/`hasPhone` are deliberately **not** re-applied: the mockup's 42 leads include two
+without a phone.
+
+**Contact rules.** Pure predicates in `domain/results/contact_rules.dart`: call needs any phone; WhatsApp
+needs a **mobile** (a landline cannot receive WhatsApp, so the action is disabled at 40 % opacity, not
+failed); email needs an address; copy needs a phone or an email. `primaryPhone`/`primaryEmail` prefer the
+`isPrimary` contact, otherwise the first. Call, WhatsApp and Email go through the `ContactLauncher`
+interface (fake in B2, platform intents in a later prompt) and answer with a snackbar from strings; Copy uses
+Flutter's real clipboard and copies the primary phone and email on separate lines.
+
+**Selection and export.** The checkbox on a card selects that lead; the select row toggles every currently
+visible lead and shows "N selected" only when something is selected. The bottom bar's Export Leads passes an
+`ExportArgs` (title, lead ids, scope hint, counts) — the selected ids when there is a selection, otherwise
+every visible id — and the export placeholder prints it, so the hand-off is visible. The copy button opens a
+menu with "Copy emails (N)" and "Copy phones (M)", disabled at 0.
+
+**Saving.** The bookmark goes through `LeadRepositoryWriter`, which respects `Entitlements.maxSavedLeads`.
+Past the cap nothing is saved and the controller emits `ResultsOpenPro(savedLeadLimitReached)`; the page
+navigates, so the rule stays testable without a widget tree.
+
+**States.** Searching with no leads: a progress card with the stage in words, one row per source
+(Waiting / Searching / Done / Pro only / Blocked / Failed), "Found N so far" and Cancel, above four static
+skeletons whose pulse respects the platform reduce-motion setting. Once a batch arrives, a slim one-line
+header (stage, found count, thin progress bar) sits above the list and batches append without moving the
+scroll offset. Completed with no leads: an `EmptyState` with Edit search and, when local filters are active,
+Clear filters. Local filters hiding everything: Clear filters. Failure with no leads: per `SearchErrorType`
+(no network / rate limited / source blocked / unknown) with Retry and Edit search; a failure **after** partial
+results keeps the list and adds a Retry note instead.
+
+**Leaving.** Back pops to Home. While searching, back cancels the run silently (the controller also cancels on
+dispose, so a removed screen never leaves a stream running).
+
+**Event to UI**
+
+| Event | What the screen does |
+|-------|----------------------|
+| `SearchStarted` | Skeleton and progress card; per-source rows to Waiting/Searching; previous leads cleared. |
+| `SearchProgress` | Stage caption and source words update; "Found N so far" and the stats strip follow. |
+| `SearchPartialResults` | Batch appended by lead id (never duplicated), switch to `partial`, slim header stays above the list. |
+| `SearchCompleted` (total ≥ 1) | Phase `completed`; stats and subtitle become final; quota and history written once; export enabled; cap note if at the cap; lead session finalised for B3. |
+| `SearchCompleted` (total 0) | Phase `empty`; nothing spent, no history; empty state with Edit search. |
+| `SearchFailed` | `noResults` → empty; `noNetwork`, `rateLimited`, `sourceBlocked`, `unknown` → error state with Retry; `cancelled` → leave; partial leads are kept with a Retry note. |
+| `leave()` | `AdTrigger.resultsClosed` only when the run is not searching. |
+
+**Performance.** The list is a `SliverList.builder` with `ValueKey(lead.id)`; each card watches its own
+selection and saved state, so selecting one card does not rebuild the rest. The 200-lead `large` scenario uses
+the same path and stays at 60 fps when scrolled (see Section 10).
+
+**Differences from the mockup (B2)**
+
+| Mockup | Built | Why |
+|---|---|---|
+| Icon names rendered as words ("swap_vert", "group") | Real rounded icons | The mockup is a hand-drawn bug; the prompt forbids icon-name text. |
+| Copy-all button only | Copy button with a menu (emails / phones) | The prompt asks for one-per-line menus with disabled zero entries. |
+| Count pill inside the Export button | Count pill beside the button | Keeps the shared `BottomActionBar` primary label intact and passes 48 px targets. |
+| No progress, partial, error or cap states | Progress card, slim header, four error variants, Retry note, cap note, filters-changed note | The prompt requires them; the mockup only draws the finished screen. |
+| 36 px chips / 44 px select row | 40 px chips (48 px tap) and a 48 px select row | 48 px touch targets override the drawing. |
+| "Public contact details are unverified" (Section 8 rule e) | "Emails are unverified" | The prompt keeps the shorter note verbatim. |
+| Card is one widget in the list | Shared `LeadCard` with an action list | One card for Results and Saved; nothing is duplicated. |
+| Chips and stats scroll as one block | Same, chips are **not** sticky | Matches the mockup and the prompt; the select row scrolls with them. |
+
 ### 4.3 lead_detail — Lead details (pushed, `/lead`)
 
 **Purpose.** The full lead profile: contact, outreach actions, social profiles, business facts, private
@@ -1397,7 +1509,7 @@ Cancelling is `engine.cancel(searchId)` (the stream then ends with a `cancelled`
 
 ### 11.5 Debug controls for building screens
 
-`/dev/gallery` (debug builds only) has a “Fake data scenarios” section: `normal`, `slow`, `empty`, `no network`, `rate limited`, `partial: source blocked`, plus a pretend-Pro switch. That is how B prompts check loading, empty, error and locked states without a network or a purchase. The scenario feeds `FakeLeadSearchEngine`; the Pro switch feeds `FakeSubscriptionRepository`, which is the only thing that decides entitlements.
+`/dev/gallery` (debug builds only) has a “Fake data scenarios” section: `normal`, `slow`, `large: 200 leads`, `empty: no results`, `empty: completed`, `no network`, `rate limited`, `partial: source blocked` (which still completes), plus a pretend-Pro switch. That is how B prompts check loading, empty, error and locked states without a network or a purchase. The scenario feeds `FakeLeadSearchEngine`; the Pro switch feeds `FakeSubscriptionRepository`, which is the only thing that decides entitlements.
 
 ## 12. Ads model
 
