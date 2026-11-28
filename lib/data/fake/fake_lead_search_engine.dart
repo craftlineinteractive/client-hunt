@@ -35,6 +35,15 @@ class FakeLeadSearchEngine implements LeadSearchEngine {
 
   final Set<String> _cancelled = <String>{};
 
+  final List<SearchRequest> _seenRequests = <SearchRequest>[];
+
+  /// Every request this engine was asked to run, in order.
+  ///
+  /// Debug aid: the design gallery and the Results controller tests use it to
+  /// confirm that a retry starts a genuinely new run.
+  List<SearchRequest> get seenRequests =>
+      List<SearchRequest>.unmodifiable(_seenRequests);
+
   /// Leads per partial batch.
   static const int _batchSize = 8;
 
@@ -45,6 +54,7 @@ class FakeLeadSearchEngine implements LeadSearchEngine {
 
   @override
   Stream<SearchEvent> search(SearchRequest request) async* {
+    _seenRequests.add(request);
     final List<LeadSource> sources = request.query.sources.isEmpty
         ? const <LeadSource>[LeadSource.maps]
         : request.query.sources.toList();

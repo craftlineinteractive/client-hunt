@@ -184,6 +184,12 @@ class SearchSummary {
 /// (zero or more) → `SearchCompleted`.
 sealed class SearchEvent {
   const SearchEvent();
+
+  /// The run this event belongs to; always equal to [SearchRequest.id].
+  ///
+  /// Hoisted onto the base class so a consumer can drop a late event from a
+  /// replaced run with one check instead of one per subclass.
+  String get searchId;
 }
 
 /// The run started; the Results screen can show its skeleton.
@@ -191,6 +197,7 @@ final class SearchStarted extends SearchEvent {
   const SearchStarted({required this.searchId, required this.sources});
 
   /// Matches [SearchRequest.id].
+  @override
   final String searchId;
 
   /// Sources being attempted, in display order.
@@ -210,6 +217,7 @@ final class SearchProgress extends SearchEvent {
   });
 
   /// Matches [SearchRequest.id].
+  @override
   final String searchId;
 
   /// Current pipeline stage.
@@ -234,6 +242,7 @@ final class SearchPartialResults extends SearchEvent {
   });
 
   /// Matches [SearchRequest.id].
+  @override
   final String searchId;
 
   /// Leads ready at this point.
@@ -251,6 +260,7 @@ final class SearchCompleted extends SearchEvent {
   const SearchCompleted({required this.searchId, required this.summary});
 
   /// Matches [SearchRequest.id].
+  @override
   final String searchId;
 
   /// Totals and per-source outcomes.
@@ -265,6 +275,7 @@ final class SearchFailed extends SearchEvent {
   const SearchFailed({required this.searchId, required this.error});
 
   /// Matches [SearchRequest.id].
+  @override
   final String searchId;
 
   /// Why it failed, plus user-safe copy.

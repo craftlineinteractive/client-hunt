@@ -152,6 +152,59 @@ class ResultsFilter {
   String toString() => 'ResultsFilter(${chip.name}, "$text")';
 }
 
+/// Whether [lead] satisfies the parts of [filters] that can be checked locally.
+///
+/// Applying the whole [SearchFilters] here would be wrong: `hasEmail` and
+/// `hasPhone` are **engine** constraints (the search never returns a lead that
+/// breaks them), and re-checking them would hide the leads the engine chose to
+/// return — the mockup's 42 leads include two without a phone. Open status, depth,
+/// max results and the cleanup flags are deliberately absent too: they change the
+/// search, so Results asks for a new one instead of pretending.
+///
+/// What can be applied locally: website presence, WhatsApp presence, social
+/// links, "no website", minimum rating, minimum reviews, required and excluded
+/// keywords.
+bool matchesLocalFilters(Lead lead, SearchFilters filters) {
+  if (filters.hasWebsite && !lead.hasWebsite) {
+    return false;
+  }
+  if (filters.hasWhatsApp && !ContactRules.canWhatsApp(lead)) {
+    return false;
+  }
+  if (filters.hasSocial && lead.socialLinks.isEmpty) {
+    return false;
+  }
+  if (filters.noWebsite && lead.hasWebsite) {
+    return false;
+  }
+  final double? minRating = filters.minRating;
+  if (minRating != null && (lead.rating ?? 0) < minRating) {
+    return false;
+  }
+  final int? minReviews = filters.minReviews;
+  if (minReviews != null && (lead.reviewCount ?? 0) < minReviews) {
+    return false;
+  }
+
+  final String haystack = <String>[
+    lead.name,
+    lead.category,
+    lead.area,
+  ].join(' ').toLowerCase();
+
+  for (final String keyword in filters.mustInclude) {
+    if (!haystack.contains(keyword.trim().toLowerCase())) {
+      return false;
+    }
+  }
+  for (final String keyword in filters.exclude) {
+    if (haystack.contains(keyword.trim().toLowerCase())) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /// Client-side ordering for a finished (or still arriving) result set.
 ///
 /// Relevance is the engine's own order, so it is the identity: a search's best

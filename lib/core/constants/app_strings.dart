@@ -182,8 +182,7 @@ abstract final class ResultsStrings {
   static const String statsPhones = 'Phones';
 
   /// Approved negation. Not a claim that anything was verified.
-  static const String unverifiedNotice =
-      'Contact details are sourced publicly and unverified.';
+  static const String unverifiedNotice = 'Emails are unverified';
 
   static const String filterAll = 'All';
   static const String filterEmail = 'Email';
@@ -225,22 +224,98 @@ abstract final class ResultsStrings {
   static const String emailTooltip = 'Email';
   static const String copyContactTooltip = 'Copy contact details';
 
+  // Top bar, stats and notes.
+  static const String searchingEllipsis = 'Searching...';
+  static const String goPro = 'Go Pro';
+  static const String partialSourcesNote = 'Some sources could not be searched';
+  static const String detailsAction = 'Details';
+  static const String sourceDetailsTitle = 'Sources';
+  static const String sourceDetailsBody =
+      'Each source is searched separately. One blocked source does not stop the '
+      'others.';
+  static const String filtersChangedNote =
+      'Filters changed. Search again to apply.';
+  static const String searchAgain = 'Search again';
+
+  /// Shown when a completed search hit the plan's result cap.
+  static String capNote(int cap, int proCap) =>
+      'Showing the first $cap leads. Pro shows up to $proCap.';
+
+  // Source states, in words (never colour).
+  static const String sourcePending = 'Waiting';
+  static const String sourceRunning = 'Searching';
+  static const String sourceDone = 'Done';
+  static const String sourceSkippedPro = 'Pro only';
+  static const String sourceBlocked = 'Blocked';
+  static const String sourceFailed = 'Failed';
+
+  // Menu and actions.
+  static const String sortBy = 'Sort by';
+  static const String sortRelevance = 'Relevance';
+  static const String sortRating = 'Rating';
+  static const String sortReviews = 'Reviews';
+  static const String sortNameAZ = 'Name A to Z';
+  static const String export = 'Export';
+  static const String searchHint = 'Search leads';
+  static const String clearSearchTooltip = 'Clear search';
+  static const String closeSearchTooltip = 'Close search';
+  static const String copyEmailsTooltip = 'Copy emails';
+  static const String copyPhonesTooltip = 'Copy phones';
+  static const String selectLeadSemantics = 'Select lead';
+  static const String exportBarTooltip = 'Export these leads';
+
+  /// "12 selected" under the select row.
+  static String selectedCount(int count) => '$count selected';
+
+  /// "Copy emails (31)" in the copy menu.
+  static String copyEmails(int count) => 'Copy emails ($count)';
+
+  /// "Copy phones (40)" in the copy menu.
+  static String copyPhones(int count) => 'Copy phones ($count)';
+
+  /// "Found 24 so far" in the progress header.
+  static String foundSoFar(int count) => 'Found $count so far';
+
+  /// "42 leads" in the top bar subtitle.
+  static String leadsCount(int count) => count == 1 ? '1 lead' : '$count leads';
+
   // Loading stages.
   static const String loadingQuerying = 'Searching sources';
   static const String loadingParsing = 'Reading listings';
-  static const String loadingEnriching = 'Checking websites';
-  static const String loadingValidating = 'Validating contacts';
+  static const String loadingEnriching = 'Looking for contact details';
+  static const String loadingValidating = 'Checking formats';
   static const String loadingDeduplicating = 'Removing duplicates';
   static const String searchingMaps = 'Searching Maps';
 
   // Empty and error states.
   static const String emptyTitle = 'No leads found';
   static const String emptyBody =
-      'Try a broader niche, a bigger area, or fewer filters.';
-  static const String emptyAction = 'Edit filters';
+      'Try a broader niche, a nearby city, or fewer filters.';
+  static const String emptyAction = 'Edit search';
+  static const String clearFilters = 'Clear filters';
+  static const String localEmptyTitle = 'No leads match';
+  static const String localEmptyBody =
+      'Clear the search or choose another filter to see the other leads.';
+  static const String rateLimitedBody =
+      'Too many searches right now. Try again in a moment.';
+  static const String sourceBlockedBody =
+      'A source blocked this search. Try again, or search without it.';
+  static const String cancelledTitle = 'Search cancelled';
   static const String resultLimitReached =
       'You reached this plan\'s result limit.';
   static const String cancelledNotice = 'Search cancelled.';
+
+  // Outreach outcomes.
+  static const String contactUnavailable =
+      'No app on this device can handle that.';
+  static const String contactFailed = 'Could not open the app. Try again.';
+  static const String nothingToCopy = 'There is no contact detail to copy.';
+
+  // Fallback when the route extra is missing.
+  static const String missingRequestTitle = 'Search not available';
+  static const String missingRequestBody =
+      'This search could not be restored. Go back and run it again.';
+  static const String backToSearch = 'Back to search';
 
   // Toasts.
   static const String savedToast = 'Lead saved';
