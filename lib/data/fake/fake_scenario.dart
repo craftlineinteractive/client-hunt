@@ -15,8 +15,16 @@ enum FakeScenario {
   /// The same run at roughly triple the latency, to see loading states.
   slow(displayName: 'Slow'),
 
-  /// Completes with zero leads, so the empty state renders.
-  empty(displayName: 'Empty'),
+  /// 200 leads, delivered in batches of 8, for long-list and scroll checks.
+  large(displayName: 'Large: 200 leads'),
+
+  /// Fails with `noResults`, as the engine does when nothing matched.
+  empty(displayName: 'Empty: no results'),
+
+  /// **Completes with zero leads.** The difference from [empty] matters: a
+  /// completed search still finalises, but consumes no quota and writes no
+  /// history.
+  emptyCompleted(displayName: 'Empty: completed'),
 
   /// Fails immediately with no network.
   errorNoNetwork(displayName: 'Error: no network'),

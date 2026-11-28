@@ -32,6 +32,9 @@ abstract final class DummyData {
   /// Leads in that scenario with at least one phone.
   static const int dentistWithPhone = 40;
 
+  /// Leads in the debug-only "large" scenario, for long-list checks.
+  static const int largeResultTotal = 200;
+
   /// Total saved leads.
   static const int savedLeadTotal = 128;
 
@@ -55,6 +58,7 @@ abstract final class DummyData {
 
     return DummyDataSet(
       dentistResults: dentistResults,
+      largeResults: _largeResults(reference, random),
       savedLeads: saved.leads,
       lists: saved.lists,
       recentSearches: _recentSearches(reference),
@@ -263,6 +267,82 @@ abstract final class DummyData {
           note: index == 0
               ? 'Spoke to clinic manager, requested PDF proposal'
               : '',
+        ),
+      );
+    }
+
+    return leads;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Large result set (debug scenario).
+  // ---------------------------------------------------------------------------
+
+  /// 200 deterministic leads that exercise a long list: some without email,
+  /// phone, website or rating, so the missing-value paths are covered too.
+  static List<Lead> _largeResults(DateTime now, Random random) {
+    final List<Lead> leads = <Lead>[];
+
+    for (int index = 0; index < largeResultTotal; index++) {
+      final String prefix = _prefixes[index % _prefixes.length];
+      final int kind = index % 3;
+      final String type = switch (kind) {
+        0 => _dentalTypes[index % _dentalTypes.length],
+        1 => _cafeTypes[index % _cafeTypes.length],
+        _ => _otherTypes[index % _otherTypes.length],
+      };
+      final String name = '$prefix $type';
+      final String slug = _slug(name);
+      final bool hasPhone = index % 5 != 0;
+      final bool hasEmail = index % 3 != 0;
+      final bool hasWebsite = index % 4 != 0;
+      final bool hasRating = index % 9 != 4;
+      final String area = _ahmedabadAreas[index % _ahmedabadAreas.length];
+
+      leads.add(
+        Lead(
+          id: 'large-${index.toString().padLeft(4, '0')}',
+          name: name,
+          category: switch (kind) {
+            0 => 'Dental clinic',
+            1 => 'Cafe',
+            _ => 'Salon',
+          },
+          address: '${4 + index} $area Road, Ahmedabad',
+          area: area,
+          city: 'Ahmedabad',
+          state: 'Gujarat',
+          latitude: 23.0225 + index * 0.001,
+          longitude: 72.5714 + random.nextDouble() * 0.05,
+          phones: <PhoneContact>[
+            if (hasPhone)
+              PhoneContact(
+                value: fakePhone(5001 + index),
+                kind: index % 4 == 0 ? PhoneKind.landline : PhoneKind.mobile,
+                status: ValidationStatus.likelyValid,
+                confidence: 0.8,
+                isPrimary: true,
+              ),
+          ],
+          emails: <EmailContact>[
+            if (hasEmail)
+              EmailContact(
+                value: fakeEmail(slug),
+                status: ValidationStatus.likelyValid,
+                confidence: 0.76,
+                isPrimary: true,
+              ),
+          ],
+          website: hasWebsite ? fakeWebsite(slug) : null,
+          rating: hasRating
+              ? double.parse((3.0 + (index % 21) / 10).toStringAsFixed(1))
+              : null,
+          reviewCount: hasRating ? 4 + (index * 37) % 500 : null,
+          isOpenNow: hasRating ? index.isEven : null,
+          openingHours: 'Mon-Sat, 9AM-8PM',
+          sources: const <LeadSource>{LeadSource.maps},
+          confidenceScore: 50 + index % 45,
+          discoveredAt: now.subtract(Duration(minutes: index)),
         ),
       );
     }
@@ -501,6 +581,7 @@ class _SavedBuild {
 class DummyDataSet {
   const DummyDataSet({
     required this.dentistResults,
+    this.largeResults = const <Lead>[],
     required this.savedLeads,
     required this.lists,
     required this.recentSearches,
@@ -509,6 +590,9 @@ class DummyDataSet {
 
   /// The 42 "Dentists in Ahmedabad" leads, hero first.
   final List<Lead> dentistResults;
+
+  /// The 200-lead debug scenario, for long lists.
+  final List<Lead> largeResults;
 
   /// The 128 saved leads, hero first.
   final List<Lead> savedLeads;
@@ -527,7 +611,11 @@ class DummyDataSet {
 
   /// Look a lead up across both stores.
   Lead? leadById(String id) {
-    for (final Lead lead in <Lead>[...savedLeads, ...dentistResults]) {
+    for (final Lead lead in <Lead>[
+      ...savedLeads,
+      ...dentistResults,
+      ...largeResults,
+    ]) {
       if (lead.id == id) {
         return lead;
       }

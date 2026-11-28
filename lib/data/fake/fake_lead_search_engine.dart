@@ -13,6 +13,11 @@ import 'fake_scenario.dart';
 /// Latency defaults to 700 ms per stage (~2.8 s per search), which is long enough
 /// to see the loading UI and short enough not to be annoying. [FakeScenario.slow]
 /// triples it; the error scenarios fail after one stage.
+///
+/// Results are delivered in **batches of eight** rather than all at once, so
+/// progressive rendering and "the list does not jump" can be checked. Each batch
+/// costs a quarter of the stage latency, so the total stays close to the old
+/// single-batch run.
 class FakeLeadSearchEngine implements LeadSearchEngine {
   FakeLeadSearchEngine({
     this.scenario = FakeScenario.normal,
@@ -30,8 +35,13 @@ class FakeLeadSearchEngine implements LeadSearchEngine {
 
   final Set<String> _cancelled = <String>{};
 
+  /// Leads per partial batch.
+  static const int _batchSize = 8;
+
   Duration get _latency =>
       scenario == FakeScenario.slow ? searchLatency * 3 : searchLatency;
+
+  Duration get _batchLatency => _latency ~/ 4;
 
   @override
   Stream<SearchEvent> search(SearchRequest request) async* {
@@ -105,9 +115,35 @@ class FakeLeadSearchEngine implements LeadSearchEngine {
       return;
     }
 
-    final List<Lead> leads = _data.dentistResults
-        .take(request.filters.maxResults)
-        .toList(growable: false);
+    if (scenario == FakeScenario.emptyCompleted) {
+      statuses[LeadSource.maps] = SourceStatus.done;
+      yield SearchProgress(
+        searchId: request.id,
+        stage: SearchStage.deduplicating,
+        sourceStatuses: Map<LeadSource, SourceStatus>.unmodifiable(statuses),
+      );
+      yield SearchCompleted(
+        searchId: request.id,
+        summary: SearchSummary(
+          total: 0,
+          withEmail: 0,
+          withPhone: 0,
+          duration: _latency * 2,
+          perSource: const <LeadSource, SourceResult>{
+            LeadSource.maps: SourceResult(status: SourceStatus.done),
+          },
+        ),
+      );
+      return;
+    }
+
+    // The large scenario deliberately ignores the result cap: its only job is a
+    // 200-row list for performance checks.
+    final List<Lead> leads = scenario == FakeScenario.large
+        ? _data.largeResults
+        : _data.dentistResults
+              .take(request.filters.maxResults)
+              .toList(growable: false);
 
     statuses[LeadSource.maps] = SourceStatus.done;
     for (final LeadSource source in statuses.keys) {
@@ -132,17 +168,35 @@ class FakeLeadSearchEngine implements LeadSearchEngine {
       return;
     }
 
-    final List<Lead> firstBatch = leads.take(12).toList(growable: false);
-    yield SearchPartialResults(
-      searchId: request.id,
-      leads: firstBatch,
-      foundSoFar: firstBatch.length,
-    );
+    // Batches of eight, so the list grows visibly and the screen can keep its
+    // scroll position while rows append.
+    int sent = 0;
+    while (sent < leads.length) {
+      final List<Lead> batch = leads
+          .skip(sent)
+          .take(_batchSize)
+          .toList(growable: false);
+      sent += batch.length;
+      yield SearchPartialResults(
+        searchId: request.id,
+        leads: batch,
+        foundSoFar: sent,
+      );
 
-    await Future<void>.delayed(_latency);
-    if (_cancelled.contains(request.id)) {
-      yield _cancelledEvent(request.id);
-      return;
+      await Future<void>.delayed(_batchLatency);
+      if (_cancelled.contains(request.id)) {
+        yield _cancelledEvent(request.id);
+        return;
+      }
+
+      if (sent == _batchSize && sent < leads.length) {
+        yield SearchProgress(
+          searchId: request.id,
+          stage: SearchStage.enriching,
+          sourceStatuses: Map<LeadSource, SourceStatus>.unmodifiable(statuses),
+          leadsFoundSoFar: leads.length,
+        );
+      }
     }
 
     yield SearchProgress(

@@ -7,6 +7,7 @@ library;
 
 export 'dummy_data.dart';
 export 'fake_ad_service.dart';
+export 'fake_contact_launcher.dart';
 export 'fake_export_service.dart';
 export 'fake_lead_repository.dart';
 export 'fake_lead_search_engine.dart';

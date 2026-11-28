@@ -86,6 +86,21 @@ class SearchRequest {
   /// How to narrow it.
   final SearchFilters filters;
 
+  /// Value equality, because Results scopes its controller per request: two
+  /// builds of the same route must resolve to the same state, not start two
+  /// searches.
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is SearchRequest &&
+            other.id == id &&
+            other.query == query &&
+            other.filters == filters;
+  }
+
+  @override
+  int get hashCode => Object.hash(id, query, filters);
+
   @override
   String toString() => 'SearchRequest($id, ${query.displayTitle})';
 }

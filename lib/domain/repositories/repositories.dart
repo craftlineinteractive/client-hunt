@@ -6,6 +6,7 @@
 /// `lib/app/providers.dart` change.
 library;
 
+export 'contact_launcher.dart';
 export 'export_service.dart';
 export 'lead_repository.dart';
 export 'lead_search_engine.dart';

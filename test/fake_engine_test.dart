@@ -45,12 +45,23 @@ void main() {
       );
       expect(progress.last.leadsFoundSoFar, 42);
 
+      // Eight at a time, so progressive rendering is visible: 42 leads → six
+      // batches, the last one short. Ids never repeat across batches.
       final List<SearchPartialResults> partial = events
           .whereType<SearchPartialResults>()
           .toList();
-      expect(partial, hasLength(1));
-      expect(partial.single.leads, hasLength(12));
-      expect(partial.single.foundSoFar, 12);
+      expect(partial, hasLength(6));
+      expect(partial.first.leads, hasLength(8));
+      expect(partial.last.leads, hasLength(2));
+      expect(partial.first.foundSoFar, 8);
+      expect(partial.last.foundSoFar, 42);
+      expect(
+        partial
+            .expand((SearchPartialResults event) => event.leads)
+            .map((Lead lead) => lead.id)
+            .toSet(),
+        hasLength(42),
+      );
 
       // Nothing failed before completion.
       expect(events.whereType<SearchFailed>(), isEmpty);
@@ -152,10 +163,41 @@ void main() {
     ).search(capped).toList();
 
     expect(events.whereType<SearchCompleted>().single.summary.total, 25);
+    final List<SearchPartialResults> partial = events
+        .whereType<SearchPartialResults>()
+        .toList();
+    expect(partial, hasLength(4));
+    expect(partial.last.leads, hasLength(1));
+    expect(partial.last.foundSoFar, 25);
+  });
+
+  test('the large scenario delivers 200 leads in batches', () async {
+    final List<SearchEvent> events = await engineFor(
+      FakeScenario.large,
+    ).search(request).toList();
+
+    final SearchCompleted completed = events
+        .whereType<SearchCompleted>()
+        .single;
+    expect(completed.summary.total, DummyData.largeResultTotal);
+    final List<SearchPartialResults> partial = events
+        .whereType<SearchPartialResults>()
+        .toList();
+    expect(partial, hasLength(25));
     expect(
-      events.whereType<SearchPartialResults>().single.leads,
-      hasLength(12),
+      partial.every((SearchPartialResults event) => event.leads.length == 8),
+      isTrue,
     );
+  });
+
+  test('the empty-completed scenario completes with zero leads', () async {
+    final List<SearchEvent> events = await engineFor(
+      FakeScenario.emptyCompleted,
+    ).search(request).toList();
+
+    expect(events.whereType<SearchFailed>(), isEmpty);
+    expect(events.whereType<SearchPartialResults>(), isEmpty);
+    expect(events.whereType<SearchCompleted>().single.summary.total, 0);
   });
 
   test('cancel emits a cancelled failure', () async {

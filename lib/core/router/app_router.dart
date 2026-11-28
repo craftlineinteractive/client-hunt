@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../dev/design_gallery_page.dart';
+import '../../domain/models/export_args.dart';
 import '../../domain/repositories/lead_search_engine.dart';
 import '../../features/home/home_page.dart';
 import '../../features/results/results_placeholder_page.dart';
@@ -108,8 +109,26 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.exportLeads,
       name: AppRoutes.exportLeadsName,
       parentNavigatorKey: rootNavigatorKey,
-      builder: (BuildContext context, GoRouterState state) =>
-          const PlaceholderScreen(title: 'Export leads'),
+      // The placeholder renders the ExportArgs it received, so the Results →
+      // Export hand-off is checkable on a device before prompt B6 builds the real
+      // screen.
+      builder: (BuildContext context, GoRouterState state) {
+        final Object? extra = state.extra;
+        final ExportArgs? args = extra is ExportArgs ? extra : null;
+        return PlaceholderScreen(
+          title: 'Export leads',
+          subtitle: args?.title,
+          lines: args == null
+              ? null
+              : <String>[
+                  '${args.leadCount} leads · ${args.scope.displayName}',
+                  '${args.resultCount} results · ${args.withEmail} with email · '
+                      '${args.withPhone} with phone',
+                  if (args.leadIds.isNotEmpty)
+                    'Ids: ${args.leadIds.take(3).join(', ')}',
+                ],
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.pro,
@@ -155,12 +174,22 @@ class AppShell extends StatelessWidget {
 /// A deliberately empty screen that only names the destination.
 ///
 /// Each feature folder gets its real screen in prompt B; the router already
-/// points at these so every route can be exercised today.
+/// points at these so every route can be exercised today. [lines] lets a
+/// placeholder show the payload it was handed (Export does this for its
+/// `ExportArgs`).
 class PlaceholderScreen extends StatelessWidget {
-  const PlaceholderScreen({required this.title, this.subtitle, super.key});
+  const PlaceholderScreen({
+    required this.title,
+    this.subtitle,
+    this.lines,
+    super.key,
+  });
 
   final String title;
   final String? subtitle;
+
+  /// Extra facts rendered under the subtitle.
+  final List<String>? lines;
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +218,20 @@ class PlaceholderScreen extends StatelessWidget {
                     color: colors.textSecondary,
                   ),
                 ),
+              ],
+              if (lines != null) ...<Widget>[
+                const SizedBox(height: AppSpacing.md),
+                for (final String line in lines!)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                    child: Text(
+                      line,
+                      textAlign: TextAlign.center,
+                      style: AppTypography.bodySm.copyWith(
+                        color: colors.textMuted,
+                      ),
+                    ),
+                  ),
               ],
               const SizedBox(height: AppSpacing.md),
               Text(

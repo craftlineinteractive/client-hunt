@@ -81,6 +81,14 @@ final Provider<ExportService> exportServiceProvider = Provider<ExportService>(
   (Ref ref) => const FakeExportService(),
 );
 
+/// Opens the dialler, WhatsApp, the mail composer and the browser.
+///
+/// A fake that records attempts in B2; prompt D supplies the platform-intent
+/// implementation behind the same interface. Copy actions do **not** use this:
+/// they go to Flutter's own `Clipboard`.
+final Provider<ContactLauncher> contactLauncherProvider =
+    Provider<ContactLauncher>((Ref ref) => FakeContactLauncher());
+
 /// Live entitlements for the current (fake) subscription.
 ///
 /// While the stream has not emitted yet, or if it errors, callers should fall

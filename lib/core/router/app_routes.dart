@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/models/export_args.dart';
 import '../../domain/models/search_filters.dart';
 import '../../domain/repositories/lead_search_engine.dart';
 
@@ -97,9 +98,12 @@ abstract final class AppNavigator {
     return context.push<SearchFilters>(AppRoutes.filters, extra: initial);
   }
 
-  /// Pushes the export screen.
-  static Future<void> openExport(BuildContext context) {
-    return context.push<void>(AppRoutes.exportLeads);
+  /// Pushes the export screen with the selection Results built.
+  ///
+  /// [args] is the route `extra`. It is optional so the export screen can still
+  /// be exercised on its own; with no extra it falls back to its own empty state.
+  static Future<void> openExport(BuildContext context, {ExportArgs? args}) {
+    return context.push<void>(AppRoutes.exportLeads, extra: args);
   }
 
   /// Pushes the paywall. The optional [reason] lets the paywall open scrolled to
