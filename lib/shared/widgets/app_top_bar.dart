@@ -101,11 +101,17 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
               if (showWordmark) ...<Widget>[
                 Icon(AppIcons.logo, size: 20, color: colors.textPrimary),
                 const SizedBox(width: AppSpacing.sm),
-                Text(
-                  title,
-                  style: AppTypography.titleMd.copyWith(
-                    color: colors.textPrimary,
-                    fontWeight: FontWeight.w800,
+                // Flexible so a 320 px phone ellipsizes the wordmark instead
+                // of overflowing the app bar's title box.
+                Flexible(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.titleMd.copyWith(
+                      color: colors.textPrimary,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ] else

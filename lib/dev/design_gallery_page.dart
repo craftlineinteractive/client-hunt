@@ -158,7 +158,9 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                Row(
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
                   children: <Widget>[
                     AppButton(
                       label: 'Clear recents',
@@ -168,7 +170,6 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                       variant: AppButtonVariant.secondary,
                       expand: false,
                     ),
-                    const SizedBox(width: AppSpacing.sm),
                     AppButton(
                       label: 'Restore recents',
                       onPressed: () {

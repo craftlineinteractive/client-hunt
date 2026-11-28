@@ -727,23 +727,41 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
+        // Both labels are flexible: at 1.3 text scale on a 360 px phone the
+        // pair no longer fits, and an ellipsized hint beats an overflow.
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(
-              HomeStrings.sources,
-              style: AppTypography.labelLg.copyWith(
-                color: colors.textPrimary,
-                fontWeight: FontWeight.w600,
+            Flexible(
+              child: Text(
+                HomeStrings.sources,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.labelLg.copyWith(
+                  color: colors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-            const Spacer(),
-            Icon(AppIcons.lock, size: 14, color: colors.textMuted),
-            const SizedBox(width: AppSpacing.xs),
-            Text(
-              HomeStrings.proSources,
-              style: AppTypography.labelMd.copyWith(
-                color: colors.textSecondary,
-                fontWeight: FontWeight.w600,
+            const SizedBox(width: AppSpacing.sm),
+            Flexible(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(AppIcons.lock, size: 14, color: colors.textMuted),
+                  const SizedBox(width: AppSpacing.xs),
+                  Flexible(
+                    child: Text(
+                      HomeStrings.proSources,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.labelMd.copyWith(
+                        color: colors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

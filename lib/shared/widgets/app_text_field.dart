@@ -124,12 +124,25 @@ class AppTextField extends StatelessWidget {
                   autofocus: autofocus,
                   style: style,
                   cursorColor: colors.primary,
-                  decoration: InputDecoration.collapsed(
-                    hintText: hintText,
-                    hintStyle: AppTypography.bodyLg.copyWith(
-                      color: colors.textMuted,
-                    ),
-                  ),
+                  // The group draws the surface and the border. The theme's
+                  // input decoration is filled and bordered, and it wins over
+                  // `collapsed` for the state borders, so without this every
+                  // grouped row paints a second box inside the group.
+                  decoration:
+                      InputDecoration.collapsed(
+                        hintText: hintText,
+                        hintStyle: AppTypography.bodyLg.copyWith(
+                          color: colors.textMuted,
+                        ),
+                      ).copyWith(
+                        filled: false,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        focusedErrorBorder: InputBorder.none,
+                      ),
                 ),
               ),
             ),
