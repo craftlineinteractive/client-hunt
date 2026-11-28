@@ -13,4 +13,5 @@ export 'lead_search_engine.dart';
 export 'quota_repository.dart';
 export 'search_history_repository.dart';
 export 'settings_repository.dart';
+export 'share_service.dart';
 export 'subscription_repository.dart';

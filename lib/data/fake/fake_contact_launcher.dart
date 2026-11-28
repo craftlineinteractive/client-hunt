@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../domain/models/models.dart';
 import '../../domain/repositories/contact_launcher.dart';
 
 /// One recorded outreach attempt.
@@ -10,7 +11,7 @@ class ContactLaunchRecord {
   /// Which action was requested.
   final ContactChannel channel;
 
-  /// The phone number, address or URL it was given.
+  /// The phone number, address, URL, maps query or lead id it was given.
   final String value;
 
   @override
@@ -73,6 +74,14 @@ class FakeContactLauncher implements ContactLauncher {
   @override
   Future<ContactLaunchResult> openUrl(String url) =>
       _record(ContactChannel.url, url);
+
+  @override
+  Future<ContactLaunchResult> openMaps(String query) =>
+      _record(ContactChannel.maps, query);
+
+  @override
+  Future<ContactLaunchResult> saveToContacts(Lead lead) =>
+      _record(ContactChannel.contacts, lead.id);
 
   Future<ContactLaunchResult> _record(
     ContactChannel channel,

@@ -1,3 +1,5 @@
+import '../models/models.dart';
+
 /// The channel an outreach action uses.
 enum ContactChannel {
   /// Dial a number.
@@ -11,6 +13,12 @@ enum ContactChannel {
 
   /// Open a web address.
   url,
+
+  /// Open a map/directions app at an address or coordinate query.
+  maps,
+
+  /// Insert the lead into the device address book.
+  contacts,
 }
 
 /// How an outreach action ended.
@@ -48,4 +56,14 @@ abstract interface class ContactLauncher {
 
   /// Opens [url] in a browser.
   Future<ContactLaunchResult> openUrl(String url);
+
+  /// Opens a maps app at [query] (an address, or "lat,lng").
+  Future<ContactLaunchResult> openMaps(String query);
+
+  /// Inserts [lead] into the device address book.
+  ///
+  /// The platform implementation needs the contacts permission and arrives in a
+  /// later prompt; the interface is final so the UI can be written and tested
+  /// now.
+  Future<ContactLaunchResult> saveToContacts(Lead lead);
 }

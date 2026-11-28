@@ -161,6 +161,14 @@ class FakeLeadRepository implements LeadRepository {
   }
 
   @override
+  Stream<List<String>> watchAllTags() async* {
+    yield _tagSnapshot();
+    await for (final Object? _ in _changes.stream) {
+      yield _tagSnapshot();
+    }
+  }
+
+  @override
   Future<int> savedCount() async => _saved.length;
 
   @override
@@ -248,6 +256,24 @@ class FakeLeadRepository implements LeadRepository {
         contains(lead.city) ||
         lead.emails.any((EmailContact email) => contains(email.value)) ||
         lead.phones.any((PhoneContact phone) => contains(phone.value));
+  }
+
+  /// Distinct tags, case-insensitively de-duplicated and sorted.
+  List<String> _tagSnapshot() {
+    final Map<String, String> byLower = <String, String>{};
+    for (final Lead lead in _saved.values) {
+      for (final String tag in lead.tags) {
+        final String trimmed = tag.trim();
+        if (trimmed.isNotEmpty) {
+          byLower.putIfAbsent(trimmed.toLowerCase(), () => trimmed);
+        }
+      }
+    }
+    final List<String> tags = byLower.values.toList()
+      ..sort(
+        (String a, String b) => a.toLowerCase().compareTo(b.toLowerCase()),
+      );
+    return List<String>.unmodifiable(tags);
   }
 
   List<LeadList> _listSnapshot() {

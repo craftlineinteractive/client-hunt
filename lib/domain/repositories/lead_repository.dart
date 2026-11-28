@@ -106,6 +106,12 @@ abstract interface class LeadRepository {
   /// Adds leads to a list, keeping the list's count in sync.
   Future<void> addToList(Iterable<String> leadIds, String listId);
 
+  /// Every distinct tag across the saved leads, sorted case-insensitively.
+  ///
+  /// Used by Lead Detail's "Add tag" sheet as suggestions. A stream, so a tag
+  /// added on another lead is suggested next time without a reload.
+  Stream<List<String>> watchAllTags();
+
   /// Number of saved leads.
   Future<int> savedCount();
 

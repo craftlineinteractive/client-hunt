@@ -16,4 +16,5 @@ export 'fake_quota_repository.dart';
 export 'fake_scenario.dart';
 export 'fake_search_history_repository.dart';
 export 'fake_settings_repository.dart';
+export 'fake_share_service.dart';
 export 'fake_subscription_repository.dart';

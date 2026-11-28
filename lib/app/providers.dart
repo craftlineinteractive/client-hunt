@@ -89,6 +89,14 @@ final Provider<ExportService> exportServiceProvider = Provider<ExportService>(
 final Provider<ContactLauncher> contactLauncherProvider =
     Provider<ContactLauncher>((Ref ref) => FakeContactLauncher());
 
+/// Opens the platform share sheet with a plain-text block.
+///
+/// A recorder in B3; prompt D supplies the real implementation behind the same
+/// interface (no `share_plus` dependency yet).
+final Provider<ShareService> shareServiceProvider = Provider<ShareService>(
+  (Ref ref) => FakeShareService(),
+);
+
 /// Live entitlements for the current (fake) subscription.
 ///
 /// While the stream has not emitted yet, or if it errors, callers should fall
