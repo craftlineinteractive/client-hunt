@@ -427,6 +427,7 @@ void main() {
     final FakeContactLauncher launcher =
         container.read(contactLauncherProvider) as FakeContactLauncher;
     expect(launcher.lastCall?.channel, ContactChannel.phone);
+    expect(find.text(ResultsStrings.launchingCall), findsOneWidget);
   });
 
   testWidgets('tapping a card opens Lead Detail with its id', (
@@ -582,6 +583,30 @@ void main() {
 
     expect(find.byType(HomePage), findsOneWidget);
     expect(ads.interstitialsShown, 1);
+  });
+
+  testWidgets('closing the inline search and then leaving still goes back', (
+    WidgetTester tester,
+  ) async {
+    await pumpResults(tester);
+    await pumpUntil(tester, find.byKey(const Key('results-list')));
+
+    await tester.tap(find.byKey(const Key('results-search-toggle')));
+    await tester.pump();
+    await tester.enterText(
+      find.byKey(const Key('results-search-field')),
+      'cedar',
+    );
+    await tester.pump();
+
+    await tester.tap(find.byTooltip(ResultsStrings.closeSearchTooltip));
+    await tester.pump();
+    expect(find.byKey(const Key('results-search-field')), findsNothing);
+    expect(readState(tester).filter.text, isEmpty);
+
+    await tester.tap(find.byTooltip('Go back'));
+    await tester.pumpAndSettle();
+    expect(find.byType(HomePage), findsOneWidget);
   });
 
   testWidgets('leaving a running search never asks for an interstitial', (

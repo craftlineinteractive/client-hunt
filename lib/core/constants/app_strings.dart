@@ -311,6 +311,9 @@ abstract final class ResultsStrings {
   static const String cancelledNotice = 'Search cancelled.';
 
   // Outreach outcomes.
+  static const String launchingCall = 'Opening the phone app';
+  static const String launchingWhatsApp = 'Opening WhatsApp';
+  static const String launchingEmail = 'Opening the email app';
   static const String contactUnavailable =
       'No app on this device can handle that.';
   static const String contactFailed = 'Could not open the app. Try again.';

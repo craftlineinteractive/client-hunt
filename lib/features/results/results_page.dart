@@ -1109,20 +1109,17 @@ class _ResultLeadCard extends ConsumerWidget {
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
     final ContactLauncher launcher = ref.read(contactLauncherProvider);
     final ContactLaunchResult result = await action.run(launcher);
-    if (result == ContactLaunchResult.launched) {
-      return;
-    }
+    // Every outcome answers with a snackbar. A launched action would hand off to
+    // another app on a real device, but the fake launcher opens nothing, so the
+    // confirmation is also what makes the wiring visible in a build.
+    final String message = switch (result) {
+      ContactLaunchResult.launched => action.launchedMessage,
+      ContactLaunchResult.unavailable => ResultsStrings.contactUnavailable,
+      ContactLaunchResult.failed => ResultsStrings.contactFailed,
+    };
     messenger
       ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(
-            result == ContactLaunchResult.unavailable
-                ? ResultsStrings.contactUnavailable
-                : ResultsStrings.contactFailed,
-          ),
-        ),
-      );
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<void> _copyContact(BuildContext context, WidgetRef ref) async {
@@ -1154,6 +1151,9 @@ sealed class _ContactAction {
   const factory _ContactAction.whatsApp(String phone) = _WhatsAppAction;
   const factory _ContactAction.email(String address) = _EmailAction;
 
+  /// Snackbar copy for a successful hand-off.
+  String get launchedMessage;
+
   Future<ContactLaunchResult> run(ContactLauncher launcher);
 }
 
@@ -1161,6 +1161,9 @@ final class _CallAction extends _ContactAction {
   const _CallAction(this.phone);
 
   final String phone;
+
+  @override
+  String get launchedMessage => ResultsStrings.launchingCall;
 
   @override
   Future<ContactLaunchResult> run(ContactLauncher launcher) =>
@@ -1173,6 +1176,9 @@ final class _WhatsAppAction extends _ContactAction {
   final String phone;
 
   @override
+  String get launchedMessage => ResultsStrings.launchingWhatsApp;
+
+  @override
   Future<ContactLaunchResult> run(ContactLauncher launcher) =>
       launcher.whatsApp(phone);
 }
@@ -1181,6 +1187,9 @@ final class _EmailAction extends _ContactAction {
   const _EmailAction(this.address);
 
   final String address;
+
+  @override
+  String get launchedMessage => ResultsStrings.launchingEmail;
 
   @override
   Future<ContactLaunchResult> run(ContactLauncher launcher) =>
