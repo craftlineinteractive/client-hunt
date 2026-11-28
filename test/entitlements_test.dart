@@ -18,6 +18,7 @@ void main() {
       expect(freeEntitlements.deepSearchAllowed, isFalse);
       expect(freeEntitlements.noWebsiteFilterAllowed, isFalse);
       expect(freeEntitlements.adsEnabled, isTrue);
+      expect(freeEntitlements.socialProfilesVisible, isFalse);
       expect(freeEntitlements.exportFormats, ExportFormat.values.toSet());
     });
 
@@ -36,6 +37,7 @@ void main() {
       expect(proEntitlements.deepSearchAllowed, isTrue);
       expect(proEntitlements.noWebsiteFilterAllowed, isTrue);
       expect(proEntitlements.adsEnabled, isFalse);
+      expect(proEntitlements.socialProfilesVisible, isTrue);
       expect(proEntitlements.exportFormats, ExportFormat.values.toSet());
     });
 
@@ -72,6 +74,37 @@ void main() {
         expect(pro.canUseSource(source), isTrue, reason: source.name);
         expect(pro.reasonForSource(source), isNull);
       }
+    });
+  });
+
+  group('social profiles', () {
+    test('Free sees the networks but not the handles', () {
+      expect(free.canViewSocialProfiles, isFalse);
+      expect(free.reasonForSocialProfiles, LockReason.socialProfilesRequirePro);
+    });
+
+    test('Pro can read the handles', () {
+      expect(pro.canViewSocialProfiles, isTrue);
+      expect(pro.reasonForSocialProfiles, isNull);
+    });
+
+    test('the flag survives copyWith', () {
+      expect(
+        freeEntitlements.copyWith(socialProfilesVisible: true),
+        isNot(freeEntitlements),
+      );
+      expect(
+        freeEntitlements
+            .copyWith(socialProfilesVisible: true)
+            .socialProfilesVisible,
+        isTrue,
+      );
+      expect(
+        proEntitlements
+            .copyWith(socialProfilesVisible: false)
+            .socialProfilesVisible,
+        isFalse,
+      );
     });
   });
 

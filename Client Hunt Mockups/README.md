@@ -748,6 +748,22 @@ on a device.
 | Card is one widget in the list | Shared `LeadCard` with an action list | One card for Results and Saved; nothing is duplicated. |
 | Chips and stats scroll as one block | Same, chips are **not** sticky | Matches the mockup and the prompt; the select row scrolls with them. |
 
+**Decisions recorded during B3 housekeeping**
+
+1. **Selection is pruned, not just hidden.** Changing the chip, the text query or the applied filters drops any selected
+   lead id that is no longer visible, so the "N selected" count, the Export badge and `ExportArgs.leadIds` only ever
+   describe leads the user can see. Sorting changes only the order, so it never prunes.
+2. **The plan cap is enforced defensively.** `maxResults` is the engine's contract, but Results also drops anything
+   past `request.filters.maxResults` in arrival order and rewrites a completion summary that claims more leads than
+   the plan allowed. An engine that ignores the cap therefore cannot make the screen show 200 leads to a Free user;
+   the stats strip stays consistent with the list. The 200-lead performance scenario runs as Pro with a 200 cap.
+3. **A successful contact launch still shows a snackbar.** The fake launcher opens nothing, so silence made Call,
+   WhatsApp and Email look like dead buttons in a build. When the real platform intents land (prompt D), the
+   `launched` outcome becomes silent again — the three `launching*` strings will then be unused and go with them.
+4. **The engine must enforce `hasEmail` and `hasPhone` itself (prompt D).** Results deliberately does not re-check
+   them: the mockup's 42 leads include two without a phone, so a client-side re-check would hide leads the engine
+   chose to return.
+
 ### 4.3 lead_detail — Lead details (pushed, `/lead`)
 
 **Purpose.** The full lead profile: contact, outreach actions, social profiles, business facts, private
@@ -1211,7 +1227,7 @@ routes and absent — and restored after pop — on every pushed route.
 | Saved leads / lists | 50 | unlimited | Saved leads limit + upsell; comparison table |
 | Export formats | CSV, Excel, PDF, VCF | same four, without limits | Export format tiles; paywall list. All four formats are allowed on Free — the Pro claim is "without limits", not "more formats" |
 | Ads | opt-in rewarded ad before each search, plus interstitials at breaks | none | Home Find Leads dialog; `AdPolicy` triggers. **No banner slots exist** (Section 3.9) |
-| Social profile values | hidden/teaser | ✓ | Lead detail profiles card (Pro badge + "Not found" until Pro) |
+| Social profile values | network and "Found" visible, handle and link locked | ✓ | Lead detail profiles card: Free rows show the glyph plus "Found" with a lock, tapping opens `/pro` with `LockReason.socialProfilesRequirePro`; Pro rows show the handle and `open_in_new`. `Entitlements.socialProfilesVisible` is the single flag |
 | Priority support | ✗ | ✓ | Paywall feature list only |
 | AI organize/format/verify leads | — | coming soon | Paywall coming-soon row |
 

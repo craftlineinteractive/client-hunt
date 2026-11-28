@@ -31,6 +31,10 @@ enum LockReason {
   /// The paywall was opened from the rewarded-ad opt-in dialog ("Go Pro"), so
   /// the ad-free benefit should lead.
   adFreeRequiresPro,
+
+  /// Social profile handles and links are Pro; the networks themselves are
+  /// visible on Free so the lead still reads as complete.
+  socialProfilesRequirePro,
 }
 
 /// One choice in the Filters screen's "Max results" row.
@@ -86,6 +90,13 @@ class FeatureGate {
 
   /// True when the rewarded prompt and interstitials are active.
   bool get showsAds => entitlements.adsEnabled;
+
+  /// True when social profile handles and links may be read.
+  bool get canViewSocialProfiles => entitlements.socialProfilesVisible;
+
+  /// Why the social profiles are locked, or `null` when they are readable.
+  LockReason? get reasonForSocialProfiles =>
+      canViewSocialProfiles ? null : LockReason.socialProfilesRequirePro;
 
   /// Why the rewarded opt-in dialog offers Pro, or `null` when ads are already
   /// off for this plan.

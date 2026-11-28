@@ -23,6 +23,7 @@ class Entitlements {
     required this.allowedSources,
     required this.deepSearchAllowed,
     required this.noWebsiteFilterAllowed,
+    required this.socialProfilesVisible,
     required this.adsEnabled,
     required this.exportFormats,
   }) : assert(maxResultsPerSearch > 0, 'A result cap must be positive');
@@ -50,6 +51,13 @@ class Entitlements {
 
   /// Whether the "No website" filter is allowed.
   final bool noWebsiteFilterAllowed;
+
+  /// Whether social profile handles and their links are readable.
+  ///
+  /// Free still sees *which* networks have a profile for a lead (see Lead
+  /// Detail), but the handle and the open action are Pro. False on Free, true on
+  /// Pro — Lead Detail and the paywall both read it from here.
+  final bool socialProfilesVisible;
 
   /// Whether the rewarded prompt and interstitials are active.
   ///
@@ -80,6 +88,7 @@ class Entitlements {
     Set<LeadSource>? allowedSources,
     bool? deepSearchAllowed,
     bool? noWebsiteFilterAllowed,
+    bool? socialProfilesVisible,
     bool? adsEnabled,
     Set<ExportFormat>? exportFormats,
   }) {
@@ -92,6 +101,8 @@ class Entitlements {
       deepSearchAllowed: deepSearchAllowed ?? this.deepSearchAllowed,
       noWebsiteFilterAllowed:
           noWebsiteFilterAllowed ?? this.noWebsiteFilterAllowed,
+      socialProfilesVisible:
+          socialProfilesVisible ?? this.socialProfilesVisible,
       adsEnabled: adsEnabled ?? this.adsEnabled,
       exportFormats: exportFormats ?? this.exportFormats,
     );
@@ -108,6 +119,7 @@ class Entitlements {
             setsEqual<LeadSource>(other.allowedSources, allowedSources) &&
             other.deepSearchAllowed == deepSearchAllowed &&
             other.noWebsiteFilterAllowed == noWebsiteFilterAllowed &&
+            other.socialProfilesVisible == socialProfilesVisible &&
             other.adsEnabled == adsEnabled &&
             setsEqual<ExportFormat>(other.exportFormats, exportFormats);
   }
@@ -121,6 +133,7 @@ class Entitlements {
     setsHash<LeadSource>(allowedSources),
     deepSearchAllowed,
     noWebsiteFilterAllowed,
+    socialProfilesVisible,
     adsEnabled,
     setsHash<ExportFormat>(exportFormats),
   );
@@ -143,6 +156,7 @@ const Entitlements freeEntitlements = Entitlements(
   allowedSources: <LeadSource>{LeadSource.maps},
   deepSearchAllowed: false,
   noWebsiteFilterAllowed: false,
+  socialProfilesVisible: false,
   adsEnabled: true,
   exportFormats: <ExportFormat>{
     ExportFormat.csv,
@@ -170,6 +184,7 @@ const Entitlements proEntitlements = Entitlements(
   },
   deepSearchAllowed: true,
   noWebsiteFilterAllowed: true,
+  socialProfilesVisible: true,
   adsEnabled: false,
   exportFormats: <ExportFormat>{
     ExportFormat.csv,
