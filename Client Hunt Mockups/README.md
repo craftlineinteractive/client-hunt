@@ -730,9 +730,10 @@ dispose, so a removed screen never leaves a stream running).
 | `SearchFailed` | `noResults` → empty; `noNetwork`, `rateLimited`, `sourceBlocked`, `unknown` → error state with Retry; `cancelled` → leave; partial leads are kept with a Retry note. |
 | `leave()` | `AdTrigger.resultsClosed` only when the run is not searching. |
 
-**Performance.** The list is a `SliverList.builder` with `ValueKey(lead.id)`; each card watches its own
-selection and saved state, so selecting one card does not rebuild the rest. The 200-lead `large` scenario uses
-the same path and stays at 60 fps when scrolled (see Section 10).
+**Performance.** The list is a `SliverList.builder` with `ValueKey(lead.id)`; each card watches only its own
+selection and saved state. A widget test drives the 200-lead `large` scenario and asserts that only the visible
+handful of cards is built, before and after a fling, so the list stays lazy; no frame-rate measurement was taken
+on a device.
 
 **Differences from the mockup (B2)**
 

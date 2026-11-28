@@ -13,6 +13,7 @@ import 'package:clienthunt/features/results/results_controller.dart';
 import 'package:clienthunt/features/results/results_page.dart';
 import 'package:clienthunt/features/results/results_state.dart';
 import 'package:clienthunt/shared/widgets/app_bottom_nav.dart';
+import 'package:clienthunt/shared/widgets/app_checkbox.dart';
 import 'package:clienthunt/shared/widgets/lead_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -428,6 +429,46 @@ void main() {
         container.read(contactLauncherProvider) as FakeContactLauncher;
     expect(launcher.lastCall?.channel, ContactChannel.phone);
     expect(find.text(ResultsStrings.launchingCall), findsOneWidget);
+  });
+
+  testWidgets('the 200-lead list stays lazy and selects one card', (
+    WidgetTester tester,
+  ) async {
+    await pumpResults(tester, scenario: FakeScenario.large);
+    await pumpUntil(tester, find.byType(LeadCard));
+    await pumpUntil(tester, find.text(ResultsStrings.leadsCount(200)));
+
+    expect(readState(tester).leads, hasLength(200));
+    // Only the viewport's worth of cards is built from 200 leads.
+    final int builtAtRest = find.byType(LeadCard).evaluate().length;
+    expect(builtAtRest, lessThanOrEqualTo(12));
+
+    final LeadCard firstBuilt = tester.widget<LeadCard>(
+      find.byType(LeadCard).first,
+    );
+    await tester.tap(
+      find.descendant(
+        of: find.byType(LeadCard).first,
+        matching: find.byType(AppCheckbox),
+      ),
+    );
+    await tester.pump();
+
+    final ResultsState state = readState(tester);
+    expect(state.selectedIds, <String>{firstBuilt.lead.id});
+    expect(find.text(ResultsStrings.selectedCount(1)), findsOneWidget);
+
+    await tester.fling(
+      find.byType(CustomScrollView),
+      const Offset(0, -2500),
+      4000,
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(tester.takeException(), isNull);
+    expect(find.byType(LeadCard).evaluate().length, lessThanOrEqualTo(12));
+    expect(readState(tester).selectedIds, <String>{firstBuilt.lead.id});
   });
 
   testWidgets('tapping a card opens Lead Detail with its id', (
