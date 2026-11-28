@@ -16,6 +16,7 @@ class ClientHuntApp extends ConsumerWidget {
     return MaterialApp.router(
       title: AppStrings.appName,
       debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: rootScaffoldMessengerKey,
       routerConfig: appRouter,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,

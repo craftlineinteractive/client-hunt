@@ -6,6 +6,7 @@ import '../../dev/design_gallery_page.dart';
 import '../../domain/models/export_args.dart';
 import '../../domain/repositories/lead_search_engine.dart';
 import '../../features/home/home_page.dart';
+import '../../features/lead_detail/lead_detail_page.dart';
 import '../../features/results/results_page.dart';
 import '../../shared/widgets/app_bottom_nav.dart';
 import '../constants/app_strings.dart';
@@ -23,6 +24,11 @@ export 'app_routes.dart';
 /// other destination is pushed on the root navigator with
 /// `parentNavigatorKey: _rootNavigatorKey`, which covers the shell — and with it
 /// the bottom bar, exactly as the mockups draw those screens.
+/// The root messenger, so a screen can report something after it has popped
+/// ("Lead removed" belongs to the screen underneath).
+final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
 );
@@ -92,10 +98,8 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.leadDetail,
       name: AppRoutes.leadDetailName,
       parentNavigatorKey: rootNavigatorKey,
-      builder: (BuildContext context, GoRouterState state) => PlaceholderScreen(
-        title: 'Lead details',
-        subtitle: state.pathParameters['id'],
-      ),
+      builder: (BuildContext context, GoRouterState state) =>
+          LeadDetailPage(leadId: state.pathParameters['id'] ?? ''),
     ),
     GoRoute(
       path: AppRoutes.filters,
