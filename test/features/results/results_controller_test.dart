@@ -403,6 +403,79 @@ void main() {
     expect(state.savedIds, contains(unsaved.id));
   });
 
+  test(
+    'a Free search keeps only the plan cap when the engine overshoots',
+    () async {
+      final ProviderContainer container = makeContainer(
+        engine: FakeLeadSearchEngine(
+          scenario: FakeScenario.large,
+          searchLatency: Duration.zero,
+          data: data,
+        ),
+      );
+      final request = makeRequest();
+
+      start(container, request);
+      await settle(40);
+
+      final ResultsState state = container.read(
+        resultsControllerProvider(request),
+      );
+      expect(state.leads, hasLength(50));
+      // The summary describes the kept leads, not the 200 the engine reported.
+      expect(state.totalCount, 50);
+      expect(
+        state.withEmailCount,
+        state.leads.where((Lead l) => l.hasEmail).length,
+      );
+      expect(
+        state.withPhoneCount,
+        state.leads.where((Lead l) => l.hasPhone).length,
+      );
+      expect(state.reachedCap(50), isTrue);
+    },
+  );
+
+  test('a Pro search with a 200 cap keeps all 200', () async {
+    final ProviderContainer container = makeContainer(isPro: true);
+    final request = makeRequest(filters: const SearchFilters(maxResults: 200));
+
+    start(container, request);
+    await settle(40);
+
+    final ResultsState state = container.read(
+      resultsControllerProvider(request),
+    );
+    expect(state.leads, hasLength(42));
+    expect(state.totalCount, 42);
+  });
+
+  test('a select-all selection is pruned when a chip hides leads', () async {
+    final ProviderContainer container = makeContainer();
+    final request = makeRequest();
+    final ResultsController controller = start(container, request);
+    await settle();
+
+    controller.selectAllVisible();
+    expect(controller.state.selectedIds, hasLength(42));
+
+    controller.setChip(ResultsChip.website);
+    final Set<String> visible = <String>{
+      for (final Lead lead in controller.state.visibleLeads) lead.id,
+    };
+    expect(visible.length, lessThan(42));
+    expect(controller.state.selectedIds, visible);
+
+    // Sorting rearranges, so nothing can be hidden and nothing is pruned.
+    controller.setSort(SortOption.name);
+    expect(controller.state.selectedIds, visible);
+
+    // A query that hides everything empties the selection with it.
+    controller.setQuery('zzzz-no-match');
+    expect(controller.state.visibleLeads, isEmpty);
+    expect(controller.state.selectedIds, isEmpty);
+  });
+
   test('select all applies to visible leads only', () async {
     final ProviderContainer container = makeContainer();
     final request = makeRequest();

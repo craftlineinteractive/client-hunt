@@ -7,6 +7,7 @@ import '../../app/providers.dart';
 import '../../core/constants/app_strings.dart';
 import '../../domain/ads/ad_policy.dart';
 import '../../domain/entitlements/feature_gate.dart';
+import '../../domain/leads/lead_save_controller.dart';
 import '../../domain/models/models.dart';
 import '../../domain/repositories/repositories.dart';
 import '../../domain/results/results_filter.dart';
@@ -202,15 +203,15 @@ class ResultsController extends Notifier<ResultsState> {
 
   /// Applies a chip.
   void setChip(ResultsChip chip) =>
-      _set(state.copyWith(filter: state.filter.copyWith(chip: chip)));
+      _setPruning(state.copyWith(filter: state.filter.copyWith(chip: chip)));
 
   /// Applies a text query.
   void setQuery(String text) =>
-      _set(state.copyWith(filter: state.filter.copyWith(text: text)));
+      _setPruning(state.copyWith(filter: state.filter.copyWith(text: text)));
 
   /// Shows or hides the inline search field; hiding clears the query.
   void setSearchMode(bool isSearchMode) {
-    _set(
+    _setPruning(
       state.copyWith(
         isSearchMode: isSearchMode,
         filter: isSearchMode ? state.filter : state.filter.copyWith(text: ''),
@@ -220,7 +221,7 @@ class ResultsController extends Notifier<ResultsState> {
 
   /// Replaces the query with an empty one.
   void clearQuery() =>
-      _set(state.copyWith(filter: state.filter.copyWith(text: '')));
+      _setPruning(state.copyWith(filter: state.filter.copyWith(text: '')));
 
   /// Applies an ordering.
   void setSort(SortOption sort) => _set(state.copyWith(sort: sort));
@@ -235,7 +236,7 @@ class ResultsController extends Notifier<ResultsState> {
   /// (open status, depth, result cap, cleanup flags) sets [ResultsState
   /// .filtersChanged], and the screen offers "Search again".
   void applyFilters(SearchFilters filters) {
-    _set(
+    _setPruning(
       state.copyWith(
         activeFilters: filters,
         filtersChanged: _needsNewSearch(state.activeFilters, filters),
@@ -245,14 +246,14 @@ class ResultsController extends Notifier<ResultsState> {
 
   /// Clears the chip and the text query — the local-empty action.
   void clearLocalFilters() =>
-      _set(state.copyWith(filter: const ResultsFilter()));
+      _setPruning(state.copyWith(filter: const ResultsFilter()));
 
   /// Saves or unsaves a lead, respecting the plan's saved-lead cap.
   ///
   /// A save past the cap opens the paywall through [ResultsOpenPro]; the page
   /// performs the navigation, so this stays testable.
   Future<void> toggleSave(Lead lead) async {
-    final LeadRepositoryWriter writer = LeadRepositoryWriter(
+    final LeadSaveController writer = LeadSaveController(
       repository: ref.read(leadRepositoryProvider),
       gate: ref.read(featureGateProvider),
     );
@@ -358,9 +359,17 @@ class ResultsController extends Notifier<ResultsState> {
         merged.add(lead);
       }
     }
+    // Defence in depth: the engine is supposed to respect `maxResults`, but a
+    // buggy or hostile one must not be able to push the list past the plan's
+    // cap. Extras are dropped in arrival order, so the first leads (the best
+    // matches) survive.
+    final int cap = state.request.filters.maxResults;
+    final List<Lead> kept = merged.length > cap
+        ? merged.sublist(0, cap)
+        : merged;
     final ResultsState next = state.copyWith(
-      leads: List<Lead>.unmodifiable(merged),
-      foundSoFar: foundSoFar > merged.length ? foundSoFar : merged.length,
+      leads: List<Lead>.unmodifiable(kept),
+      foundSoFar: kept.length,
       phase: ResultsPhase.partial,
     );
     _set(next);
@@ -374,24 +383,45 @@ class ResultsController extends Notifier<ResultsState> {
     }
     final bool isFirstCompletion = _finalisedSearchIds.add(state.searchId);
     _activeSearchId = null;
+    final SearchSummary effective = _cappedSummary(summary);
     final ResultsState next = state.copyWith(
-      phase: summary.total > 0 ? ResultsPhase.completed : ResultsPhase.empty,
-      summary: summary,
+      phase: effective.total > 0 ? ResultsPhase.completed : ResultsPhase.empty,
+      summary: effective,
       foundSoFar: summary.total,
       clearError: true,
     );
     _set(next);
     _publishSession(
       next,
-      summary.total > 0 ? LeadSessionStatus.completed : LeadSessionStatus.empty,
+      effective.total > 0
+          ? LeadSessionStatus.completed
+          : LeadSessionStatus.empty,
     );
 
     // The one place a search is spent and recorded. A duplicate completion, a
     // rebuild or a late event fails this guard and changes nothing.
-    if (!isFirstCompletion || summary.total < 1) {
+    if (!isFirstCompletion || effective.total < 1) {
       return;
     }
-    unawaited(_recordCompletedSearch(summary));
+    unawaited(_recordCompletedSearch(effective));
+  }
+
+  /// The summary the screen may show: when the engine reported more leads than
+  /// the plan's cap allowed us to keep, the totals describe the kept leads.
+  ///
+  /// Otherwise the stats strip would claim 200 leads above a 50-lead list.
+  SearchSummary _cappedSummary(SearchSummary summary) {
+    final int cap = state.request.filters.maxResults;
+    if (summary.total <= cap) {
+      return summary;
+    }
+    return SearchSummary(
+      total: state.leads.length,
+      withEmail: state.leads.where((Lead lead) => lead.hasEmail).length,
+      withPhone: state.leads.where((Lead lead) => lead.hasPhone).length,
+      duration: summary.duration,
+      perSource: summary.perSource,
+    );
   }
 
   Future<void> _recordCompletedSearch(SearchSummary summary) async {
@@ -494,6 +524,25 @@ class ResultsController extends Notifier<ResultsState> {
     state = next;
   }
 
+  /// Sets a state produced by a filter change, dropping now-hidden lead ids.
+  ///
+  /// Selection is about what the user can act on: a lead hidden by a chip or a
+  /// query must not stay selected, or Export would ship leads the user cannot
+  /// see. Sorting never hides anything, so it does not come through here.
+  void _setPruning(ResultsState next) {
+    final Set<String> visible = <String>{
+      for (final Lead lead in next.visibleLeads) lead.id,
+    };
+    _set(
+      next.copyWith(
+        selectedIds: <String>{
+          for (final String id in next.selectedIds)
+            if (visible.contains(id)) id,
+        },
+      ),
+    );
+  }
+
   void _emit(ResultsUiEvent event) {
     if (!_events.isClosed) {
       _events.add(event);
@@ -520,33 +569,6 @@ class ResultsController extends Notifier<ResultsState> {
         }),
       );
     }
-  }
-}
-
-/// Result of a bookmark toggle.
-enum LeadSaveOutcome { saved, unsaved, limitReached }
-
-/// Applies the save/unsave rule without a widget tree.
-///
-/// Split out so the cap behaviour is unit-testable and Results stays a thin
-/// caller. The repository is the only writer; the cap comes from the gate.
-class LeadRepositoryWriter {
-  const LeadRepositoryWriter({required this.repository, required this.gate});
-
-  final LeadRepository repository;
-  final FeatureGate gate;
-
-  Future<LeadSaveOutcome> toggle(Lead lead) async {
-    if (lead.isSaved) {
-      await repository.deleteLeads(<String>[lead.id]);
-      return LeadSaveOutcome.unsaved;
-    }
-    final int savedCount = await repository.savedCount();
-    if (!gate.canSaveMore(savedCount)) {
-      return LeadSaveOutcome.limitReached;
-    }
-    await repository.saveLead(lead);
-    return LeadSaveOutcome.saved;
   }
 }
 

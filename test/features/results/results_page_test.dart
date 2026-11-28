@@ -434,11 +434,26 @@ void main() {
   testWidgets('the 200-lead list stays lazy and selects one card', (
     WidgetTester tester,
   ) async {
-    await pumpResults(tester, scenario: FakeScenario.large);
+    // Pro with a 200 cap: the defensive clamp keeps 50 on a Free plan, so the
+    // performance scenario has to opt into the bigger list explicitly.
+    const SearchRequest largeRequest = SearchRequest(
+      id: 'search-large',
+      query: SearchQuery(
+        niches: <String>['Dentists'],
+        locations: <String>['Ahmedabad'],
+      ),
+      filters: SearchFilters(maxResults: 200),
+    );
+    await pumpResults(
+      tester,
+      scenario: FakeScenario.large,
+      isPro: true,
+      searchRequest: largeRequest,
+    );
     await pumpUntil(tester, find.byType(LeadCard));
     await pumpUntil(tester, find.text(ResultsStrings.leadsCount(200)));
 
-    expect(readState(tester).leads, hasLength(200));
+    expect(readState(tester, largeRequest).leads, hasLength(200));
     // Only the viewport's worth of cards is built from 200 leads.
     final int builtAtRest = find.byType(LeadCard).evaluate().length;
     expect(builtAtRest, lessThanOrEqualTo(12));
@@ -454,7 +469,7 @@ void main() {
     );
     await tester.pump();
 
-    final ResultsState state = readState(tester);
+    final ResultsState state = readState(tester, largeRequest);
     expect(state.selectedIds, <String>{firstBuilt.lead.id});
     expect(find.text(ResultsStrings.selectedCount(1)), findsOneWidget);
 
@@ -468,7 +483,9 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.byType(LeadCard).evaluate().length, lessThanOrEqualTo(12));
-    expect(readState(tester).selectedIds, <String>{firstBuilt.lead.id});
+    expect(readState(tester, largeRequest).selectedIds, <String>{
+      firstBuilt.lead.id,
+    });
   });
 
   testWidgets('tapping a card opens Lead Detail with its id', (
