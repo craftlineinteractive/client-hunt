@@ -128,13 +128,18 @@ class ResultsController extends Notifier<ResultsState> {
 
   /// Cancels a running search. The page then leaves the screen.
   Future<void> cancel() async {
-    if (!state.isRunning) {
+    if (_disposed || !state.isRunning) {
       return;
     }
     final String searchId = state.searchId;
     _activeSearchId = null;
     await _searchSubscription?.cancel();
     _searchSubscription = null;
+    // The screen is often popped in the same tap that cancels: by the time the
+    // subscription is torn down the controller may already be disposed.
+    if (_disposed) {
+      return;
+    }
     _set(state.copyWith(phase: ResultsPhase.cancelled));
     _publishSession(state, LeadSessionStatus.cancelled);
     try {
@@ -147,15 +152,21 @@ class ResultsController extends Notifier<ResultsState> {
   /// Called when the screen is being removed.
   ///
   /// While a search is running the run is cancelled silently and **no ad** is
-  /// requested. Otherwise this records one completed user action and asks the
-  /// page for an interstitial at `AdTrigger.resultsClosed`.
-  void leave() {
+  /// requested; the return value says whether one is. Otherwise this records one
+  /// completed user action and asks the page for an interstitial at
+  /// `AdTrigger.resultsClosed`.
+  ///
+  /// The returned bool is the synchronous answer the page needs before it pops;
+  /// [ResultsAdBreak] is the same fact on the event stream, for anything that
+  /// listens rather than calls.
+  bool leave() {
     if (state.isRunning) {
       unawaited(cancel());
-      return;
+      return false;
     }
     ref.read(adPolicyProvider).recordUserAction();
     _emit(const ResultsAdBreak(AdTrigger.resultsClosed));
+    return true;
   }
 
   /// Selects or deselects one lead.
@@ -384,13 +395,16 @@ class ResultsController extends Notifier<ResultsState> {
   }
 
   Future<void> _recordCompletedSearch(SearchSummary summary) async {
+    // Captured before the first await: the entry must describe the run that
+    // completed, even if the page is gone when the writes land.
+    final String searchId = state.searchId;
     try {
       await ref.read(quotaRepositoryProvider).consumeOne();
       await ref
           .read(searchHistoryRepositoryProvider)
           .add(
             SearchHistoryEntry(
-              id: 'history-${state.searchId}',
+              id: 'history-$searchId',
               query: request.query,
               resultCount: summary.total,
               searchedAt: DateTime.now(),
@@ -536,11 +550,13 @@ class LeadRepositoryWriter {
   }
 }
 
-/// One controller per request.
+/// One controller per request, alive only while the screen watches it.
 ///
 /// Keyed by the whole [SearchRequest] (which has value equality), so a rebuild of
 /// the same route resolves to the same run instead of starting a second one.
-final resultsControllerProvider =
-    NotifierProvider.family<ResultsController, ResultsState, SearchRequest>(
+/// Auto-dispose means removing the screen releases the run, its leads and its
+/// subscriptions — and cancels a search that was still going.
+final resultsControllerProvider = NotifierProvider.autoDispose
+    .family<ResultsController, ResultsState, SearchRequest>(
       ResultsController.new,
     );
