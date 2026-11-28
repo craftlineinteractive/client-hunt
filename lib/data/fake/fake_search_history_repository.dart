@@ -14,10 +14,14 @@ class FakeSearchHistoryRepository implements SearchHistoryRepository {
     this.latency = const Duration(milliseconds: 150),
   }) : _entries = <SearchHistoryEntry>[
          ...(data ?? DummyData.build()).recentSearches,
-       ];
+       ] {
+    _seed = List<SearchHistoryEntry>.unmodifiable(_entries);
+  }
 
   /// Simulated write latency.
   final Duration latency;
+
+  late final List<SearchHistoryEntry> _seed;
 
   final List<SearchHistoryEntry> _entries;
 
@@ -47,6 +51,15 @@ class FakeSearchHistoryRepository implements SearchHistoryRepository {
   Future<void> clear() async {
     await _pause();
     _entries.clear();
+    _notify();
+  }
+
+  /// Puts the seeded entries back after [clear]. Debug only: the design gallery
+  /// uses it to test the empty Recent block and then the populated one.
+  void restore() {
+    _entries
+      ..clear()
+      ..addAll(_seed);
     _notify();
   }
 

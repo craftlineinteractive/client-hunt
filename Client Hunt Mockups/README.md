@@ -543,6 +543,28 @@ are fixed. Chip rows are `SizedBox(height: …)` + horizontal `ListView` with `C
 `TextEditingController`s in a small local state object (Riverpod form state arrives in B2). CTA must sit
 inside the scrolling content (the mockup scrolls it), not in a sticky bar.
 
+**Implemented behavior (B1).** The Search tab is real UI on the A2 fakes:
+
+- **Typeahead.** Both fields suggest from `NicheCatalog` (60 niches) and `CityCatalog` (46 cities) after two
+  characters. The list is an overlay, so it never pushes the card. Enter or a tap fills the field; both values
+  are normalized on submit ("dental clinic" → "Dentists", "Bombay" → "Mumbai").
+- **Validation.** 2–60 characters from letters, digits, space and `. , & ' - /`. The CTA stays disabled until
+  both fields pass and at least one source is selected.
+- **Sources.** Maps is free; the four social pills return `SourceToggleResult.locked` for Free and open `/pro`
+  with `LockReason.sourceRequiresPro`. The last selected source cannot be deselected.
+- **Quick filters.** Email, Phone and Website write into the same `SearchFilters` the Filters screen returns, so
+  the badge and that screen's caption can never disagree. The badge is hidden at 0: the mockup's "2" counts
+  the Email + Phone defaults, not active changes.
+- **Quota.** At 0 the pill reads exhausted and the CTA opens `/pro` with
+  `LockReason.dailySearchLimitReached`; Pro shows "Unlimited". Home checks the quota and never consumes it.
+- **Free search flow.** Find Leads → validate → quota → opt-in `AppDialog` → rewarded ad → `/results`. Pro skips
+  both the dialog and the ad. No ad or a failed ad proceeds without blocking; closing early stays on Home with a
+  snackbar. Home never writes a history entry; B2 does, when a search completes with at least one lead.
+- **Recent.** Two rows from the history stream, hidden when empty; "Clear all" empties the list; a row refills
+  the fields and runs the same flow.
+- **No other ad placement.** There is no banner slot (Section 3.9) and no interstitial can fire on Home: typing,
+  launching, loading, the moment after a rewarded ad and the whole Pro session all fail the policy (Section 12).
+
 ### 4.2 search_results — Results (pushed, `/results`)
 
 **Purpose.** Scan and act on a result set fast; select for bulk actions; jump to export.
@@ -1376,3 +1398,73 @@ Cancelling is `engine.cancel(searchId)` (the stream then ends with a `cancelled`
 ### 11.5 Debug controls for building screens
 
 `/dev/gallery` (debug builds only) has a “Fake data scenarios” section: `normal`, `slow`, `empty`, `no network`, `rate limited`, `partial: source blocked`, plus a pretend-Pro switch. That is how B prompts check loading, empty, error and locked states without a network or a purchase. The scenario feeds `FakeLeadSearchEngine`; the Pro switch feeds `FakeSubscriptionRepository`, which is the only thing that decides entitlements.
+
+## 12. Ads model
+
+**There are no banner ads, no native ads and no ad slot in any layout.** The mockup's home banner was removed
+(Section 3.9); the only two formats are a *rewarded* ad the user opts into before a Free search and an
+*interstitial* at a natural break. Both run through one coordinator and one frequency policy, so no screen can
+invent its own rules.
+
+### 12.1 The two formats
+
+| | Rewarded | Interstitial |
+|---|---|---|
+| When | Before a Free search, after an explicit opt-in | Only at a break the user finished |
+| Consent | `AppDialog`: “Watch ad”, “Go Pro”, “Cancel” | None; it is the price of the Free tier |
+| If it fails | Proceed anyway, logged | Nothing happens, logged |
+| If the user refuses | Stay on Home; no search, no quota use | n/a |
+| Pro | Never shown, never loaded | Never shown, never loaded |
+
+### 12.2 Rewarded: the Free search flow
+
+1. Find Leads validates the form. Invalid → nothing happens.
+2. The quota is checked. Exhausted → `/pro` with `LockReason.dailySearchLimitReached`.
+3. Free users get the opt-in `AppDialog`. Cancel or “Go Pro” releases the button and stays on Home.
+4. `AdCoordinator.runRewardedGate()` preloads if needed, shows the ad and returns exactly one of
+   `proceed` (reward earned), `cancelledByUser` (closed early) or `skippedNoAd` (no fill, load error, playback
+   error, SDK exception).
+5. `proceed` and `skippedNoAd` both navigate to `/results`; only `cancelledByUser` stays, with
+   `AdsStrings.rewardedDismissed`. An ad problem must never cost a Free user their search.
+6. Home records the action in `AdPolicy` but never consumes quota or writes history. B2 does both, after a
+   search completes with at least one lead.
+
+### 12.3 Interstitial frequency
+
+One `AdPolicy` per session, in `lib/domain/ads/ad_policy.dart`. All numbers are in `AdPolicyConfig`:
+
+| Rule | Default | Why |
+|---|---|---|
+| Chance when everything else passes | 35% | Frequent enough to earn, rare enough not to annoy |
+| Minimum gap between interstitials | 120 s | Never two in a row |
+| Completed user actions between interstitials | 2 | The user has to have *done* something |
+| No interstitial in the first | 60 s | Never at launch |
+| No interstitial within | 60 s after a rewarded ad | The user just watched one |
+| Pro | always false | Paid means ad-free |
+| Busy | always false | Never while typing, loading or while a dialog is open |
+
+Triggers are finished actions only: `AdTrigger.resultsClosed` (B2), `leadSaved` and `leadDetailClosed` (B3/B4),
+`exportFinished` (B6). App resume is deliberately not a trigger. Screens call
+`AdCoordinator.maybeShowInterstitial(trigger, isBusy: …)`; the coordinator applies the policy, shows, and calls
+`recordInterstitialShown()`, which resets the action counter and starts the interval clock. `recordUserAction()`
+is called when the user completes something.
+
+### 12.4 Failure, logging and the test ad
+
+`AdCoordinator` never throws: an SDK error becomes a logged skip. `AdLogger` is the seam for prompt E's
+analytics/crash reporter; the default prints `[ads] …` in debug builds only. `FakeAdService` presents
+`TestAdPage`, a plainly labelled five-second stand-in, instead of an SDK. It is debug-only and prompt E replaces
+it with AdMob behind the same `AdService` interface.
+
+### 12.5 Debug controls
+
+The gallery's “Search, quota and ads (B1)” section sets the remaining Free searches (0–5), clears and restores
+the seeded recents, picks the location outcome and the rewarded/interstitial outcomes, forces the next
+interstitial past the policy roll, reads the live policy counters, opens the test ad page and shows the real
+opt-in dialog. That is how every ad and quota state is checked without a network, an SDK or a purchase.
+
+### 12.6 What B1 does not do
+
+No ads SDK, no ad unit ids, no consent-management platform, no billing, and no interstitial trigger of its own:
+B1 ships the policy, the coordinator, the rewarded flow on Home and the fake ad page, and later prompts call the
+triggers they own.

@@ -11,7 +11,9 @@ import '../core/theme/app_spacing.dart';
 import '../core/theme/app_typography.dart';
 import '../core/theme/theme_mode_provider.dart';
 import '../data/fake/fake.dart';
+import '../domain/ads/ad_policy.dart';
 import '../shared/widgets/shared.dart';
+import 'test_ad_page.dart';
 
 /// **Debug-only.** A visual harness for every shared widget and state.
 ///
@@ -41,6 +43,9 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
   @override
   Widget build(BuildContext context) {
     final AppColors colors = AppColors.of(context);
+    final int? remainingToday = ref.watch(remainingSearchesProvider).value;
+    final AdPolicy policy = ref.watch(adPolicyProvider);
+    final int? lastInterstitial = policy.secondsSinceLastInterstitial;
     return Scaffold(
       appBar: const AppTopBar.pushed(
         title: 'Design gallery',
@@ -116,6 +121,186 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                   '${ref.watch(featureGateProvider).showsAds ? 'on' : 'off'}',
                   style: AppTypography.monoSm,
                   color: colors.textMuted,
+                ),
+              ],
+            ),
+          ),
+          _Section(
+            title: 'Search, quota and ads (B1)',
+            subtitle:
+                'Debug only: the Home form’s cold-start states and every ad '
+                'outcome.',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Free searches left today',
+                  style: AppTypography.labelMd.copyWith(
+                    color: colors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: <Widget>[
+                    for (int remaining = 0; remaining <= 5; remaining++)
+                      AppChip(
+                        label: '$remaining',
+                        isSelected: remainingToday == remaining,
+                        onTap: () {
+                          (ref.read(quotaRepositoryProvider)
+                                  as FakeQuotaRepository)
+                              .setRemaining(remaining);
+                          setState(() {});
+                        },
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: <Widget>[
+                    AppButton(
+                      label: 'Clear recents',
+                      onPressed: () {
+                        ref.read(searchHistoryRepositoryProvider).clear();
+                      },
+                      variant: AppButtonVariant.secondary,
+                      expand: false,
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    AppButton(
+                      label: 'Restore recents',
+                      onPressed: () {
+                        (ref.read(searchHistoryRepositoryProvider)
+                                as FakeSearchHistoryRepository)
+                            .restore();
+                        setState(() {});
+                      },
+                      variant: AppButtonVariant.secondary,
+                      expand: false,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  'Location outcome',
+                  style: AppTypography.labelMd.copyWith(
+                    color: colors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: <Widget>[
+                    for (final FakeLocationOutcome outcome
+                        in FakeLocationOutcome.values)
+                      AppChip(
+                        label: outcome.displayName,
+                        isSelected:
+                            ref.watch(fakeLocationOutcomeProvider) == outcome,
+                        onTap: () => ref
+                            .read(fakeLocationOutcomeProvider.notifier)
+                            .set(outcome),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  'Rewarded outcome',
+                  style: AppTypography.labelMd.copyWith(
+                    color: colors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: <Widget>[
+                    for (final FakeRewardedOutcome outcome
+                        in FakeRewardedOutcome.values)
+                      AppChip(
+                        label: outcome.displayName,
+                        isSelected:
+                            ref.watch(fakeAdConfigProvider).rewarded == outcome,
+                        onTap: () => ref
+                            .read(fakeAdConfigProvider.notifier)
+                            .setRewarded(outcome),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  'Interstitial outcome',
+                  style: AppTypography.labelMd.copyWith(
+                    color: colors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: <Widget>[
+                    for (final FakeInterstitialOutcome outcome
+                        in FakeInterstitialOutcome.values)
+                      AppChip(
+                        label: outcome.displayName,
+                        isSelected:
+                            ref.watch(fakeAdConfigProvider).interstitial ==
+                            outcome,
+                        onTap: () => ref
+                            .read(fakeAdConfigProvider.notifier)
+                            .setInterstitial(outcome),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                ToggleRow(
+                  label: 'Force the next interstitial',
+                  icon: AppIcons.tag,
+                  value: ref.watch(forcedInterstitialProvider),
+                  onChanged: (bool value) =>
+                      ref.read(forcedInterstitialProvider.notifier).set(value),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                MonoText(
+                  'Policy · ${policy.actionsSinceLastInterstitial} actions · '
+                  'last interstitial '
+                  '${lastInterstitial == null ? 'never' : '${lastInterstitial}s'}'
+                  ' · session ${policy.secondsSinceStart}s',
+                  style: AppTypography.monoSm,
+                  color: colors.textMuted,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: <Widget>[
+                    AppButton(
+                      label: 'Open test ad',
+                      onPressed: () => Navigator.of(context).push<void>(
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              const TestAdPage(isRewarded: true),
+                        ),
+                      ),
+                      variant: AppButtonVariant.secondary,
+                      expand: false,
+                    ),
+                    AppButton(
+                      label: 'Try interstitial',
+                      onPressed: _tryInterstitial,
+                      variant: AppButtonVariant.secondary,
+                      expand: false,
+                    ),
+                    AppButton(
+                      label: 'Show opt-in dialog',
+                      onPressed: _showOptInDialog,
+                      variant: AppButtonVariant.secondary,
+                      expand: false,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -929,6 +1114,52 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
         ],
       ),
     );
+  }
+
+  /// Asks the coordinator for an interstitial, so the forced switch and the
+  /// test ad page can be checked without a real trigger.
+  Future<void> _tryInterstitial() async {
+    final bool shown = await ref
+        .read(adCoordinatorProvider)
+        .maybeShowInterstitial(AdTrigger.resultsClosed);
+    _note(shown ? 'Interstitial shown' : 'Interstitial skipped by policy');
+  }
+
+  /// Shows the real rewarded opt-in dialog and reports the choice, so `AppDialog`
+  /// can be reviewed without walking a Free search.
+  Future<void> _showOptInDialog() async {
+    final Object? choice = await showAppDialog(
+      context,
+      title: AdsStrings.rewardedTitle,
+      body: AdsStrings.rewardedBody,
+      actions: const <AppDialogAction>[
+        AppDialogAction(
+          label: AdsStrings.rewardedWatch,
+          style: AppDialogActionStyle.primary,
+          value: 'watch',
+        ),
+        AppDialogAction(label: AdsStrings.rewardedGoPro, value: 'goPro'),
+        AppDialogAction(
+          label: CommonStrings.cancel,
+          style: AppDialogActionStyle.ghost,
+          value: 'cancel',
+        ),
+      ],
+    );
+    _note(switch (choice) {
+      'watch' => 'Would play the rewarded ad',
+      'goPro' => 'Would open the paywall',
+      _ => 'Cancelled',
+    });
+  }
+
+  void _note(String message) {
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 

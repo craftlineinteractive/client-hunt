@@ -46,6 +46,15 @@ class FakeQuotaRepository implements QuotaRepository {
   /// Current count without subscribing.
   int get remainingToday => _remaining;
 
+  /// Sets the count directly. Debug only: the design gallery uses it to reach 0
+  /// (exhausted) and 5 (fresh) without running five searches.
+  void setRemaining(int remaining) {
+    _remaining = remaining < 0 ? 0 : remaining;
+    if (!_changes.isClosed) {
+      _changes.add(_remaining);
+    }
+  }
+
   /// Releases the change stream.
   Future<void> dispose() => _changes.close();
 }
