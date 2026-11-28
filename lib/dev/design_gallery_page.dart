@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app/providers.dart';
 import '../core/constants/app_icons.dart';
 import '../core/constants/app_strings.dart';
+import '../core/router/app_router.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_radius.dart';
 import '../core/theme/app_spacing.dart';
@@ -12,6 +13,10 @@ import '../core/theme/app_typography.dart';
 import '../core/theme/theme_mode_provider.dart';
 import '../data/fake/fake.dart';
 import '../domain/ads/ad_policy.dart';
+import '../domain/models/models.dart';
+import '../domain/repositories/lead_repository.dart';
+import '../domain/repositories/lead_search_engine.dart';
+import '../features/results/lead_session.dart';
 import '../shared/widgets/shared.dart';
 import 'test_ad_page.dart';
 
@@ -38,7 +43,53 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
   bool _toggleA = true;
   bool _toggleB = false;
   bool _showNote = true;
+  bool _sampleSaved = true;
   final List<String> _tags = <String>['implants', 'family'];
+
+  static const List<(String, String)> _sampleLabels = <(String, String)>[
+    ('Full data', DummyData.sampleFullLeadId),
+    ('Landline only', DummyData.sampleLandlineLeadId),
+    ('No email', DummyData.sampleNoEmailLeadId),
+    ('No website', DummyData.sampleNoWebsiteLeadId),
+    ('Maps, long text', DummyData.sampleMapsLongLeadId),
+    ('Social only', DummyData.sampleSocialLeadId),
+  ];
+
+  /// Opens a sample lead the way Results or Saved would.
+  ///
+  /// Saved: the repository copy wins. Unsaved: the sample is published as the
+  /// current search session, which is exactly how an unsaved result is opened.
+  Future<void> _openSample(String id) async {
+    final Lead? lead = ref.read(dummyDataSetProvider).leadById(id);
+    if (lead == null) {
+      return;
+    }
+    final LeadRepository repository = ref.read(leadRepositoryProvider);
+    if (_sampleSaved) {
+      await repository.saveLead(lead);
+    } else {
+      await repository.deleteLeads(<String>[id]);
+    }
+    ref
+        .read(leadSessionProvider.notifier)
+        .set(
+          LeadSession(
+            request: const SearchRequest(
+              id: 'debug-lead-samples',
+              query: SearchQuery(
+                niches: <String>['Samples'],
+                locations: <String>['Ahmedabad'],
+              ),
+            ),
+            leads: <Lead>[lead],
+            status: LeadSessionStatus.completed,
+          ),
+        );
+    if (!mounted) {
+      return;
+    }
+    await AppNavigator.goToLead(context, id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +172,33 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
                   '${ref.watch(featureGateProvider).showsAds ? 'on' : 'off'}',
                   style: AppTypography.monoSm,
                   color: colors.textMuted,
+                ),
+              ],
+            ),
+          ),
+          _Section(
+            title: 'Lead detail samples (B3)',
+            subtitle:
+                'Debug only: opens one branch of Lead Detail by id, saved or '
+                'as a fresh result.',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ToggleRow(
+                  label: 'Open the sample as saved',
+                  icon: AppIcons.saved,
+                  value: _sampleSaved,
+                  onChanged: (bool value) =>
+                      setState(() => _sampleSaved = value),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: <Widget>[
+                    for (final (String label, String id) in _sampleLabels)
+                      AppChip(label: label, onTap: () => _openSample(id)),
+                  ],
                 ),
               ],
             ),

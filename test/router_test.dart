@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:clienthunt/app.dart';
 import 'package:clienthunt/core/constants/nav_tabs.dart';
 import 'package:clienthunt/core/router/app_router.dart';
+import 'package:clienthunt/features/lead_detail/lead_detail_page.dart';
 import 'package:clienthunt/shared/widgets/app_bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -88,8 +89,13 @@ void main() {
     await expectPushed(
       'lead detail',
       (BuildContext context) => AppNavigator.goToLead(context, 'lead-42'),
-      // The path parameter reaches the screen.
-      whilePushed: () => expect(find.text('lead-42'), findsOneWidget),
+      // The path parameter reaches the real screen.
+      whilePushed: () {
+        final LeadDetailPage page = tester.widget<LeadDetailPage>(
+          find.byType(LeadDetailPage),
+        );
+        expect(page.leadId, 'lead-42');
+      },
     );
 
     await expectPushed(

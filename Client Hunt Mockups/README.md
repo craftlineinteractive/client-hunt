@@ -842,6 +842,107 @@ reminderAt, isSaved, latitude/longitude (for directions).
 scaling must not break the 2-column fact grid — use `Wrap`/`IntrinsicHeight` rather than fixed heights
 for text rows (fixed 56 only where the label is one line).
 
+#### Implemented behavior (B3)
+
+Built as `features/lead_detail/lead_detail_page.dart` over `LeadDetailController` (one auto-disposing
+controller per lead id) and `leadByIdProvider` + `LeadRepository`. The screen is a pushed route on the
+root navigator: no bottom navigation, no sticky bottom bar, everything scrolls under a fixed app bar.
+
+**Where the lead comes from.** `leadByIdProvider(id)` resolves the current search session first, then the
+saved store. The controller then merges the *saved* copy over the session copy whenever the lead is saved,
+so bookmark state, status, tags, note and follow-up date follow the repository (and stay in step with
+Results and, later, Saved). If the id resolves to nothing, the screen shows the not-found state instead of
+an empty card.
+
+**Save and unsave.** The bookmark toggles saved state through the shared `LeadSaveController`, so Results
+and Lead Detail apply the same Free saved-lead cap and the same Pro event.
+
+**Auto-save before a CRM edit (decided).** A lead opened from Results may be unsaved. Editing its status,
+tags, note or follow-up date saves it first, then writes the edit:
+
+1. `LeadSaveController.ensureSaved(lead)` runs first, exactly as the bookmark would.
+2. If the Free cap (`entitlements.maxSavedLeads`, 50) refuses the save, **nothing is written**: the
+   optimistic control reverts to its previous value, no tag/status/note change survives, and `/pro`
+   opens with `LockReason.savedLeadLimitReached`.
+3. A repository failure restores the previous state and shows a short snackbar. Edits are optimistic and
+   show no spinner.
+
+**Unsaving deletes private data, so it asks first.** Unsaving a lead that has any note, any tag, a status
+other than New, or a follow-up date shows `AppDialog` — "Removing this lead also deletes your notes and
+tags." A lead with no CRM data is unsaved in one tap with no dialog.
+
+**"Remove lead"** appears only for a saved lead (footer button and `more_vert` menu), uses the same
+confirmation, deletes the lead from the repository, pops, and shows "Lead removed" *on the screen
+underneath* through the root `ScaffoldMessenger`.
+
+**Public contact details.** The card is titled "Public contact details" (the mockup's "Direct & Verified"
+is not used). It lists every phone with its `PhoneKind` label (Phone / Mobile / Landline / Toll-free),
+every email, the website (with an `open_in_new` action) and the address (with a `directions` action) — no
+fixed slot limit. Each row copies its own value. A phone or email row adds a muted "Found on <domain>"
+line only when the `ContactPoint` carries `foundOnUrl`; under the emails the exact line "Found on a public
+page, not verified." is kept. Missing values are omitted; when there is no contact information at all the
+card shows one muted row, "No public contact details found".
+
+**Profiles, Free versus Pro.** The card lists Instagram, LinkedIn, Facebook and X with neutral glyphs (no
+brand logos).
+
+- **Pro** (`socialProfilesVisible`): found rows show the handle (or the URL host when there is no handle)
+  and open the link through `ContactLauncher.openUrl`; missing rows read "Not found".
+- **Free**: found rows read "Found" with a lock icon and announce "Pro feature, locked"; tapping any of
+  them opens `/pro` with `LockReason.socialProfilesRequirePro`. Missing rows still read "Not found".
+  A Free user with no profiles at all does not see the card (nothing to tease); Pro always sees it.
+- Copying or sharing a lead never includes social links for a Free user (`LeadTextFormatter.format`'s
+  `includeSocialLinks: false`), so the gate cannot be bypassed through the clipboard.
+
+**Follow-up date, never a notification.** The row is labelled "Follow-up date" and stores a date *and*
+time in `lead.reminderAt`. Nothing is scheduled in B3 and the copy never promises an alert or reminder;
+the row reads "Not set" until a date exists, opens the built-in date picker then time picker, and offers
+"Change date" / "Clear" once set. A later logic prompt adds notifications.
+
+**Maps-only data is hidden when missing.** The business-details card exists only when rating, review
+count or opening hours exist, and it shows only the facts that do. No empty tiles, no dash placeholders.
+
+**Interstitial.** `AdCoordinator.maybeShowInterstitial(AdTrigger.leadDetailClosed)` runs after the user
+leaves — never on arrival, never with a dialog or picker open — and only if the visit contained a CRM
+edit, a save or a contact action (any call / WhatsApp / email / website / directions / contacts / copy /
+share). The flag comes from `LeadDetailController.leave()`, which also flushes the note first.
+`recordUserAction()` is called on every CRM edit and save.
+
+**The note is debounced.** Typing updates the draft only; 600 ms after the last keystroke the note is
+written. It is also flushed immediately on back (system or app bar), on dispose, and when the app goes to
+the background, so a quick exit never loses text. The field shows a character counter only past 1800 of
+2000 characters, and `CrmRules` caps the text at 2000.
+
+**Tags.** Chips with a remove x plus a dashed "Add tag" action that opens a small sheet with suggestions
+from `LeadRepository.watchAllTags()` (the distinct tags across saved leads). `CrmRules` enforces 10 tags,
+1–24 characters after trimming, letters/numbers/space/`-`/`_`/`&` only, and rejects case-insensitive
+duplicates; each failure has its own sentence in the sheet.
+
+**Tags are not lists.** A tag is a free-text label on one lead, shown and edited here. A list is a named
+collection on Saved that leads belong to (`lead.listIds`). They are separate concepts with separate
+limits, and this screen does not create or assign lists; B4 defines how lists are presented.
+
+**Differences from the mockup (and why).**
+
+| Mockup | Built | Why |
+| --- | --- | --- |
+| Header "Direct & Verified" | "Public contact details" | Nothing here is verified; the words are banned for our data. |
+| Icon names rendered as text | Real rounded icons | The mockup's icon font did not load. |
+| Ad slot under the footer | Removed | No banners anywhere (Section 3.9). |
+| Two phones, one email | Every phone and email | The data has more than one; hiding them loses real numbers. |
+| "(4 checked)" caption on Profiles | Pro badge only | "Checked" implies a verification claim. |
+| Fixed 56 px contact rows | Minimum 48 px rows | Text scaling to 1.3 must not clip a two-line address. |
+| No loading, not-found, or edit states | Skeleton, not-found, optimistic edits, dialogs | The mockup only showed the happy path. |
+| "Follow-up reminder" + "Reminder set" | "Follow-up date" + "Follow-up date set" | No notification is scheduled yet. |
+| Share opens a share sheet | `ShareService` recorder | `share_plus` is not a B3 dependency; prompt D supplies the real implementation. |
+| Save to contacts inserts | Records the call on `ContactLauncher` | Contact permissions arrive with the real intents. |
+
+**Debug.** The design gallery (`/dev/gallery`, debug builds only) gains "Lead detail samples (B3)": one
+chip per `DummyData` sample lead (full data, landline only, no email, no website, Maps with long text,
+social only) and a saved/unsaved toggle. Saved opens the repository copy; unsaved publishes the sample as
+the current search session, which is how an unsaved result is opened. The existing "Pretend Pro
+subscription" toggle covers the Free and Pro profile states.
+
 ### 4.4 saved_leads — Saved leads (tab, `/saved`)
 
 **Purpose.** Lightweight on-device CRM: lists, statuses, tags, notes, reminders, bulk actions.

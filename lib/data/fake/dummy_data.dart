@@ -23,6 +23,15 @@ abstract final class DummyData {
   /// The one lead every screen can open (lead detail hero).
   static const String heroLeadId = 'lead-hero-0001';
 
+  // Lead Detail sample variants (debug shortcuts). Each exercises one branch of
+  // the screen; every value is clearly fictional.
+  static const String sampleFullLeadId = 'sample-lead-full';
+  static const String sampleLandlineLeadId = 'sample-lead-landline';
+  static const String sampleNoEmailLeadId = 'sample-lead-no-email';
+  static const String sampleNoWebsiteLeadId = 'sample-lead-no-website';
+  static const String sampleMapsLongLeadId = 'sample-lead-maps-long';
+  static const String sampleSocialLeadId = 'sample-lead-social';
+
   /// Total leads in the "Dentists in Ahmedabad" scenario.
   static const int dentistResultTotal = 42;
 
@@ -63,6 +72,7 @@ abstract final class DummyData {
       lists: saved.lists,
       recentSearches: _recentSearches(reference),
       searchesRemainingToday: dailySearchLimit - searchesUsedToday,
+      sampleLeads: _sampleLeads(reference),
     );
   }
 
@@ -540,6 +550,234 @@ abstract final class DummyData {
   }
 
   // ---------------------------------------------------------------------------
+  // Lead Detail samples (debug shortcuts).
+  // ---------------------------------------------------------------------------
+
+  /// Six leads that each cover one Lead Detail branch: everything filled in,
+  /// landline only (no WhatsApp), no email, no website, a Maps entry with very
+  /// long text, and a social-only lead with no rating or contact details.
+  static List<Lead> _sampleLeads(DateTime now) {
+    return <Lead>[
+      Lead(
+        id: sampleFullLeadId,
+        name: 'Meridian Physiotherapy Studio',
+        category: 'Physiotherapy clinic',
+        address: '204, Meridian Arcade, C G Road, Ahmedabad, Gujarat 380006',
+        area: 'C G Road',
+        city: 'Ahmedabad',
+        state: 'Gujarat',
+        latitude: 23.0258,
+        longitude: 72.5603,
+        phones: const <PhoneContact>[
+          PhoneContact(
+            value: '+91 79 4002 1188',
+            kind: PhoneKind.landline,
+            status: ValidationStatus.valid,
+            confidence: 0.9,
+            foundOnUrl: 'https://meridianphysio.example/contact',
+            isPrimary: true,
+          ),
+          PhoneContact(
+            value: '+91 98250 44112',
+            kind: PhoneKind.mobile,
+            status: ValidationStatus.valid,
+            confidence: 0.94,
+            foundOnUrl: 'https://meridianphysio.example/contact',
+          ),
+        ],
+        emails: const <EmailContact>[
+          EmailContact(
+            value: 'hello@meridianphysio.example',
+            isRoleBased: true,
+            domainHasMx: true,
+            matchesWebsiteDomain: true,
+            status: ValidationStatus.likelyValid,
+            confidence: 0.8,
+            foundOnUrl: 'https://meridianphysio.example/contact',
+            isPrimary: true,
+          ),
+        ],
+        website: 'meridianphysio.example',
+        socialLinks: const <LeadSource, String>{
+          LeadSource.instagram: 'https://instagram.com/meridianphysio',
+          LeadSource.linkedin:
+              'https://linkedin.com/company/meridian-physiotherapy',
+        },
+        rating: 4.6,
+        reviewCount: 92,
+        isOpenNow: true,
+        openingHours: 'Mon-Sat, 8AM-9PM',
+        sources: const <LeadSource>{LeadSource.maps, LeadSource.web},
+        confidenceScore: 91,
+        discoveredAt: now.subtract(const Duration(hours: 3)),
+        isSaved: true,
+        savedAt: now.subtract(const Duration(days: 1)),
+        tags: const <String>['Warm lead', 'Physio'],
+        note: 'Owner asked for a proposal with monthly packages.',
+        reminderAt: now.add(const Duration(days: 2)),
+      ),
+      Lead(
+        id: sampleLandlineLeadId,
+        name: 'Silverline Dental Care',
+        category: 'Dental clinic',
+        address: '7 Silverline Complex, Vastrapur, Ahmedabad 380015',
+        area: 'Vastrapur',
+        city: 'Ahmedabad',
+        state: 'Gujarat',
+        phones: const <PhoneContact>[
+          PhoneContact(
+            value: '+91 79 2646 3311',
+            kind: PhoneKind.landline,
+            status: ValidationStatus.valid,
+            confidence: 0.88,
+            isPrimary: true,
+          ),
+        ],
+        emails: const <EmailContact>[
+          EmailContact(
+            value: 'frontdesk@silverlinedental.example',
+            domainHasMx: true,
+            status: ValidationStatus.likelyValid,
+            confidence: 0.72,
+            isPrimary: true,
+          ),
+        ],
+        website: 'silverlinedental.example',
+        rating: 4.2,
+        reviewCount: 61,
+        isOpenNow: false,
+        openingHours: 'Mon-Sat, 10AM-7PM',
+        sources: const <LeadSource>{LeadSource.maps},
+        confidenceScore: 74,
+        discoveredAt: now.subtract(const Duration(hours: 5)),
+      ),
+      Lead(
+        id: sampleNoEmailLeadId,
+        name: 'Copper Kettle Bakehouse',
+        category: 'Bakery',
+        address: '18 Copper Lane, Navrangpura, Ahmedabad 380009',
+        area: 'Navrangpura',
+        city: 'Ahmedabad',
+        state: 'Gujarat',
+        phones: const <PhoneContact>[
+          PhoneContact(
+            value: '+91 99040 77120',
+            kind: PhoneKind.mobile,
+            status: ValidationStatus.valid,
+            confidence: 0.93,
+            isPrimary: true,
+          ),
+        ],
+        website: 'copperkettle.example',
+        rating: 4.7,
+        reviewCount: 214,
+        isOpenNow: true,
+        openingHours: 'Daily, 7AM-10PM',
+        sources: const <LeadSource>{LeadSource.maps},
+        confidenceScore: 66,
+        discoveredAt: now.subtract(const Duration(hours: 7)),
+      ),
+      Lead(
+        id: sampleNoWebsiteLeadId,
+        name: 'Anand Tailoring House',
+        category: 'Tailor',
+        address: '3 Anand Estate, Maninagar, Ahmedabad 380008',
+        area: 'Maninagar',
+        city: 'Ahmedabad',
+        state: 'Gujarat',
+        phones: const <PhoneContact>[
+          PhoneContact(
+            value: '+91 97260 11845',
+            kind: PhoneKind.mobile,
+            status: ValidationStatus.valid,
+            confidence: 0.9,
+            isPrimary: true,
+          ),
+        ],
+        emails: const <EmailContact>[
+          EmailContact(
+            value: 'anandtailoring@example.com',
+            domainHasMx: true,
+            status: ValidationStatus.risky,
+            confidence: 0.5,
+            isPrimary: true,
+          ),
+        ],
+        rating: 3.9,
+        reviewCount: 33,
+        sources: const <LeadSource>{LeadSource.maps, LeadSource.web},
+        confidenceScore: 62,
+        discoveredAt: now.subtract(const Duration(hours: 9)),
+      ),
+      Lead(
+        id: sampleMapsLongLeadId,
+        name: 'Shreeji Multi-Speciality Dental, Orthodontic and Implant Centre',
+        category: 'Dental clinic',
+        address:
+            'Shop 4-7, Third Floor, Shreeji Business Hub, Opposite Sardar '
+            'Patel Stadium, Near Navrangpura Bus Stand, Navrangpura, '
+            'Ahmedabad, Gujarat 380014',
+        area: 'Navrangpura',
+        city: 'Ahmedabad',
+        state: 'Gujarat',
+        latitude: 23.0369,
+        longitude: 72.5611,
+        phones: const <PhoneContact>[
+          PhoneContact(
+            value: '+91 79 4009 7788',
+            kind: PhoneKind.landline,
+            status: ValidationStatus.valid,
+            confidence: 0.86,
+            isPrimary: true,
+          ),
+          PhoneContact(
+            value: '1800 200 4455',
+            kind: PhoneKind.tollFree,
+            status: ValidationStatus.valid,
+            confidence: 0.8,
+          ),
+        ],
+        emails: const <EmailContact>[
+          EmailContact(
+            value: 'appointments@shreejidental.example',
+            isRoleBased: true,
+            domainHasMx: true,
+            status: ValidationStatus.likelyValid,
+            confidence: 0.75,
+            foundOnUrl: 'https://shreejidental.example/appointments',
+            isPrimary: true,
+          ),
+        ],
+        website: 'shreejidental.example',
+        rating: 4.4,
+        reviewCount: 1208,
+        isOpenNow: true,
+        openingHours:
+            'Mon-Fri 9AM-8PM, Sat 9AM-6PM, Sun 10AM-2PM (emergencies only, '
+            'call ahead for implant consultations)',
+        sources: const <LeadSource>{LeadSource.maps, LeadSource.web},
+        confidenceScore: 84,
+        discoveredAt: now.subtract(const Duration(hours: 11)),
+      ),
+      Lead(
+        id: sampleSocialLeadId,
+        name: 'Studio Pamplemousse',
+        category: 'Design studio',
+        area: 'Bandra West',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        socialLinks: const <LeadSource, String>{
+          LeadSource.instagram: 'https://instagram.com/studiopamplemousse',
+          LeadSource.x: 'https://x.com/studio_pample',
+        },
+        sources: const <LeadSource>{LeadSource.instagram, LeadSource.x},
+        confidenceScore: 41,
+        discoveredAt: now.subtract(const Duration(hours: 13)),
+      ),
+    ];
+  }
+
+  // ---------------------------------------------------------------------------
   // Recent searches.
   // ---------------------------------------------------------------------------
 
@@ -586,6 +824,7 @@ class DummyDataSet {
     required this.lists,
     required this.recentSearches,
     required this.searchesRemainingToday,
+    this.sampleLeads = const <Lead>[],
   });
 
   /// The 42 "Dentists in Ahmedabad" leads, hero first.
@@ -599,6 +838,9 @@ class DummyDataSet {
 
   /// Hot leads 14, Follow up 9, Dentists 36, Cafes 22.
   final List<LeadList> lists;
+
+  /// The Lead Detail variants reachable from the debug shortcuts.
+  final List<Lead> sampleLeads;
 
   /// Two recent searches, newest first.
   final List<SearchHistoryEntry> recentSearches;
@@ -615,6 +857,7 @@ class DummyDataSet {
       ...savedLeads,
       ...dentistResults,
       ...largeResults,
+      ...sampleLeads,
     ]) {
       if (lead.id == id) {
         return lead;

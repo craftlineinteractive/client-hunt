@@ -27,6 +27,11 @@ class FakeLeadRepository implements LeadRepository {
     for (final Lead lead in _data.dentistResults) {
       _known.putIfAbsent(lead.id, () => lead);
     }
+    // The Lead Detail samples are reachable by id, saved or not: their card is
+    // what the debug shortcuts open.
+    for (final Lead lead in _data.sampleLeads) {
+      _known.putIfAbsent(lead.id, () => lead);
+    }
     for (final LeadList list in _data.lists) {
       _lists[list.id] = list;
     }

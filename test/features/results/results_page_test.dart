@@ -9,6 +9,7 @@ import 'package:clienthunt/domain/entitlements/entitlements.dart';
 import 'package:clienthunt/domain/models/models.dart';
 import 'package:clienthunt/domain/repositories/repositories.dart';
 import 'package:clienthunt/features/home/home_page.dart';
+import 'package:clienthunt/features/lead_detail/lead_detail_page.dart';
 import 'package:clienthunt/features/results/results_controller.dart';
 import 'package:clienthunt/features/results/results_page.dart';
 import 'package:clienthunt/features/results/results_state.dart';
@@ -497,9 +498,12 @@ void main() {
     await tester.tap(find.text(data.dentistResults.first.name));
     await tester.pumpAndSettle();
 
-    // App bar title and placeholder heading both read "Lead details".
+    // The real screen is pushed with the card's id.
     expect(find.text(LeadDetailStrings.title), findsWidgets);
-    expect(find.text(data.dentistResults.first.id), findsOneWidget);
+    final LeadDetailPage page = tester.widget<LeadDetailPage>(
+      find.byType(LeadDetailPage),
+    );
+    expect(page.leadId, data.dentistResults.first.id);
   });
 
   testWidgets('the Free cap note appears when a search hits the cap', (
