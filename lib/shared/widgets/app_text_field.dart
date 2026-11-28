@@ -22,6 +22,7 @@ enum AppTextFieldVariant {
 class AppTextField extends StatelessWidget {
   const AppTextField({
     this.controller,
+    this.focusNode,
     this.initialValue,
     this.hintText,
     this.leadingIcon,
@@ -42,6 +43,9 @@ class AppTextField extends StatelessWidget {
 
   /// External controller. Mutually exclusive with [initialValue].
   final TextEditingController? controller;
+
+  /// External focus node, for typeahead and the Next/Search keyboard actions.
+  final FocusNode? focusNode;
 
   /// Initial text when no controller is supplied.
   final String? initialValue;
@@ -110,6 +114,7 @@ class AppTextField extends StatelessWidget {
                 textField: true,
                 child: TextField(
                   controller: controller,
+                  focusNode: focusNode,
                   onTap: onTap,
                   enabled: isEnabled,
                   keyboardType: keyboardType,
@@ -142,6 +147,7 @@ class AppTextField extends StatelessWidget {
       textField: true,
       child: TextField(
         controller: controller,
+        focusNode: focusNode,
         onTap: onTap,
         enabled: isEnabled,
         keyboardType: keyboardType,

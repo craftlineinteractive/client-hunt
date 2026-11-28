@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../dev/design_gallery_page.dart';
+import '../../domain/repositories/lead_search_engine.dart';
+import '../../features/home/home_page.dart';
+import '../../features/results/results_placeholder_page.dart';
 import '../../shared/widgets/app_bottom_nav.dart';
 import '../constants/app_strings.dart';
 import '../theme/app_colors.dart';
@@ -19,13 +22,13 @@ export 'app_routes.dart';
 /// other destination is pushed on the root navigator with
 /// `parentNavigatorKey: _rootNavigatorKey`, which covers the shell — and with it
 /// the bottom bar, exactly as the mockups draw those screens.
-final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
 );
 
 /// The single router instance.
 final GoRouter appRouter = GoRouter(
-  navigatorKey: _rootNavigatorKey,
+  navigatorKey: rootNavigatorKey,
   initialLocation: AppRoutes.search,
   routes: <RouteBase>[
     StatefulShellRoute.indexedStack(
@@ -42,10 +45,7 @@ final GoRouter appRouter = GoRouter(
               path: AppRoutes.search,
               name: AppRoutes.searchName,
               builder: (BuildContext context, GoRouterState state) =>
-                  const PlaceholderScreen(
-                    title: CommonStrings.searchTab,
-                    subtitle: HomeStrings.question,
-                  ),
+                  const HomePage(),
             ),
           ],
         ),
@@ -80,14 +80,18 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.results,
       name: AppRoutes.resultsName,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (BuildContext context, GoRouterState state) =>
-          const PlaceholderScreen(title: 'Search results'),
+          ResultsPlaceholderPage(
+            request: state.extra is SearchRequest
+                ? state.extra! as SearchRequest
+                : null,
+          ),
     ),
     GoRoute(
       path: AppRoutes.leadDetail,
       name: AppRoutes.leadDetailName,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (BuildContext context, GoRouterState state) => PlaceholderScreen(
         title: 'Lead details',
         subtitle: state.pathParameters['id'],
@@ -96,21 +100,21 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.filters,
       name: AppRoutes.filtersName,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (BuildContext context, GoRouterState state) =>
           const PlaceholderScreen(title: FiltersStrings.title),
     ),
     GoRoute(
       path: AppRoutes.exportLeads,
       name: AppRoutes.exportLeadsName,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (BuildContext context, GoRouterState state) =>
           const PlaceholderScreen(title: 'Export leads'),
     ),
     GoRoute(
       path: AppRoutes.pro,
       name: AppRoutes.proName,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (BuildContext context, GoRouterState state) =>
           const PlaceholderScreen(title: 'ClientHunt Pro'),
     ),
@@ -120,7 +124,7 @@ final GoRouter appRouter = GoRouter(
       GoRoute(
         path: AppRoutes.designGallery,
         name: AppRoutes.designGalleryName,
-        parentNavigatorKey: _rootNavigatorKey,
+        parentNavigatorKey: rootNavigatorKey,
         builder: (BuildContext context, GoRouterState state) =>
             const DesignGalleryPage(),
       ),

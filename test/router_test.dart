@@ -63,7 +63,12 @@ void main() {
 
       expect(find.byType(AppBottomNav), findsNothing, reason: label);
       if (expectBackArrow) {
-        expect(find.byType(BackButton), findsWidgets, reason: label);
+        // A Material `BackButton` or the app bar's own icon button (which carries
+        // the "Go back" tooltip); both cover the same contract.
+        final bool hasBackButton =
+            find.byType(BackButton).evaluate().isNotEmpty ||
+            find.byTooltip('Go back').evaluate().isNotEmpty;
+        expect(hasBackButton, isTrue, reason: label);
       }
       whilePushed?.call();
 

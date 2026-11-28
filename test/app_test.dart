@@ -33,6 +33,9 @@ void main() {
   ) async {
     await tester.pumpWidget(_appWith(ThemeMode.light));
     await tester.pump();
+    // Home preloads the rewarded ad on first frame; let the fake's load finish so
+    // no timer outlives the test.
+    await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.byType(ClientHuntApp), findsOneWidget);
     final MaterialApp app = tester.widget<MaterialApp>(
@@ -49,6 +52,7 @@ void main() {
   testWidgets('builds in dark mode', (WidgetTester tester) async {
     await tester.pumpWidget(_appWith(ThemeMode.dark));
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
 
     final MaterialApp app = tester.widget<MaterialApp>(
       find.byType(MaterialApp),
