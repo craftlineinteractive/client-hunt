@@ -8,6 +8,7 @@ library;
 export 'app_bottom_nav.dart';
 export 'app_button.dart';
 export 'app_card.dart';
+export 'app_checkbox.dart';
 export 'app_chip.dart';
 export 'app_dialog.dart';
 export 'app_icon_button.dart';

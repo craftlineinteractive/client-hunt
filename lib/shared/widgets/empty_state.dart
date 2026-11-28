@@ -6,8 +6,11 @@ import '../../core/theme/app_typography.dart';
 import 'app_button.dart';
 
 /// A centered empty state: 32 px icon, title, one or two lines of body, optional
-/// action. Used for "no results", "nothing saved yet" and error states. Icons and
-/// weight carry the meaning — never color.
+/// action and optional secondary action. Used for "no results", "nothing saved
+/// yet" and error states. Icons and weight carry the meaning — never color.
+///
+/// Results uses the second action for "Edit search" plus "Clear filters"; a
+/// single-action state simply leaves it null.
 class EmptyState extends StatelessWidget {
   const EmptyState({
     required this.icon,
@@ -15,6 +18,8 @@ class EmptyState extends StatelessWidget {
     required this.body,
     this.actionLabel,
     this.onAction,
+    this.secondaryActionLabel,
+    this.onSecondaryAction,
     this.padding = const EdgeInsets.all(AppSpacing.xxl),
     super.key,
   });
@@ -33,6 +38,12 @@ class EmptyState extends StatelessWidget {
 
   /// Optional action handler.
   final VoidCallback? onAction;
+
+  /// Optional second, quieter action ("Clear filters").
+  final String? secondaryActionLabel;
+
+  /// Handler for [secondaryActionLabel].
+  final VoidCallback? onSecondaryAction;
 
   /// Outer padding.
   final EdgeInsetsGeometry padding;
@@ -71,6 +82,15 @@ class EmptyState extends StatelessWidget {
           if (actionLabel != null) ...<Widget>[
             const SizedBox(height: AppSpacing.xl),
             AppButton(label: actionLabel!, onPressed: onAction, expand: false),
+          ],
+          if (secondaryActionLabel != null) ...<Widget>[
+            const SizedBox(height: AppSpacing.sm),
+            AppButton(
+              label: secondaryActionLabel!,
+              onPressed: onSecondaryAction,
+              variant: AppButtonVariant.ghost,
+              expand: false,
+            ),
           ],
         ],
       ),

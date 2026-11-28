@@ -6,7 +6,7 @@ import '../../dev/design_gallery_page.dart';
 import '../../domain/models/export_args.dart';
 import '../../domain/repositories/lead_search_engine.dart';
 import '../../features/home/home_page.dart';
-import '../../features/results/results_placeholder_page.dart';
+import '../../features/results/results_page.dart';
 import '../../shared/widgets/app_bottom_nav.dart';
 import '../constants/app_strings.dart';
 import '../theme/app_colors.dart';
@@ -82,12 +82,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.results,
       name: AppRoutes.resultsName,
       parentNavigatorKey: rootNavigatorKey,
-      builder: (BuildContext context, GoRouterState state) =>
-          ResultsPlaceholderPage(
-            request: state.extra is SearchRequest
-                ? state.extra! as SearchRequest
-                : null,
-          ),
+      builder: (BuildContext context, GoRouterState state) => ResultsPage(
+        request: state.extra is SearchRequest
+            ? state.extra! as SearchRequest
+            : null,
+      ),
     ),
     GoRoute(
       path: AppRoutes.leadDetail,

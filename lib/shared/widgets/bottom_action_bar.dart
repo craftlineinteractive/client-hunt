@@ -22,6 +22,7 @@ class BottomActionBar extends StatelessWidget {
     this.secondaryIcon,
     this.secondaryTooltip,
     this.onSecondary,
+    this.isSecondaryTrailing = false,
     this.isPrimaryLoading = false,
     this.trailing,
     super.key,
@@ -48,6 +49,12 @@ class BottomActionBar extends StatelessWidget {
 
   /// Handler for the secondary button.
   final VoidCallback? onSecondary;
+
+  /// Places the secondary button **after** the primary instead of before it.
+  ///
+  /// Results uses this so the copy menu sits on the right, as the mockup draws
+  /// it, without duplicating the bar.
+  final bool isSecondaryTrailing;
 
   /// Shows a spinner in the primary button.
   final bool isPrimaryLoading;
@@ -95,14 +102,8 @@ class BottomActionBar extends StatelessWidget {
               ],
               Row(
                 children: <Widget>[
-                  if (hasSecondary) ...<Widget>[
-                    AppIconButton(
-                      icon: secondaryIcon!,
-                      tooltip: secondaryTooltip ?? 'Secondary action',
-                      onPressed: onSecondary,
-                      size: 52,
-                      outlined: true,
-                    ),
+                  if (hasSecondary && !isSecondaryTrailing) ...<Widget>[
+                    _secondary(),
                     const SizedBox(width: AppSpacing.sm),
                   ],
                   Expanded(
@@ -125,6 +126,10 @@ class BottomActionBar extends StatelessWidget {
                       ],
                     ),
                   ),
+                  if (hasSecondary && isSecondaryTrailing) ...<Widget>[
+                    const SizedBox(width: AppSpacing.sm),
+                    _secondary(),
+                  ],
                 ],
               ),
             ],
@@ -133,4 +138,12 @@ class BottomActionBar extends StatelessWidget {
       ),
     );
   }
+
+  Widget _secondary() => AppIconButton(
+    icon: secondaryIcon!,
+    tooltip: secondaryTooltip ?? 'Secondary action',
+    onPressed: onSecondary,
+    size: 52,
+    outlined: true,
+  );
 }

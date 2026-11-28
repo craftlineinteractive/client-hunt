@@ -255,6 +255,7 @@ abstract final class ResultsStrings {
   static const String sortRating = 'Rating';
   static const String sortReviews = 'Reviews';
   static const String sortNameAZ = 'Name A to Z';
+  static const String sortNewest = 'Newest';
   static const String export = 'Export';
   static const String searchHint = 'Search leads';
   static const String clearSearchTooltip = 'Clear search';
@@ -296,10 +297,14 @@ abstract final class ResultsStrings {
   static const String localEmptyTitle = 'No leads match';
   static const String localEmptyBody =
       'Clear the search or choose another filter to see the other leads.';
+  static const String rateLimitedTitle = 'Try again in a moment';
   static const String rateLimitedBody =
       'Too many searches right now. Try again in a moment.';
+  static const String sourceBlockedTitle = 'A source blocked this search';
   static const String sourceBlockedBody =
       'A source blocked this search. Try again, or search without it.';
+  static const String cancelledBody =
+      'The search was stopped. Run it again when you are ready.';
   static const String cancelledTitle = 'Search cancelled';
   static const String resultLimitReached =
       'You reached this plan\'s result limit.';

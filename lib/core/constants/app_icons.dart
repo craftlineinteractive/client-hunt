@@ -30,6 +30,12 @@ abstract final class AppIcons {
   static const IconData lock = Icons.lock_rounded;
   static const IconData info = Icons.info_outline_rounded;
   static const IconData pro = Icons.workspace_premium_rounded;
+  static const IconData warning = Icons.error_outline_rounded;
+  static const IconData block = Icons.block_rounded;
+  static const IconData searchOff = Icons.search_off_rounded;
+  static const IconData noNetwork = Icons.wifi_off_rounded;
+  static const IconData hourglass = Icons.hourglass_empty_rounded;
+  static const IconData stop = Icons.stop_rounded;
 
   // Search form.
   static const IconData niche = Icons.business_center_rounded;

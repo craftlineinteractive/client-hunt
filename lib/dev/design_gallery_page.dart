@@ -307,6 +307,28 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
             ),
           ),
           _Section(
+            title: 'Selection and notes (B2)',
+            subtitle:
+                'The Results checkbox (48 px target around a 20 px mark) and a '
+                'note with a trailing action.',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const _CheckboxDemo(),
+                const SizedBox(height: AppSpacing.sm),
+                InfoNote(
+                  text: ResultsStrings.unverifiedNotice,
+                  onDismiss: () {},
+                ),
+                InfoNote(
+                  text: 'Filters changed. Search again to apply.',
+                  actionLabel: 'Search again',
+                  onAction: () {},
+                ),
+              ],
+            ),
+          ),
+          _Section(
             title: 'Palette',
             subtitle: 'Every color is a role; no hue is allowed.',
             child: Wrap(
@@ -1161,6 +1183,43 @@ class _DesignGalleryPageState extends ConsumerState<DesignGalleryPage> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+/// Demonstrates [AppCheckbox] checked, unchecked and disabled.
+class _CheckboxDemo extends StatefulWidget {
+  const _CheckboxDemo();
+
+  @override
+  State<_CheckboxDemo> createState() => _CheckboxDemoState();
+}
+
+class _CheckboxDemoState extends State<_CheckboxDemo> {
+  bool _isChecked = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        AppCheckbox(
+          value: _isChecked,
+          onChanged: (bool value) => setState(() => _isChecked = value),
+          semanticLabel: 'Select all',
+        ),
+        AppCheckbox(value: !_isChecked, onChanged: (bool _) {}),
+        const AppCheckbox(value: false, semanticLabel: 'Disabled'),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Text(
+            'Tap the first box: the mark is 20 px, the touch area is 48 px. '
+            'The last box is disabled.',
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.of(context).textMuted,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 
