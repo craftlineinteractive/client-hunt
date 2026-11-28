@@ -1468,3 +1468,34 @@ opt-in dialog. That is how every ad and quota state is checked without a network
 No ads SDK, no ad unit ids, no consent-management platform, no billing, and no interstitial trigger of its own:
 B1 ships the policy, the coordinator, the rewarded flow on Home and the fake ad page, and later prompts call the
 triggers they own.
+
+## 13. Engine build policy
+
+The lead engine is prompt D. When its capabilities are specified, **the first step is always a package
+search, not a file**.
+
+**Rule.** For every capability the engine needs, check maintained Flutter or Dart packages first. Use a package
+whenever one qualifies; write custom code only where none does.
+
+**A package qualifies when all of these hold:**
+
+- actively maintained (recent releases, issues answered, no abandoned upstream);
+- a permissive license (MIT/BSD/Apache-2.0; no copyleft we cannot ship);
+- Android support on the minimum SDK, with no missing platform channel;
+- no unacceptable terms-of-service or legal risk for the data source it touches (scraping restrictions, API
+  terms, personal-data rules);
+- a small footprint: no transitive dependency that pulls in a second HTTP stack, a database or a large native
+  library.
+
+**Capabilities to evaluate this way** (the list will grow as the engine is specified): HTTP with timeouts and
+retries, rate limiting and backoff, HTML parsing and CSS selection, phone number parsing and
+mobile/landline classification, email syntax and domain checks, DNS/MX lookup, export writers (CSV, XLSX, PDF,
+vCard), and vCard generation.
+
+**Recording.** Every package evaluated — accepted or rejected — is written into the engine's section of this
+document with: the capability, the package and version, the decision, and the reason in one line (maintenance,
+license, platform support, footprint, or data-source terms). A rejected package is as important to record as an
+accepted one: it stops the next session from re-running the same evaluation.
+
+**Not done here.** B2 researches no packages and adds no dependency. It only records the policy so prompt D
+starts from it.
